@@ -169,28 +169,6 @@
             justify-content: center;
             font-weight: bold;
         }
-        .search-box {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            background: #f1f5f9;
-            padding: 5px 15px;
-            border-radius: 40px;
-        }
-        .search-box input {
-            border: none;
-            background: transparent;
-            padding: 8px;
-            width: 200px;
-            outline: none;
-        }
-        .search-box button {
-            background: #facc15;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 30px;
-            cursor: pointer;
-        }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -303,22 +281,11 @@
             cursor: pointer;
             font-size: 12px;
         }
-        .add-party-btn {
-            background: #22c55e;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 14px;
-        }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); position: fixed; }
             .sidebar.open { transform: translateX(0); }
             .main-content { margin-right: 0; }
             .menu-toggle { display: block; }
-            .search-box input { width: 120px; }
         }
         .menu-toggle { display: none; background: #0f172a; color: white; border: none; font-size: 1.5rem; cursor: pointer; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -417,13 +384,13 @@
                 <div id="clientsTab" class="tab-content" style="display:none;">
                     <div class="card">
                         <div class="card-header"><h3>قائمة الموكلين</h3><button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> إضافة موكل</button></div>
-                        <div style="overflow-x:auto;"><table id="clientsTable"><thead><tr><th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>بيانات التوكيل</th><th>عدد القضايا</th><th>الإجراءات</th></tr></thead><tbody><tr><td colspan="7" class="loading">جاري التحميل...</td></tr></tbody></table></div>
+                        <div style="overflow-x:auto;"><table id="clientsTable"><thead>60q<th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>بيانات التوكيل</th><th>عدد القضايا</th><th>الإجراءات</th> </thead><tbody><td colspan="7" class="loading">جاري التحميل...</td></tbody> </div>
                     </div>
                 </div>
                 <div id="casesTab" class="tab-content" style="display:none;">
                     <div class="card">
                         <div class="card-header"><h3>القضايا</h3><button class="btn" id="addCaseBtn"><i class="fas fa-plus"></i> قضية جديدة</button></div>
-                        <div style="overflow-x:auto;"><table id="casesTable"><thead><tr><th style="width:30px"></th><th>رقم القضية</th><th>المحكمة/الدائرة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody><tr><td colspan="8" class="loading">جاري التحميل...</td></tr></tbody></table></div>
+                        <div style="overflow-x:auto;"><table id="casesTable"><thead>60q<th style="width:30px"></th><th>رقم القضية</th><th>المحكمة/الدائرة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th>الإجراءات</th> </thead><tbody><td colspan="8" class="loading">جاري التحميل...</td></tbody> </div>
                     </div>
                 </div>
                 <div id="searchTab" class="tab-content" style="display:none;">
@@ -526,7 +493,7 @@
             document.getElementById('notifCount').innerText = notifications.filter(n => !n.read).length;
         }
         
-        // دوال CRUD (نفس الكود السابق - مختصر هنا)
+        // دوال CRUD (مختصرة)
         window.addClient = async (data) => {
             await addDoc(collection(db, "clients"), { ...data, createdAt: new Date().toISOString() });
             addNotification(`✅ تم إضافة موكل: ${data.name}`);
@@ -709,25 +676,18 @@
             return '';
         }
         
-        // دالة الانتقال إلى القضية في تبويب القضايا
+        // دالة الانتقال إلى القضية
         window.goToCase = (caseId) => {
-            // التبديل إلى تبويب القضايا
             const casesTab = document.querySelector('.nav-item[data-tab="cases"]');
-            if(casesTab) {
-                casesTab.click();
-            }
-            // فتح القضية
+            if(casesTab) casesTab.click();
             setTimeout(() => {
                 expandedCase = caseId;
                 renderCases();
-                // التمرير إلى القضية
                 const caseRow = document.querySelector(`.case-row[data-case-id="${caseId}"]`);
                 if(caseRow) {
                     caseRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     caseRow.style.backgroundColor = '#fef9c3';
-                    setTimeout(() => {
-                        caseRow.style.backgroundColor = '';
-                    }, 2000);
+                    setTimeout(() => { caseRow.style.backgroundColor = ''; }, 2000);
                 }
             }, 200);
         };
@@ -735,7 +695,7 @@
         function renderCases() {
             const tbody = document.querySelector('#casesTable tbody');
             if(!tbody) return;
-            if(cases.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا</td></tr>'; return; }
+            if(cases.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا</td> </tr>'; return; }
             
             tbody.innerHTML = cases.map(c => {
                 const isExpanded = expandedCase === c.id;
@@ -745,18 +705,18 @@
                 
                 let row = `
                     <tr class="case-row" data-case-id="${c.id}" onclick="toggleCaseDetails('${c.id}')">
-                        <td><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i></td>
-                        <td><strong>${c.caseNumber}</strong></td>
-                        <td>${c.court || '--'}${c.circuit ? ` - ${c.circuit}` : ''}</td>
-                        <td>${c.clients?.map(cl => `${cl.name}${cl.title ? ` (${cl.title})` : ''}`).join('<br>') || '--'}</td>
-                        <td>${c.opponents?.map(op => `${op.name}${op.title ? ` (${op.title})` : ''}`).join('<br>') || '--'}</td>
-                        <td>${c.subject || '--'}${lastSession ? `<div><span class="last-session-badge">📅 آخر جلسة: ${lastSession}</span></div>` : ''}</td>
-                        <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span></td>
+                        <td><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i> </div>
+                        <td><strong>${c.caseNumber}</strong> </div>
+                        <td>${c.court || '--'}${c.circuit ? ` - ${c.circuit}` : ''} </div>
+                        <td>${c.clients?.map(cl => `${cl.name}${cl.title ? ` (${cl.title})` : ''}`).join('<br>') || '--'} </div>
+                        <td>${c.opponents?.map(op => `${op.name}${op.title ? ` (${op.title})` : ''}`).join('<br>') || '--'} </div>
+                        <td>${c.subject || '--'}${lastSession ? `<div><span class="last-session-badge">📅 آخر جلسة: ${lastSession}</span></div>` : ''} </div>
+                        <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> </div>
                         <td class="action-buttons">
                             <button class="btn-outline btn-sm" onclick="event.stopPropagation(); editCase('${c.id}')" style="background:#facc15;"><i class="fas fa-edit"></i></button>
                             <button class="btn-outline btn-sm" onclick="event.stopPropagation(); deleteCase('${c.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
+                         </div>
+                     </tr>
                 `;
                 
                 if(isExpanded) {
@@ -802,14 +762,14 @@
                             <button class="btn-outline btn-sm" onclick="event.stopPropagation(); deleteDocumentFromFirestore('${doc.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i></button></div></div>`;
                         });
                     }
-                    sessionsHtml += `</div></div></div></div> </td></tr>`;
+                    sessionsHtml += `</div></div></div></div> </tr>`;
                     row += sessionsHtml;
                 }
                 return row;
             }).join('');
         }
         
-        // البحث عن موكل والانتقال إلى القضية
+        // دالة البحث مع إضافة خانة الموضوع
         function searchClient() {
             const searchTerm = document.getElementById('searchClientInput').value.trim().toLowerCase();
             const resultsDiv = document.getElementById('searchResults');
@@ -840,7 +800,17 @@
                         <h4 style="margin: 15px 0 10px 0;"><i class="fas fa-balance-scale"></i> قضايا الموكل (${clientCases.length})</h4>
                         <div style="overflow-x:auto;">
                             <table style="width:100%;">
-                                <thead>60q<th>رقم القضية</th><th>المحكمة</th><th>الخصوم</th><th>الحالة</th><th>آخر جلسة</th><th></th> </thead>
+                                <thead>
+                                    <tr>
+                                        <th>رقم القضية</th>
+                                        <th>المحكمة</th>
+                                        <th>الخصوم</th>
+                                        <th>الموضوع</th>
+                                        <th>الحالة</th>
+                                        <th>آخر جلسة</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                 `;
                 
@@ -848,27 +818,28 @@
                     const lastSession = c.sessions?.length ? new Date([...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date))[0].date).toLocaleDateString('ar-EG') : 'لا توجد';
                     html += `
                         <tr class="case-clickable" onclick="goToCase('${c.id}')">
-                            <td><strong>${c.caseNumber}</strong> </td>
-                            <td>${c.court || '--'}${c.circuit ? ` - ${c.circuit}` : ''} </td>
-                            <td>${c.opponents?.map(op => op.name).join(', ') || '--'} </td>
-                            <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> </td>
-                            <td>${lastSession} </td>
-                            <td><button class="btn-outline btn-sm" onclick="event.stopPropagation(); goToCase('${c.id}')"><i class="fas fa-arrow-left"></i> عرض القضية</button></td>
+                            <td><strong>${c.caseNumber}</strong> </div>
+                            <td>${c.court || '--'}${c.circuit ? ` - ${c.circuit}` : ''} </div>
+                            <td>${c.opponents?.map(op => op.name).join(', ') || '--'} </div>
+                            <td>${c.subject || '--'} </div>
+                            <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> </div>
+                            <td>${lastSession} </div>
+                            <td><button class="btn-outline btn-sm" onclick="event.stopPropagation(); goToCase('${c.id}')"><i class="fas fa-arrow-left"></i> عرض القضية</button> </div>
                         </tr>
                     `;
                 });
                 
                 if(clientCases.length === 0) {
-                    html += `<tr><td colspan="6" style="text-align:center;">لا توجد قضايا مسجلة</td></tr>`;
+                    html += `<tr><td colspan="7" style="text-align:center;">لا توجد قضايا مسجلة</td></tr>`;
                 }
                 
-                html += `</tbody> </table> </div> </div>`;
+                html += `</tbody></table></div></div>`;
             });
             
             resultsDiv.innerHTML = html;
         }
         
-        // النوافذ المنبثقة (مختصرة لأنها نفس الكود السابق)
+        // النوافذ المنبثقة (مختصرة)
         let tempClientsList = [];
         let tempOpponentsList = [];
         
@@ -1016,7 +987,6 @@
         window.editCase = async (caseId) => {
             const caseObj = cases.find(c => c.id === caseId);
             if(!caseObj) return;
-            
             tempClientsList = [...(caseObj.clients || [])];
             tempOpponentsList = [...(caseObj.opponents || [])];
             
@@ -1068,66 +1038,32 @@
             
             function renderClientsList() {
                 const container = document.getElementById('clientsListContainer');
-                if(!container) return;
-                if(tempClientsList.length === 0) {
-                    container.innerHTML = '<p style="color:#64748b;">لا يوجد موكلون.</p>';
-                } else {
-                    container.innerHTML = tempClientsList.map((cl, idx) => `
-                        <div class="party-item">
-                            <div class="flex-between">
-                                <span><strong>${cl.name}</strong> ${cl.title ? `<span style="color:#64748b;">(${cl.title})</span>` : ''}</span>
-                                <button class="remove-party" onclick="removeTempClient(${idx})">✖ حذف</button>
-                            </div>
-                        </div>
-                    `).join('');
-                }
+                if(tempClientsList.length === 0) container.innerHTML = '<p style="color:#64748b;">لا يوجد موكلون.</p>';
+                else container.innerHTML = tempClientsList.map((cl, idx) => `<div class="party-item"><div class="flex-between"><span><strong>${cl.name}</strong> ${cl.title ? `(${cl.title})` : ''}</span><button class="remove-party" onclick="removeTempClient(${idx})">✖ حذف</button></div></div>`).join('');
             }
-            
             function renderOpponentsList() {
                 const container = document.getElementById('opponentsListContainer');
-                if(!container) return;
-                if(tempOpponentsList.length === 0) {
-                    container.innerHTML = '<p style="color:#64748b;">لا يوجد خصوم.</p>';
-                } else {
-                    container.innerHTML = tempOpponentsList.map((op, idx) => `
-                        <div class="party-item">
-                            <div class="flex-between">
-                                <span><strong>${op.name}</strong> ${op.title ? `<span style="color:#64748b;">(${op.title})</span>` : ''}</span>
-                                <button class="remove-party" onclick="removeTempOpponent(${idx})">✖ حذف</button>
-                            </div>
-                        </div>
-                    `).join('');
-                }
+                if(tempOpponentsList.length === 0) container.innerHTML = '<p style="color:#64748b;">لا يوجد خصوم.</p>';
+                else container.innerHTML = tempOpponentsList.map((op, idx) => `<div class="party-item"><div class="flex-between"><span><strong>${op.name}</strong> ${op.title ? `(${op.title})` : ''}</span><button class="remove-party" onclick="removeTempOpponent(${idx})">✖ حذف</button></div></div>`).join('');
             }
             
-            window.removeTempClient = (idx) => {
-                tempClientsList.splice(idx, 1);
-                renderClientsList();
-            };
-            window.removeTempOpponent = (idx) => {
-                tempOpponentsList.splice(idx, 1);
-                renderOpponentsList();
-            };
+            window.removeTempClient = (idx) => { tempClientsList.splice(idx,1); renderClientsList(); };
+            window.removeTempOpponent = (idx) => { tempOpponentsList.splice(idx,1); renderOpponentsList(); };
             
             document.getElementById('addClientToListBtn').onclick = () => {
-                const select = document.getElementById('selectClient');
-                const clientId = select.value;
+                const clientId = document.getElementById('selectClient').value;
                 if(!clientId) { alert("اختر موكلاً"); return; }
                 const client = clients.find(c => c.id === clientId);
                 if(client && !tempClientsList.some(c => c.id === client.id)) {
                     const title = prompt("صفة الموكل:", "");
                     tempClientsList.push({ id: client.id, name: client.name, title: title || "" });
                     renderClientsList();
-                } else {
-                    alert("الموكل مضاف بالفعل");
-                }
+                } else alert("الموكل مضاف بالفعل");
             };
-            
             document.getElementById('addOpponentToListBtn').onclick = () => {
                 const name = document.getElementById('newOpponentName').value.trim();
-                const title = document.getElementById('newOpponentTitle').value.trim();
                 if(!name) { alert("أدخل اسم الخصم"); return; }
-                tempOpponentsList.push({ name, title: title || "" });
+                tempOpponentsList.push({ name, title: document.getElementById('newOpponentTitle').value.trim() });
                 document.getElementById('newOpponentName').value = '';
                 document.getElementById('newOpponentTitle').value = '';
                 renderOpponentsList();
@@ -1140,23 +1076,16 @@
                 const caseNumber = document.getElementById('caseNumber').value.trim();
                 if(!caseNumber) { alert("رقم القضية مطلوب"); return; }
                 if(tempClientsList.length === 0) { alert("يجب إضافة موكل واحد على الأقل"); return; }
-                
                 await updateCase(caseId, {
-                    caseNumber,
-                    court: document.getElementById('court').value,
-                    circuit: document.getElementById('circuit').value,
-                    clients: tempClientsList,
-                    opponents: tempOpponentsList,
-                    subject: document.getElementById('subject').value,
-                    caseStatus: document.getElementById('caseStatus').value,
-                    subjectDetails: caseObj.subjectDetails
+                    caseNumber, court: document.getElementById('court').value, circuit: document.getElementById('circuit').value,
+                    clients: tempClientsList, opponents: tempOpponentsList, subject: document.getElementById('subject').value,
+                    caseStatus: document.getElementById('caseStatus').value, subjectDetails: caseObj.subjectDetails
                 });
                 document.getElementById('editCaseModal').remove();
             };
             document.getElementById('closeCaseBtn').onclick = () => document.getElementById('editCaseModal').remove();
         };
         
-        // باقي النوافذ
         window.showAddSession = (caseId) => {
             const modalHtml = `<div id="sessionModal" class="modal-overlay"><div class="modal-container"><h3><i class="fas fa-calendar-plus"></i> إضافة جلسة جديدة</h3><label>📅 تاريخ الجلسة:</label><input type="date" id="sessionDate"><label>📝 ملاحظات:</label><textarea id="sessionNotes" rows="3"></textarea><div class="modal-buttons"><button id="saveSessionBtn" style="background:#22c55e; color:white;">✅ إضافة</button><button id="closeSessionBtn" style="background:#e2e8f0;">❌ إلغاء</button></div></div></div>`;
             document.body.insertAdjacentHTML('beforeend', modalHtml);
