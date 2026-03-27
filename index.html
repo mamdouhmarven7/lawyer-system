@@ -731,7 +731,6 @@
         
         // دالة الانتقال إلى القضية
         window.goToCase = (caseId) => {
-            // التبديل إلى تبويب القضايا
             const casesTab = document.querySelector('.nav-item[data-tab="cases"]');
             if(casesTab) casesTab.click();
             setTimeout(() => {
@@ -892,31 +891,36 @@
                                         <th>الحالة</th>
                                         <th>آخر جلسة</th>
                                         <th></th>
-                                    </tr>
+                                     </div>
                                 </thead>
                                 <tbody>
                 `;
                 
-                clientCases.forEach(c => {
-                    const lastSession = c.sessions?.length ? new Date([...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date))[0].date).toLocaleDateString('ar-EG') : 'لا توجد';
-                    html += `
-                        <tr class="case-clickable" onclick="goToCase('${c.id}')">
-                            <td><strong>${c.caseNumber}</strong></td>
-                            <td>${c.court || '--'}${c.circuit ? ` - ${c.circuit}` : ''}</td>
-                            <td>${c.opponents?.map(op => op.name).join(', ') || '--'}</td>
-                            <td>${c.subject || '--'}</td>
-                            <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span></td>
-                            <td>${lastSession}</td>
-                            <td><button class="btn-outline btn-sm" onclick="event.stopPropagation(); goToCase('${c.id}')"><i class="fas fa-arrow-left"></i> عرض القضية</button></td>
-                        </tr>
-                    `;
-                });
-                
                 if(clientCases.length === 0) {
-                    html += `<tr><td colspan="7" style="text-align:center;">لا توجد قضايا مسجلة</td></tr>`;
+                    html += `}<td colspan="7" style="text-align:center;">لا توجد قضايا مسجلة</td>`;
+
+```html
+                                </tbody>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    clientCases.forEach(c => {
+                        const lastSession = c.sessions?.length ? new Date([...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date))[0].date).toLocaleDateString('ar-EG') : 'لا توجد';
+                        html += `
+                            <tr class="case-clickable" onclick="goToCase('${c.id}')">
+                                <td><strong>${c.caseNumber}</strong> </div>
+                                <td>${c.court || '--'}${c.circuit ? ` - ${c.circuit}` : ''} </div>
+                                <td>${c.opponents?.map(op => op.name).join(', ') || '--'} </div>
+                                <td>${c.subject || '--'} </div>
+                                <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> </div>
+                                <td>${lastSession} </div>
+                                <td><button class="btn-outline btn-sm" onclick="event.stopPropagation(); goToCase('${c.id}')"><i class="fas fa-arrow-left"></i> عرض القضية</button> </div>
+                             </div>
+                        `;
+                    });
+                    html += `</tbody> </div></div>`;
                 }
-                
-                html += `</tbody></table></div></div>`;
             });
             
             resultsDiv.innerHTML = html;
