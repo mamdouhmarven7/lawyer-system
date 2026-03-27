@@ -376,13 +376,13 @@
             <div id="clientsTab" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="card-header"><h3>قائمة الموكلين</h3><button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> إضافة موكل</button></div>
-                    <div style="overflow-x:auto;"><table id="clientsTable"><thead>60q<th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>بيانات التوكيل</th><th>عدد القضايا</th><th>الإجراءات</th> </thead><tbody> <td colspan="7" class="loading">جاري التحميل... </tbody> </div>
+                    <div style="overflow-x:auto;"><table id="clientsTable"><thead>60q<th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>بيانات التوكيل</th><th>عدد القضايا</th><th>الإجراءات</th> </thead><tbody><td colspan="7" class="loading">جاري التحميل... </tbody> </div>
                 </div>
             </div>
             <div id="casesTab" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="card-header"><h3>القضايا</h3><button class="btn" id="addCaseBtn"><i class="fas fa-plus"></i> قضية جديدة</button></div>
-                    <div style="overflow-x:auto;"><table id="casesTable"><thead>60q<th style="width:30px"></th><th>رقم القضية</th><th>المحكمة/الدائرة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th>الإجراءات</th> </thead><tbody> <td colspan="8" class="loading">جاري التحميل... </tbody> </div>
+                    <div style="overflow-x:auto;"><table id="casesTable"><thead>60q<th style="width:30px"></th><th>رقم القضية</th><th>المحكمة/الدائرة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th>الإجراءات</th> </thead><tbody><td colspan="8" class="loading">جاري التحميل... </tbody> </div>
                 </div>
             </div>
             <div id="searchTab" class="tab-content" style="display:none;">
@@ -429,7 +429,11 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-let clients = [], cases = [], documents = [], notifications = [], expandedCase = null;
+let clients = [];
+let cases = [];
+let documents = [];
+let notifications = [];
+let expandedCase = null;
 
 const loginScreen = document.getElementById('loginScreen');
 const appContent = document.getElementById('appContent');
@@ -602,27 +606,27 @@ function renderClients() {
     const tbody = document.querySelector('#clientsTable tbody');
     if(!tbody) return;
     if(clients.length === 0) {
-        tbody.innerHTML = '}<td colspan="7" class="loading">لا يوجد موكلون</div>';
+        tbody.innerHTML = '<tr><td colspan="7" class="loading">لا يوجد موكلون</td></tr>';
         return;
     }
     tbody.innerHTML = clients.map(c => {
         const caseCount = cases.filter(cas => cas.clients && cas.clients.some(cl => cl.id === c.id)).length;
         return `
-             <tr>
-                 <td>${c.name}</td>
-                 <td>${c.type === 'company' ? 'شركة' : 'فرد'}</td>
-                 <td>${c.phone || '--'}</td>
-                 <td>${c.idNumber || '--'}</td>
-                 <td>
+            <tr>
+                <td>${c.name}</td>
+                <td>${c.type === 'company' ? 'شركة' : 'فرد'}</td>
+                <td>${c.phone || '--'}</td>
+                <td>${c.idNumber || '--'}</td>
+                <td>
                     ${c.delegationNumber ? '<div class="delegation-details">رقم التوكيل: ' + c.delegationNumber + '<br>التاريخ: ' + (c.delegationDate || '--') + '<br>جهة التوثيق: ' + (c.delegationAuthority || '--') + '</div>' : 'لا يوجد'}
                     <button class="btn-outline btn-sm" onclick="editDelegation(\'' + c.id + '\')" style="margin-top:5px;"><i class="fas fa-file-signature"></i> تعديل التوكيل</button>
-                 </td>
-                 <td>${caseCount}</td>
-                 <td class="action-buttons">
+                </td>
+                <td>${caseCount}</td>
+                <td class="action-buttons">
                     <button class="btn-outline btn-sm" onclick="editClient('${c.id}')" style="background:#facc15;"><i class="fas fa-edit"></i> تعديل</button>
                     <button class="btn-outline btn-sm" onclick="deleteClient('${c.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i> حذف</button>
-                 </td>
-             </tr>
+                </td>
+            </tr>
         `;
     }).join('');
 }
@@ -659,7 +663,6 @@ function renderDashboard() {
                 if(sessionDate >= today) {
                     upcomingSessions.push(sessionInfo);
                 } else {
-                    // فقط الجلسات السابقة للقضايا المفتوحة (غير حكم نهائي وغير نقض)
                     if(c.caseStatus !== 'حكم نهائي' && c.caseStatus !== 'نقض') {
                         pastSessions.push(sessionInfo);
                     }
@@ -756,18 +759,18 @@ function renderCases() {
         
         let row = `
             <tr class="case-row" data-case-id="${c.id}" onclick="toggleCaseDetails('${c.id}')">
-                 <i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i> 
-                 <strong>${c.caseNumber}</strong> 
-                 ${c.court || '--'}${c.circuit ? ' - ' + c.circuit : ''} 
-                 ${clientsHtml || '--'} 
-                 ${opponentsHtml || '--'} 
-                 ${c.subject || '--'}${lastSession ? '<div><span class="last-session-badge">📅 آخر جلسة: ' + lastSession + '</span></div>' : ''} 
-                 <span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> 
+                <td><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i></td>
+                <td><strong>${c.caseNumber}</strong></td>
+                <td>${c.court || '--'}${c.circuit ? ' - ' + c.circuit : ''}</td>
+                <td>${clientsHtml || '--'}</td>
+                <td>${opponentsHtml || '--'}</td>
+                <td>${c.subject || '--'}${lastSession ? '<div><span class="last-session-badge">📅 آخر جلسة: ' + lastSession + '</span></div>' : ''}</td>
+                <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span></td>
                 <td class="action-buttons">
                     <button class="btn-outline btn-sm" onclick="event.stopPropagation(); editCase('${c.id}')" style="background:#facc15;"><i class="fas fa-edit"></i></button>
                     <button class="btn-outline btn-sm" onclick="event.stopPropagation(); deleteCase('${c.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i></button>
-                 </div>
-              </div>
+                </td>
+            </tr>
         `;
         
         if(isExpanded) {
@@ -845,7 +848,7 @@ function renderCases() {
                     `;
                 });
             }
-            sessionsHtml += `</div></div></div></div> </div>`;
+            sessionsHtml += `</div></div></div></div></div>`;
             row += sessionsHtml;
         }
         return row;
@@ -894,14 +897,14 @@ function searchByClient() {
                 const lastSession = c.sessions && c.sessions.length ? new Date([...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date))[0].date).toLocaleDateString('ar-EG') : 'لا توجد';
                 const statusClass = getStatusClass(c.caseStatus);
                 html += `<tr class="case-clickable" onclick="goToCase('${c.id}')" style="cursor:pointer;">
-                    <td style="padding:12px;"><strong>${c.caseNumber}</strong> </td>
-                    <td style="padding:12px;">${c.court || '--'}${c.circuit ? ' - ' + c.circuit : ''} </td>
-                    <td style="padding:12px;">${c.opponents ? c.opponents.map(o => o.name).join(', ') : '--'} </td>
-                    <td style="padding:12px;">${c.subject || '--'} </td>
-                    <td style="padding:12px;"><span class="status-badge ${statusClass}">${c.caseStatus || 'متداولة'}</span> </td>
-                    <td style="padding:12px;">${lastSession} </td>
-                    <td style="padding:12px;"><button class="btn-outline btn-sm" onclick="event.stopPropagation(); goToCase('${c.id}')"><i class="fas fa-arrow-left"></i> عرض</button> </td>
-                  </tr>`;
+                    <td style="padding:12px;"><strong>${c.caseNumber}</strong></td>
+                    <td style="padding:12px;">${c.court || '--'}${c.circuit ? ' - ' + c.circuit : ''}</td>
+                    <td style="padding:12px;">${c.opponents ? c.opponents.map(o => o.name).join(', ') : '--'}</td>
+                    <td style="padding:12px;">${c.subject || '--'}</td>
+                    <td style="padding:12px;"><span class="status-badge ${statusClass}">${c.caseStatus || 'متداولة'}</span></td>
+                    <td style="padding:12px;">${lastSession}</td>
+                    <td style="padding:12px;"><button class="btn-outline btn-sm" onclick="event.stopPropagation(); goToCase('${c.id}')"><i class="fas fa-arrow-left"></i> عرض</button></td>
+                </tr>`;
             });
             html += `</tbody></table></div>`;
         }
@@ -937,14 +940,14 @@ function searchByCourt() {
         const opponentNames = c.opponents ? c.opponents.map(op => op.name).join(', ') : '--';
         const statusClass = getStatusClass(c.caseStatus);
         html += `<tr class="case-clickable" onclick="goToCase('${c.id}')" style="cursor:pointer;">
-            <td style="padding:12px;"><strong>${c.caseNumber}</strong> </td>
-            <td style="padding:12px;">${c.circuit || '--'} </td>
-            <td style="padding:12px;">${clientNames} </td>
-            <td style="padding:12px;">${opponentNames} </td>
-            <td style="padding:12px;">${c.subject || '--'} </td>
-            <td style="padding:12px;"><span class="status-badge ${statusClass}">${c.caseStatus || 'متداولة'}</span> </td>
-            <td style="padding:12px;"><button class="btn-outline btn-sm" onclick="event.stopPropagation(); goToCase('${c.id}')"><i class="fas fa-arrow-left"></i> عرض</button> </td>
-          </tr>`;
+            <td style="padding:12px;"><strong>${c.caseNumber}</strong></td>
+            <td style="padding:12px;">${c.circuit || '--'}</td>
+            <td style="padding:12px;">${clientNames}</td>
+            <td style="padding:12px;">${opponentNames}</td>
+            <td style="padding:12px;">${c.subject || '--'}</td>
+            <td style="padding:12px;"><span class="status-badge ${statusClass}">${c.caseStatus || 'متداولة'}</span></td>
+            <td style="padding:12px;"><button class="btn-outline btn-sm" onclick="event.stopPropagation(); goToCase('${c.id}')"><i class="fas fa-arrow-left"></i> عرض</button></td>
+        </tr>`;
     });
     html += `</tbody></table></div></div>`;
     resultsDiv.innerHTML = html;
@@ -1164,14 +1167,43 @@ window.showUploadDocument = (caseId) => {
 
 window.editDelegation = (clientId) => {
     const c = clients.find(x => x.id === clientId);
-    if(!c) return;
-    const modal = `<div id="delModal" class="modal-overlay"><div class="modal-container"><h3>📜 بيانات التوكيل - ${c.name}</h3><label>رقم التوكيل:</label><input type="text" id="delNum" value="${c.delegationNumber || ''}"><label>تاريخ التوكيل:</label><input type="date" id="delDate" value="${c.delegationDate || ''}"><label>جهة التوثيق:</label><input type="text" id="delAuth" value="${c.delegationAuthority || ''}"><div class="modal-buttons"><button id="saveBtn" style="background:#22c55e;color:white;">💾 حفظ</button><button id="closeBtn">❌ إلغاء</button></div></div></div>`;
+    if(!c) {
+        alert("الموكل غير موجود");
+        return;
+    }
+    const modal = `
+        <div id="delModal" class="modal-overlay">
+            <div class="modal-container">
+                <h3>📜 بيانات التوكيل - ${c.name}</h3>
+                <label>رقم التوكيل:</label>
+                <input type="text" id="delNum" value="${c.delegationNumber || ''}" placeholder="مثال: توكيل رقم 123 لسنة 2025">
+                <label>تاريخ التوكيل:</label>
+                <input type="date" id="delDate" value="${c.delegationDate || ''}">
+                <label>جهة التوثيق:</label>
+                <input type="text" id="delAuth" value="${c.delegationAuthority || ''}" placeholder="مثال: مكتب توثيق القاهرة الجديدة">
+                <label>ملاحظات:</label>
+                <textarea id="delNotes" rows="3" placeholder="أي ملاحظات إضافية">${c.delegationNotes || ''}</textarea>
+                <div class="modal-buttons">
+                    <button id="saveDelBtn" style="background:#22c55e;color:white;">💾 حفظ</button>
+                    <button id="closeDelBtn" style="background:#e2e8f0;">❌ إلغاء</button>
+                </div>
+            </div>
+        </div>
+    `;
     document.body.insertAdjacentHTML('beforeend', modal);
-    document.getElementById('saveBtn').onclick = () => {
-        updateClient(clientId, { ...c, delegationNumber: document.getElementById('delNum').value, delegationDate: document.getElementById('delDate').value, delegationAuthority: document.getElementById('delAuth').value });
+    
+    document.getElementById('saveDelBtn').onclick = async () => {
+        const newDelegationData = {
+            delegationNumber: document.getElementById('delNum').value,
+            delegationDate: document.getElementById('delDate').value,
+            delegationAuthority: document.getElementById('delAuth').value,
+            delegationNotes: document.getElementById('delNotes').value
+        };
+        await updateClient(clientId, { ...c, ...newDelegationData });
         document.getElementById('delModal').remove();
+        alert("✅ تم حفظ بيانات التوكيل بنجاح!");
     };
-    document.getElementById('closeBtn').onclick = () => document.getElementById('delModal').remove();
+    document.getElementById('closeDelBtn').onclick = () => document.getElementById('delModal').remove();
 };
 
 window.editClient = (clientId) => {
