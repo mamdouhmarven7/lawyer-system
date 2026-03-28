@@ -225,6 +225,27 @@ async function loadClients() {
 async function loadCases() {
     const snap = await getDocs(query(collection(db, "cases"), orderBy("createdAt", "desc")));
     casesList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    
+    // حساب تاريخ آخر جلسة لكل قضية
+    casesList.forEach(c => {
+        if(c.sessions && c.sessions.length > 0) {
+            // ترتيب الجلسات تنازلياً (الأحدث أولاً) للحصول على آخر جلسة
+            const sortedSessions = [...c.sessions].sort((a, b) => new Date(b.date) - new Date(a.date));
+            c.lastSessionDate = sortedSessions[0].date;
+        } else {
+            c.lastSessionDate = null;
+        }
+    });
+    
+    // ترتيب القضايا حسب آخر جلسة (الأقدم في الأعلى)
+    casesList.sort((a, b) => {
+        // القضايا بدون جلسات تذهب إلى الأسفل
+        if(!a.lastSessionDate && !b.lastSessionDate) return 0;
+        if(!a.lastSessionDate) return 1;
+        if(!b.lastSessionDate) return -1;
+        return new Date(a.lastSessionDate) - new Date(b.lastSessionDate);
+    });
+    
     renderCases();
     renderDashboard();
 }
@@ -447,7 +468,7 @@ function renderCases() {
         const isExpanded = expandedCase === c.id;
         const sessions = c.sessions || [];
         const caseDocs = documents.filter(d => d.caseId === c.id);
-        const lastSession = sessions.length ? new Date([...sessions].sort((a,b) => new Date(b.date) - new Date(a.date))[0].date).toLocaleDateString('ar-EG') : null;
+      const lastSession = sessions.length ? new Date([...sessions].sort((a,b) => new Date(b.date) - new Date(a.date))[0].date).toLocaleDateString('ar-EG') : null;
         let clientsHtml = c.clients ? c.clients.map(cl => cl.name + (cl.title ? ' (' + cl.title + ')' : '')).join('<br>') : '--';
         let opponentsHtml = c.opponents ? c.opponents.map(op => op.name + (op.title ? ' (' + op.title + ')' : '')).join('<br>') : '--';
         
