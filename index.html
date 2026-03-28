@@ -121,27 +121,44 @@
                 <div class="card">
                     <div class="card-header"><h3>قائمة الموكلين</h3><button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> إضافة موكل</button></div>
                     <div style="overflow-x:auto;">
-                        <table id="clientsTable">
-                            <thead>
-                                60q<th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>التوكيل</th><th>القضايا</th><th></th> </thead>
-                            <tbody>
-                                <td colspan="7" class="loading">جاري التحميل... </td>
-                            </tbody>
-                         </div>
-                </div>
+              <table id="clientsTable">
+    <thead>
+        <tr>
+            <th>الاسم</th>
+            <th>النوع</th>
+            <th>الهاتف</th>
+            <th>الرقم الوطني</th>
+            <th>التوكيل</th>
+            <th>القضايا</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td colspan="7" class="loading">جاري التحميل...</td></tr>
+    </tbody>
+</table>
             </div>
             <div id="casesTab" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="card-header"><h3>القضايا</h3><button class="btn" id="addCaseBtn"><i class="fas fa-plus"></i> قضية جديدة</button></div>
                     <div style="overflow-x:auto;">
                         <table id="casesTable">
-                            <thead>
-                                60q<th style="width:30px"></th><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th> </thead>
-                            <tbody>
-                                <td colspan="8" class="loading">جاري التحميل... </td>
-                            </tbody>
-                         </div>
-                </div>
+    <thead>
+        <tr>
+            <th style="width:30px"></th>
+            <th>رقم القضية</th>
+            <th>المحكمة</th>
+            <th>الموكلون</th>
+            <th>الخصوم</th>
+            <th>الموضوع</th>
+            <th>الحالة</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td colspan="8" class="loading">جاري التحميل...</td></tr>
+    </tbody>
+</table>
             </div>
             <div id="searchTab" class="tab-content" style="display:none;">
                 <div class="card">
@@ -550,8 +567,8 @@ function searchClient() {
                     <td>${c.court || '--'}</td>
                     <td>${c.opponents ? c.opponents.map(o => o.name).join(', ') : '--'}</td>
                     <td>${c.subject || '--'}</td>
-                    <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span>ｓ
-                    <td><button class="btn-sm" onclick="event.stopPropagation(); window.goToCase('${c.id}')">عرض</button>ｓ
+                   <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span></td>
+<td><button class="btn-sm" onclick="event.stopPropagation(); window.goToCase('${c.id}')">عرض</button></td>
                   </div>`;
             });
             html += '</tbody></div></div>';
@@ -571,8 +588,8 @@ function searchCourt() {
     <div style="overflow-x:auto;"><table style="width:100%"><thead>60q<th>رقم القضية</th><th>الدائرة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th> </thead><tbody>`;
     found.forEach(c => {
         html += `<tr onclick="window.goToCase('${c.id}')" style="cursor:pointer">
-            <td><strong>${c.caseNumber}</strong>ｓ
-            <td>${c.circuit || '--'}ｓ
+           <td><strong>${c.caseNumber}</strong></td>
+<td>${c.circuit || '--'}</td>
             <td>${c.clients ? c.clients.map(cl => cl.name).join(', ') : '--'}ｓ
             <td>${c.opponents ? c.opponents.map(op => op.name).join(', ') : '--'}ｓ
             <td>${c.subject || '--'}ｓ
