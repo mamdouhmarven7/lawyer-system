@@ -605,10 +605,10 @@ window.deleteDocument = async (docId) => {
 function renderClients() {
     const tbody = document.querySelector('#clientsTable tbody');
     if(!tbody) return;
-    if(clients.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="loading">لا يوجد موكلون</td></tr>';
-        return;
-    }
+   if(clients.length === 0) {
+    tbody.innerHTML = '}<td colspan="7" class="loading">لا يوجد موكلون</div>';
+    return;
+}
     tbody.innerHTML = clients.map(c => {
         const caseCount = cases.filter(cas => cas.clients && cas.clients.some(cl => cl.id === c.id)).length;
         return `
@@ -742,9 +742,9 @@ function renderCases() {
     const tbody = document.querySelector('#casesTable tbody');
     if(!tbody) return;
     if(cases.length === 0) {
-        tbody.innerHTML = '}<td colspan="8" class="loading">لا توجد قضايا</div>';
-        return;
-    }
+    tbody.innerHTML = '}<td colspan="8" class="loading">لا توجد قضايا</div>';
+    return;
+}
     
     tbody.innerHTML = cases.map(c => {
         const isExpanded = expandedCase === c.id;
@@ -955,6 +955,19 @@ function searchByCourt() {
 
 window.searchByClient = searchByClient;
 window.searchByCourt = searchByCourt;
+    // تأكيد تعريف جميع الدوال على النطاق العام
+window.showAddSession = showAddSession;
+window.editSession = editSession;
+window.deleteSession = deleteSession;
+window.showUploadDocument = showUploadDocument;
+window.editSubjectDetails = editSubjectDetails;
+window.toggleCaseDetails = toggleCaseDetails;
+window.editDelegation = editDelegation;
+window.editClient = editClient;
+window.deleteClient = deleteClient;
+window.editCase = editCase;
+window.deleteCase = deleteCase;
+window.goToCase = goToCase;
 
 let tempClients = [], tempOpponents = [];
 
