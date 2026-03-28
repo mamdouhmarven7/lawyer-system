@@ -223,8 +223,7 @@
             </div>
 
             <div id="dashboardTab" class="tab-content">
-                <div class="stats-grid" id="statsGrid">
-                    </div>
+                <div class="stats-grid" id="statsGrid"></div>
                 <div class="two-columns">
                     <div class="card"><h3>📅 الجلسات القادمة</h3><div id="upcomingSessions"></div></div>
                     <div class="card"><h3>📆 الجلسات السابقة</h3><div id="pastSessions"></div></div>
@@ -272,14 +271,14 @@
         apiKey: "AIzaSyB8EHWxJrl_rPnHJBVZiF-ihZacUiNVYJs",
         authDomain: "lawyer-system-2aefd.firebaseapp.com",
         projectId: "lawyer-system-2aefd",
-        storageBucket: "lawyer-system-2aefd.firebasestorage.app",
+        storageBucket: "lawyer-system-2aefd.appspot.com",
         messagingSenderId: "819922262043",
         appId: "1:819922262043:web:888e08dbf72895cd0bc0be"
     };
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -356,13 +355,4 @@
         const tbody = document.querySelector('#casesTable tbody');
         tbody.innerHTML = list.map(c => `
             <tr>
-                <td>${c.caseNumber}</td><td>${c.court || '--'}</td><td>${c.clientName || 'غير محدد'}</td>
-                <td><span class="status-badge status-mutadawla">${c.caseStatus || 'متداولة'}</span></td>
-                <td><button class="btn-outline">تفاصيل</button></td>
-            </tr>
-        `).join('');
-    }
-</script>
-
-</body>
-</html>
+                <td>${c.caseNumber}</td><td>${c.court || '--'}</td><td>${c.clientName
