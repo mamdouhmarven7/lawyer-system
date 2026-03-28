@@ -8,54 +8,260 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; position: relative; }
-        body::before { content: "\f0e3"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 35vw; color: rgba(203, 213, 225, 0.15); pointer-events: none; z-index: 0; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            overflow-x: hidden;
+            position: relative;
+        }
+        body::before {
+            content: "\f0e3";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 35vw;
+            color: rgba(203, 213, 225, 0.15);
+            pointer-events: none;
+            z-index: 0;
+        }
         .app-container { display: flex; min-height: 100vh; position: relative; z-index: 1; }
-        .login-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 100; }
-        .login-card { background: white; padding: 40px; border-radius: 32px; width: 90%; max-width: 400px; text-align: center; }
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+        }
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 32px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
         .login-card h2 { color: #0f172a; margin-bottom: 10px; }
         .login-card .subtitle { color: #64748b; margin-bottom: 30px; }
-        .login-card input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 24px; font-family: 'Cairo', sans-serif; }
-        .login-card button { width: 100%; padding: 12px; background: #facc15; border: none; border-radius: 24px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .login-card input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 24px;
+            font-family: 'Cairo', sans-serif;
+        }
+        .login-card button {
+            width: 100%;
+            padding: 12px;
+            background: #facc15;
+            border: none;
+            border-radius: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
         .login-card .error { color: #ef4444; margin-top: 15px; }
-        .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; margin-right: 10px; }
-        .sidebar { width: 280px; background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); color: #e2e8f0; position: fixed; right: 0; top: 0; bottom: 0; z-index: 40; overflow-y: auto; box-shadow: -4px 0 10px rgba(0,0,0,0.1); }
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 40;
+            overflow-y: auto;
+            box-shadow: -4px 0 10px rgba(0,0,0,0.1);
+        }
         .sidebar-header { padding: 24px 20px; border-bottom: 1px solid #334155; text-align: center; }
         .sidebar-header h2 { font-size: 1.3rem; font-weight: 700; color: #facc15; margin-bottom: 8px; }
         .lawyer-name { font-size: 0.9rem; color: #cbd5e1; }
         .lawyer-name-small { font-size: 0.85rem; color: #94a3b8; margin-top: 3px; }
         .consultant-text { font-size: 0.8rem; color: #94a3b8; margin-top: 8px; padding-top: 5px; border-top: 1px solid #334155; }
         .nav-menu { padding: 20px 0; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 14px 24px; margin: 4px 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-weight: 500; }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 24px;
+            margin: 4px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+        }
         .nav-item i { width: 24px; font-size: 1.2rem; }
         .nav-item:hover { background-color: #334155; color: white; }
         .nav-item.active { background-color: #facc15; color: #0f172a; }
-        .main-content { flex: 1; margin-right: 280px; padding: 24px; min-height: 100vh; background: rgba(248, 250, 252, 0.85); position: relative; z-index: 2; }
-        .top-bar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 12px 24px; border-radius: 24px; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
+        .main-content {
+            flex: 1;
+            margin-right: 280px;
+            padding: 24px;
+            min-height: 100vh;
+            background: rgba(248, 250, 252, 0.85);
+            position: relative;
+            z-index: 2;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
         .page-title { font-size: 1.6rem; font-weight: 700; color: #0f172a; }
         .notif-badge { position: relative; cursor: pointer; }
-        .badge-count { position: absolute; top: -8px; left: -8px; background: #ef4444; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; display: flex; align-items: center; justify-content: center; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: white; padding: 20px; border-radius: 24px; border-right: 6px solid #facc15; }
+        .badge-count {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 24px;
+            border-right: 6px solid #facc15;
+        }
         .stat-card h3 { font-size: 1rem; color: #475569; margin-bottom: 8px; }
         .stat-number { font-size: 2.2rem; font-weight: 800; color: #0f172a; }
-        .card { background: white; border-radius: 24px; padding: 20px; margin-bottom: 24px; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-        .btn { background-color: #facc15; color: #0f172a; border: none; padding: 8px 16px; border-radius: 40px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: 'Cairo', sans-serif; }
-        .btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #334155; }
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .btn {
+            background-color: #facc15;
+            color: #0f172a;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Cairo', sans-serif;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+        }
         .btn-sm { padding: 4px 12px; font-size: 0.8rem; }
         table { width: 100%; border-collapse: collapse; }
         th, td { text-align: right; padding: 12px 8px; border-bottom: 1px solid #e2e8f0; }
         th { font-weight: 700; color: #475569; }
-        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0 16px; border: 1px solid #cbd5e1; border-radius: 16px; font-family: 'Cairo', sans-serif; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 20px; }
-        .modal-container { background: white; border-radius: 28px; width: 90%; max-width: 650px; max-height: 90vh; overflow-y: auto; padding: 25px; text-align: right; }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 16px;
+            font-family: 'Cairo', sans-serif;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+        .modal-container {
+            background: white;
+            border-radius: 28px;
+            width: 90%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 25px;
+            text-align: right;
+        }
         .modal-container h3 { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #facc15; }
-        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0; }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
         .modal-buttons button { flex: 1; padding: 12px; border-radius: 40px; font-weight: bold; cursor: pointer; border: none; }
-        .party-item { background: #f8fafc; padding: 15px; border-radius: 16px; margin-bottom: 15px; border-right: 3px solid #facc15; display: flex; justify-content: space-between; align-items: center; }
-        .remove-party { background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 20px; cursor: pointer; }
-        @media (max-width: 768px) { .sidebar { transform: translateX(100%); position: fixed; } .sidebar.open { transform: translateX(0); } .main-content { margin-right: 0; } .menu-toggle { display: block; } }
+        .party-item {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            border-right: 3px solid #facc15;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .remove-party {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(100%); position: fixed; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-right: 0; }
+            .menu-toggle { display: block; }
+        }
         .menu-toggle { display: none; background: #0f172a; color: white; border: none; font-size: 1.5rem; cursor: pointer; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
         .flex-start { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
@@ -63,14 +269,27 @@
         .case-row:hover { background: #f1f5f9; }
         .expanded-row td { padding: 0; }
         .expanded-content { padding: 20px; background: #f8fafc; }
-        .session-item, .doc-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-radius: 12px; margin-bottom: 8px; }
+        .session-item, .doc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
         .session-item { background: #fef9c3; border-right: 4px solid #facc15; }
         .doc-item { background: #f1f5f9; }
         .action-buttons { display: flex; gap: 5px; flex-wrap: wrap; }
         .sessions-section, .subject-section { margin-top: 20px; border-top: 2px solid #e2e8f0; padding-top: 20px; }
         .badge { background: #facc15; color: #0f172a; padding: 2px 8px; border-radius: 20px; font-size: 12px; }
         .badge-warning { background: #ef4444; color: white; }
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
         .status-mutadawla { background: #facc15; color: #0f172a; }
         .status-hukm { background: #22c55e; color: white; }
         .status-mostanfa { background: #f97316; color: white; }
@@ -80,12 +299,24 @@
         .delegation-details { background: #fef9c3; padding: 10px; border-radius: 12px; margin-top: 8px; font-size: 12px; }
         .loading { text-align: center; padding: 40px; color: #64748b; }
         .search-results { margin-top: 20px; }
-        .client-cases-card { background: #f8fafc; border-radius: 20px; padding: 20px; margin-bottom: 25px; border-right: 4px solid #facc15; }
+        .client-cases-card {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-right: 4px solid #facc15;
+        }
         .case-clickable { cursor: pointer; }
         .case-clickable:hover { background: #fef9c3; }
         .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 768px) { .two-columns { grid-template-columns: 1fr; } }
-        .session-card { background: white; border-radius: 16px; padding: 12px; margin-bottom: 10px; border-right: 3px solid; }
+        .session-card {
+            background: white;
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-right: 3px solid;
+        }
         .session-past { border-right-color: #64748b; background: #f1f5f9; }
         .session-upcoming { border-right-color: #facc15; background: #fef9c3; }
         .search-section { margin-bottom: 20px; }
@@ -141,13 +372,13 @@
             <div id="clientsTab" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="card-header"><h3>قائمة الموكلين</h3><button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> إضافة موكل</button></div>
-                    <div style="overflow-x:auto;"><table id="clientsTable"><thead><tr><th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>بيانات التوكيل</th><th>عدد القضايا</th><th>الإجراءات</th></tr></thead><tbody><tr><td colspan="7" class="loading">جاري التحميل...</td></tr></tbody></table></div>
+                    <div style="overflow-x:auto;"><table id="clientsTable"><thead>60q<th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>بيانات التوكيل</th><th>عدد القضايا</th><th>الإجراءات</th> </thead><tbody><td colspan="7" class="loading">جاري التحميل... </tbody> </div>
                 </div>
             </div>
             <div id="casesTab" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="card-header"><h3>القضايا</h3><button class="btn" id="addCaseBtn"><i class="fas fa-plus"></i> قضية جديدة</button></div>
-                    <div style="overflow-x:auto;"><table id="casesTable"><thead><tr><th style="width:30px"></th><th>رقم القضية</th><th>المحكمة/الدائرة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody><tr><td colspan="8" class="loading">جاري التحميل...</td></tr></tbody></table></div>
+                    <div style="overflow-x:auto;"><table id="casesTable"><thead>60q<th style="width:30px"></th><th>رقم القضية</th><th>المحكمة/الدائرة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th>الإجراءات</th> </thead><tbody><td colspan="8" class="loading">جاري التحميل... </tbody> </div>
                 </div>
             </div>
             <div id="searchTab" class="tab-content" style="display:none;">
@@ -371,7 +602,7 @@ function renderClients() {
     const tbody = document.querySelector('#clientsTable tbody');
     if(!tbody) return;
     if(clients.length === 0) {
-        tbody.innerHTML = '}<td colspan="7" class="loading">لا يوجد موكلون</div>';
+        tbody.innerHTML = '<tr><td colspan="7" class="loading">لا يوجد موكلون</td></tr>';
         return;
     }
     tbody.innerHTML = clients.map(c => {
@@ -384,12 +615,12 @@ function renderClients() {
                 <td>${c.idNumber || '--'}</td>
                 <td>
                     ${c.delegationNumber ? '<div class="delegation-details">رقم التوكيل: ' + c.delegationNumber + '<br>التاريخ: ' + (c.delegationDate || '--') + '<br>جهة التوثيق: ' + (c.delegationAuthority || '--') + '</div>' : 'لا يوجد'}
-                    <button class="btn-outline btn-sm" onclick="editDelegation(\'' + c.id + '\')" style="margin-top:5px;"><i class="fas fa-file-signature"></i> تعديل التوكيل</button>
+                    <button class="btn-outline btn-sm" onclick="window.editDelegation(\'' + c.id + '\')" style="margin-top:5px;"><i class="fas fa-file-signature"></i> تعديل التوكيل</button>
                 </td>
                 <td>${caseCount}</td>
                 <td class="action-buttons">
-                    <button class="btn-outline btn-sm" onclick="editClient('${c.id}')" style="background:#facc15;"><i class="fas fa-edit"></i> تعديل</button>
-                    <button class="btn-outline btn-sm" onclick="deleteClient('${c.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i> حذف</button>
+                    <button class="btn-outline btn-sm" onclick="window.editClient('${c.id}')" style="background:#facc15;"><i class="fas fa-edit"></i> تعديل</button>
+                    <button class="btn-outline btn-sm" onclick="window.deleteClient('${c.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i> حذف</button>
                 </td>
             </tr>
         `;
@@ -445,7 +676,7 @@ function renderDashboard() {
     } else {
         upcomingSessions.slice(0,10).forEach(s => {
             upcomingHtml += `
-                <div class="session-card session-upcoming" onclick="goToCase('${s.caseId}')" style="cursor:pointer;">
+                <div class="session-card session-upcoming" onclick="window.goToCase('${s.caseId}')" style="cursor:pointer;">
                     <div><strong>⚖️ ${s.caseNumber}</strong> - ${s.clientNames}</div>
                     <div class="flex-between" style="margin-top:8px;">
                         <span><i class="fas fa-calendar-alt"></i> ${new Date(s.date).toLocaleDateString('ar-EG')}</span>
@@ -465,7 +696,7 @@ function renderDashboard() {
     } else {
         pastSessions.slice(0,10).forEach(s => {
             pastHtml += `
-                <div class="session-card session-past" onclick="goToCase('${s.caseId}')" style="cursor:pointer;">
+                <div class="session-card session-past" onclick="window.goToCase('${s.caseId}')" style="cursor:pointer;">
                     <div><strong>⚖️ ${s.caseNumber}</strong> - ${s.clientNames}</div>
                     <div class="flex-between" style="margin-top:8px;">
                         <span><i class="fas fa-calendar-alt"></i> ${new Date(s.date).toLocaleDateString('ar-EG')}</span>
@@ -523,7 +754,7 @@ function renderCases() {
         if(c.opponents) opponentsHtml = c.opponents.map(op => op.name + (op.title ? ' (' + op.title + ')' : '')).join('<br>');
         
         let row = `
-            <tr class="case-row" data-case-id="${c.id}" onclick="toggleCaseDetails('${c.id}')">
+            <tr class="case-row" data-case-id="${c.id}" onclick="window.toggleCaseDetails('${c.id}')">
                  <i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i> 
                  <strong>${c.caseNumber}</strong> 
                  ${c.court || '--'}${c.circuit ? ' - ' + c.circuit : ''} 
@@ -532,8 +763,8 @@ function renderCases() {
                  ${c.subject || '--'}${lastSession ? '<div><span class="last-session-badge">📅 آخر جلسة: ' + lastSession + '</span></div>' : ''} 
                  <span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> 
                 <td class="action-buttons">
-                    <button class="btn-outline btn-sm" onclick="event.stopPropagation(); editCase('${c.id}')" style="background:#facc15;"><i class="fas fa-edit"></i></button>
-                    <button class="btn-outline btn-sm" onclick="event.stopPropagation(); deleteCase('${c.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i></button>
+                    <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.editCase('${c.id}')" style="background:#facc15;"><i class="fas fa-edit"></i></button>
+                    <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.deleteCase('${c.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i></button>
                  </div>
               </div>
         `;
@@ -544,14 +775,14 @@ function renderCases() {
                     <div class="subject-section">
                         <div class="flex-between">
                             <h4><i class="fas fa-align-right"></i> الموضوع</h4>
-                            <button class="btn btn-sm" onclick="event.stopPropagation(); editSubjectDetails('${c.id}')"><i class="fas fa-edit"></i> تعديل التفاصيل</button>
+                            <button class="btn btn-sm" onclick="event.stopPropagation(); window.editSubjectDetails('${c.id}')"><i class="fas fa-edit"></i> تعديل التفاصيل</button>
                         </div>
                         <div class="subject-content">${c.subjectDetails ? c.subjectDetails.replace(/\n/g, '<br>') : 'لا توجد تفاصيل'}</div>
                     </div>
                     <div class="sessions-section">
                         <div class="flex-between">
                             <h4><i class="fas fa-calendar-alt"></i> جدول الجلسات</h4>
-                            <button class="btn btn-sm" onclick="event.stopPropagation(); showAddSession('${c.id}')"><i class="fas fa-plus"></i> إضافة جلسة</button>
+                            <button class="btn btn-sm" onclick="event.stopPropagation(); window.showAddSession('${c.id}')"><i class="fas fa-plus"></i> إضافة جلسة</button>
                         </div>
                         <div id="sessions-list-${c.id}">
             `;
@@ -575,8 +806,8 @@ function renderCases() {
                                 ${diffDays===0 ? '<span class="badge badge-warning">🚨 اليوم</span>' : ''}
                             </div>
                             <div class="flex-start">
-                                <button class="btn-outline btn-sm" onclick="event.stopPropagation(); editSession('${c.id}', ${s.id})"><i class="fas fa-edit"></i></button>
-                                <button class="btn-outline btn-sm" onclick="event.stopPropagation(); deleteSession('${c.id}', ${s.id})" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i></button>
+                                <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.editSession('${c.id}', ${s.id})"><i class="fas fa-edit"></i></button>
+                                <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.deleteSession('${c.id}', ${s.id})" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                     `;
@@ -588,7 +819,7 @@ function renderCases() {
                 <div style="margin-top:20px; border-top:2px solid #e2e8f0; padding-top:20px;">
                     <div class="flex-between">
                         <h4><i class="fas fa-file-alt"></i> المستندات</h4>
-                        <button class="btn btn-sm" onclick="event.stopPropagation(); showUploadDocument('${c.id}')"><i class="fas fa-upload"></i> رفع مستند</button>
+                        <button class="btn btn-sm" onclick="event.stopPropagation(); window.showUploadDocument('${c.id}')"><i class="fas fa-upload"></i> رفع مستند</button>
                     </div>
                     <div id="docs-list-${c.id}">
             `;
@@ -607,7 +838,7 @@ function renderCases() {
                             </div>
                             <div class="flex-start">
                                 <a href="${doc.fileData}" download="${doc.name}" class="btn-outline btn-sm" onclick="event.stopPropagation()">📥 تحميل</a>
-                                <button class="btn-outline btn-sm" onclick="event.stopPropagation(); deleteDocument('${doc.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i></button>
+                                <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.deleteDocument('${doc.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                     `;
@@ -656,22 +887,22 @@ function searchByClient() {
                 <th style="padding:12px;">رقم القضية</th><th style="padding:12px;">المحكمة</th><th style="padding:12px;">الخصوم</th>
                 <th style="padding:12px;">الموضوع</th><th style="padding:12px;">الحالة</th><th style="padding:12px;">آخر جلسة</th>
                 <th style="padding:12px;"></th>
-               </tr></thead><tbody>`;
+                </thead><tbody>`;
             
             clientCases.forEach(c => {
                 const lastSession = c.sessions && c.sessions.length ? new Date([...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date))[0].date).toLocaleDateString('ar-EG') : 'لا توجد';
                 const statusClass = getStatusClass(c.caseStatus);
-                html += `<tr class="case-clickable" onclick="goToCase('${c.id}')" style="cursor:pointer;">
-                    <td style="padding:12px;"><strong>${c.caseNumber}</strong> </td>
-                    <td style="padding:12px;">${c.court || '--'}${c.circuit ? ' - ' + c.circuit : ''} </td>
-                    <td style="padding:12px;">${c.opponents ? c.opponents.map(o => o.name).join(', ') : '--'} </td>
-                    <td style="padding:12px;">${c.subject || '--'} </td>
-                    <td style="padding:12px;"><span class="status-badge ${statusClass}">${c.caseStatus || 'متداولة'}</span> </td>
-                    <td style="padding:12px;">${lastSession} </td>
-                    <td style="padding:12px;"><button class="btn-outline btn-sm" onclick="event.stopPropagation(); goToCase('${c.id}')"><i class="fas fa-arrow-left"></i> عرض</button> </td>
-                 </tr>`;
+                html += `<tr class="case-clickable" onclick="window.goToCase('${c.id}')" style="cursor:pointer;">
+                    <td style="padding:12px;"><strong>${c.caseNumber}</strong> </div>
+                    <td style="padding:12px;">${c.court || '--'}${c.circuit ? ' - ' + c.circuit : ''} </div>
+                    <td style="padding:12px;">${c.opponents ? c.opponents.map(o => o.name).join(', ') : '--'} </div>
+                    <td style="padding:12px;">${c.subject || '--'} </div>
+                    <td style="padding:12px;"><span class="status-badge ${statusClass}">${c.caseStatus || 'متداولة'}</span> </div>
+                    <td style="padding:12px;">${lastSession} </div>
+                    <td style="padding:12px;"><button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.goToCase('${c.id}')"><i class="fas fa-arrow-left"></i> عرض</button> </div>
+                  </div>`;
             });
-            html += `</tbody></div></div>`;
+            html += `</tbody> </div></div>`;
         }
         html += `</div>`;
     });
@@ -698,23 +929,23 @@ function searchByCourt() {
                 <th style="padding:12px;">رقم القضية</th><th style="padding:12px;">الدائرة</th><th style="padding:12px;">الموكلون</th>
                 <th style="padding:12px;">الخصوم</th><th style="padding:12px;">الموضوع</th><th style="padding:12px;">الحالة</th>
                 <th style="padding:12px;"></th>
-               </tr></thead><tbody>`;
+                </thead><tbody>`;
     
     foundCases.forEach(c => {
         const clientNames = c.clients ? c.clients.map(cl => cl.name).join(', ') : '--';
         const opponentNames = c.opponents ? c.opponents.map(op => op.name).join(', ') : '--';
         const statusClass = getStatusClass(c.caseStatus);
-        html += `<tr class="case-clickable" onclick="goToCase('${c.id}')" style="cursor:pointer;">
-            <td style="padding:12px;"><strong>${c.caseNumber}</strong> </td>
-            <td style="padding:12px;">${c.circuit || '--'} </td>
-            <td style="padding:12px;">${clientNames} </td>
-            <td style="padding:12px;">${opponentNames} </td>
-            <td style="padding:12px;">${c.subject || '--'} </td>
-            <td style="padding:12px;"><span class="status-badge ${statusClass}">${c.caseStatus || 'متداولة'}</span> </td>
-            <td style="padding:12px;"><button class="btn-outline btn-sm" onclick="event.stopPropagation(); goToCase('${c.id}')"><i class="fas fa-arrow-left"></i> عرض</button> </td>
-         </tr>`;
+        html += `<tr class="case-clickable" onclick="window.goToCase('${c.id}')" style="cursor:pointer;">
+            <td style="padding:12px;"><strong>${c.caseNumber}</strong> </div>
+            <td style="padding:12px;">${c.circuit || '--'} </div>
+            <td style="padding:12px;">${clientNames} </div>
+            <td style="padding:12px;">${opponentNames} </div>
+            <td style="padding:12px;">${c.subject || '--'} </div>
+            <td style="padding:12px;"><span class="status-badge ${statusClass}">${c.caseStatus || 'متداولة'}</span> </div>
+            <td style="padding:12px;"><button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.goToCase('${c.id}')"><i class="fas fa-arrow-left"></i> عرض</button> </div>
+          </div>`;
     });
-    html += `</tbody></div></div>`;
+    html += `</tbody> </div></div>`;
     resultsDiv.innerHTML = html;
 }
 
