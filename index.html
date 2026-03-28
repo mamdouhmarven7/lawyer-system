@@ -106,16 +106,10 @@
             </div>
             <div id="dashboardTab" class="tab-content">
                 <div class="stats-grid" id="statsGrid"></div>
-                <div class="two-columns">
-                    <div class="card">
-                        <h3>📅 الجلسات القادمة</h3>
-                        <div id="upcomingSessions"></div>
-                    </div>
-                    <div class="card">
-                        <h3>📆 الجلسات السابقة (المفتوحة)</h3>
-                        <div id="pastSessions"></div>
-                    </div>
-                </div>
+            <div class="card">
+    <h3>📅 الجلسات القادمة</h3>
+    <div id="upcomingSessions"></div>
+</div>
             </div>
             <div id="clientsTab" class="tab-content" style="display:none;">
                 <div class="card">
@@ -392,34 +386,29 @@ function renderDashboard() {
     today.setHours(0, 0, 0, 0);
     
     let upcomingSessions = [];
-    let pastSessions = [];
     
     casesList.forEach(c => {
-        const isOpenCase = (c.caseStatus !== 'حكم نهائي' && c.caseStatus !== 'نقض');
-        
         if(c.sessions) {
             c.sessions.forEach(s => {
                 const sessionDate = new Date(s.date);
                 sessionDate.setHours(0, 0, 0, 0);
-                const sessionInfo = {
-                    caseNumber: c.caseNumber,
-                    caseId: c.id,
-                    clientNames: c.clients ? c.clients.map(cl => cl.name).join(', ') : 'غير معروف',
-                    date: s.date,
-                    notes: s.notes
-                };
                 
                 if(sessionDate >= today) {
-                    upcomingSessions.push(sessionInfo);
-                } else if(isOpenCase) {
-                    pastSessions.push(sessionInfo);
+                    upcomingSessions.push({
+                        caseNumber: c.caseNumber,
+                        caseId: c.id,
+                        clientNames: c.clients ? c.clients.map(cl => cl.name).join(', ') : 'غير معروف',
+                        subject: c.subject || 'لا يوجد موضوع',
+                        date: s.date,
+                        notes: s.notes,
+                        lastSession: c.sessions.length > 0 ? new Date([...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date))[0].date).toLocaleDateString('ar-EG') : 'لا توجد'
+                    });
                 }
             });
         }
     });
     
     upcomingSessions.sort((a, b) => new Date(a.date) - new Date(b.date));
-    pastSessions.sort((a, b) => new Date(b.date) - new Date(a.date));
     
     let upcomingHtml = '<div style="display:flex; flex-direction:column; gap:10px;">';
     if(upcomingSessions.length === 0) {
@@ -429,60 +418,22 @@ function renderDashboard() {
             upcomingHtml += `
                 <div class="session-card" onclick="window.goToCase('${s.caseId}')" style="background:#fef9c3; padding:12px; border-radius:16px; border-right:4px solid #facc15;">
                     <div><strong>⚖️ ${s.caseNumber}</strong> - ${s.clientNames}</div>
+                    <div style="margin-top:5px; font-size:14px; color:#475569;"><i class="fas fa-tag"></i> الموضوع: ${s.subject}</div>
                     <div style="margin-top:8px;">
-                        <span><i class="fas fa-calendar-alt"></i> ${new Date(s.date).toLocaleDateString('ar-EG')}</span>
+                        <span><i class="fas fa-calendar-alt"></i> الجلسة القادمة: ${new Date(s.date).toLocaleDateString('ar-EG')}</span>
                         <span class="badge" style="margin-right:8px;">جلسة قادمة</span>
                     </div>
-                    ${s.notes ? '<div style="font-size:12px; margin-top:5px;">📝 ' + s.notes + '</div>' : ''}
+                    <div style="margin-top:5px; font-size:12px; color:#64748b;">
+                        <i class="fas fa-history"></i> آخر جلسة: ${s.lastSession}
+                    </div>
+                    ${s.notes ? '<div style="font-size:12px; margin-top:5px; color:#f97316;"><i class="fas fa-pen"></i> ملاحظات: ' + s.notes + '</div>' : ''}
                 </div>
             `;
         });
     }
     upcomingHtml += '</div>';
     document.getElementById('upcomingSessions').innerHTML = upcomingHtml;
-    
-    let pastHtml = '<div style="display:flex; flex-direction:column; gap:10px;">';
-    if(pastSessions.length === 0) {
-        pastHtml = '<p>لا توجد جلسات سابقة للقضايا المفتوحة</p>';
-    } else {
-        pastSessions.forEach(s => {
-            pastHtml += `
-                <div class="session-card" onclick="window.goToCase('${s.caseId}')" style="background:#f1f5f9; padding:12px; border-radius:16px; border-right:4px solid #64748b;">
-                    <div><strong>⚖️ ${s.caseNumber}</strong> - ${s.clientNames}</div>
-                    <div style="margin-top:8px;">
-                        <span><i class="fas fa-calendar-alt"></i> ${new Date(s.date).toLocaleDateString('ar-EG')}</span>
-                        <span class="badge" style="background:#64748b; color:white; margin-right:8px;">جلسة سابقة</span>
-                    </div>
-                    ${s.notes ? '<div style="font-size:12px; margin-top:5px;">📝 ' + s.notes + '</div>' : ''}
-                </div>
-            `;
-        });
-    }
-    pastHtml += '</div>';
-    document.getElementById('pastSessions').innerHTML = pastHtml;
 }
-
-window.goToCase = (caseId) => {
-    const casesTab = document.querySelector('.nav-item[data-tab="cases"]');
-    if(casesTab) casesTab.click();
-    
-    setTimeout(() => {
-        expandedCase = caseId;
-        renderCases();
-        
-        setTimeout(() => {
-            const caseRow = document.querySelector(`.case-row[data-id="${caseId}"]`);
-            if(caseRow) {
-                caseRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                caseRow.style.backgroundColor = '#fef9c3';
-                caseRow.style.transition = 'background-color 0.3s';
-                setTimeout(() => {
-                    caseRow.style.backgroundColor = '';
-                }, 2000);
-            }
-        }, 300);
-    }, 300);
-};
 
 function renderCases() {
     const tbody = document.querySelector('#casesTable tbody');
