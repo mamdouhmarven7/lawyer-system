@@ -455,7 +455,56 @@ function renderDashboard() {
     upcomingHtml += '</div>';
     document.getElementById('upcomingSessions').innerHTML = upcomingHtml;
 }
-
+// دالة الانتقال إلى القضية
+window.goToCase = (caseId) => {
+    console.log("الانتقال إلى القضية:", caseId);
+    
+    // التبديل إلى تبويب القضايا
+    const casesTab = document.querySelector('.nav-item[data-tab="cases"]');
+    if(casesTab) casesTab.click();
+    
+    // انتظار قليلاً حتى يتم تحميل تبويب القضايا
+    setTimeout(() => {
+        expandedCase = caseId;
+        renderCases();
+        
+        // البحث عن صف القضية
+        setTimeout(() => {
+            const caseRow = document.querySelector(`.case-row[data-id="${caseId}"]`);
+            if(caseRow) {
+                // التمرير السلس إلى موقع القضية
+                caseRow.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center',
+                    inline: 'nearest'
+                });
+                
+                // تمييز القضية بلون مؤقت
+                caseRow.style.backgroundColor = '#fef9c3';
+                caseRow.style.transition = 'background-color 0.3s';
+                setTimeout(() => {
+                    caseRow.style.backgroundColor = '';
+                }, 2000);
+            } else {
+                // إذا لم يتم العثور على القضية، حاول مرة أخرى
+                setTimeout(() => {
+                    const retryRow = document.querySelector(`.case-row[data-id="${caseId}"]`);
+                    if(retryRow) {
+                        retryRow.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center',
+                            inline: 'nearest'
+                        });
+                        retryRow.style.backgroundColor = '#fef9c3';
+                        setTimeout(() => {
+                            retryRow.style.backgroundColor = '';
+                        }, 2000);
+                    }
+                }, 500);
+            }
+        }, 300);
+    }, 300);
+};
 function renderCases() {
     const tbody = document.querySelector('#casesTable tbody');
     if(!tbody) return;
