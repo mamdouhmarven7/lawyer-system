@@ -568,8 +568,8 @@ function searchClient() {
                     <td style="padding:12px;">${c.opponents ? c.opponents.map(o => o.name).join(', ') : '--'}</td>
                     <td style="padding:12px;">${c.subject || '--'}</td>
                     <td style="padding:12px;">${lastSessionDate}</td>
-                    <td style="padding:12px;"><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span>}?
-                    }<button class="btn-sm" onclick="event.stopPropagation(); window.goToCase('${c.id}')">عرض</button>}?
+                    <td style="padding:12px;"><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span>
+                    }<button class="btn-sm" onclick="event.stopPropagation(); window.goToCase('${c.id}')">عرض</button>
                    </div>`;
             });
             html += '</tbody></div></div>';
