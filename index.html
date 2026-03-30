@@ -588,20 +588,19 @@ function searchCourt() {
             lastSessionDate = new Date(sortedSessions[0].date).toLocaleDateString('ar-EG');
         }
         html += `<tr onclick="window.goToCase('${c.id}')" style="cursor:pointer">
-             <strong>${c.caseNumber}</strong> 
-             ${c.circuit || '--'} 
-             ${c.clients ? c.clients.map(cl => cl.name).join(', ') : '--'} 
-             ${c.opponents ? c.opponents.map(op => op.name).join(', ') : '--'} 
-             ${c.subject || '--'} 
-             ${lastSessionDate} 
-             <span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> 
-             <button class="btn-sm" onclick="event.stopPropagation(); window.goToCase('${c.id}')">عرض</button> 
-          </div>`;
+            <td style="padding:12px;"><strong>${c.caseNumber}</strong> </div>
+            <td style="padding:12px;">${c.circuit || '--'} </div>
+            <td style="padding:12px;">${c.clients ? c.clients.map(cl => cl.name).join(', ') : '--'} </div>
+            <td style="padding:12px;">${c.opponents ? c.opponents.map(op => op.name).join(', ') : '--'} </div>
+            <td style="padding:12px;">${c.subject || '--'} </div>
+            <td style="padding:12px;">${lastSessionDate} </div>
+            <td style="padding:12px;"><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> </div>
+            <td style="padding:12px;"><button class="btn-sm" onclick="event.stopPropagation(); window.goToCase('${c.id}')">عرض</button> </div>
+         </div>`;
     });
     html += '</tbody></div></div>';
     div.innerHTML = html;
 }
-
 window.searchClient = searchClient;
 window.searchCourt = searchCourt;
 
