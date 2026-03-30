@@ -549,30 +549,32 @@ function searchClient() {
                 <div>${client.phone ? '📞 ' + client.phone : ''} ${client.delegationNumber ? '📜 توكيل: ' + client.delegationNumber : ''}</div>
             </div>
             <h4>قضايا الموكل (${clientCases.length})</h4>`;
-        if(clientCases.length === 0) html += '<p>لا توجد قضايا</p>';
-        else {
-            html += '<div style="overflow-x:auto;"><table style="width:100%"><thead><tr style="background:#f1f5f9;"><th>رقم القضية</th><th>المحكمة</th><th>الخصوم</th><th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th></tr></thead><tbody>';
+        if(clientCases.length === 0) {
+            html += '<p>لا توجد قضايا</p>';
+        } else {
+            html += '<div style="overflow-x:auto;"><table style="width:100%"><thead><tr style="background:#f1f5f9;"><th>رقم القضية</th><th>المحكمة</th><th>الخصوم</th><th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th> </thead><tbody>';
             clientCases.forEach(c => {
                 let lastSessionDate = 'لا توجد';
                 if(c.sessions && c.sessions.length > 0) {
                     const sortedSessions = [...c.sessions].sort((a, b) => new Date(b.date) - new Date(a.date));
                     lastSessionDate = new Date(sortedSessions[0].date).toLocaleDateString('ar-EG');
-             html += `<tr onclick="window.goToCase('${c.id}')" style="cursor:pointer">
-    <td style="padding:12px;"><strong>${c.caseNumber}</strong> </div>
-    <td style="padding:12px;">${c.court || '--'} </div>
-    <td style="padding:12px;">${c.opponents ? c.opponents.map(o => o.name).join(', ') : '--'} </div>
-    <td style="padding:12px;">${c.subject || '--'} </div>
-    <td style="padding:12px;">${lastSessionDate} </div>
-    <td style="padding:12px;"><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> </div>
-    <td style="padding:12px;"><button class="btn-sm" onclick="event.stopPropagation(); window.goToCase('${c.id}')">عرض</button> </div>
-  </div>`;
+                }
+                html += `<tr onclick="window.goToCase('${c.id}')" style="cursor:pointer">
+                    <td style="padding:12px;"><strong>${c.caseNumber}</strong> </div>
+                    <td style="padding:12px;">${c.court || '--'} </div>
+                    <td style="padding:12px;">${c.opponents ? c.opponents.map(o => o.name).join(', ') : '--'} </div>
+                    <td style="padding:12px;">${c.subject || '--'} </div>
+                    <td style="padding:12px;">${lastSessionDate} </div>
+                    <td style="padding:12px;"><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> </div>
+                    <td style="padding:12px;"><button class="btn-sm" onclick="event.stopPropagation(); window.goToCase('${c.id}')">عرض</button> </div>
+                 </div>`;
+            });
             html += '</tbody></div></div>';
         }
         html += '</div>';
     });
     div.innerHTML = html;
 }
-
 function searchCourt() {
     const term = document.getElementById('searchCourtInput').value.trim().toLowerCase();
     const div = document.getElementById('searchResults');
@@ -601,6 +603,7 @@ function searchCourt() {
     html += '</tbody></div></div>';
     div.innerHTML = html;
 }
+
 window.searchClient = searchClient;
 window.searchCourt = searchCourt;
 
