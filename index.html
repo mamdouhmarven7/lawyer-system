@@ -58,8 +58,6 @@
         .search-type-buttons{display:flex;gap:10px;margin-bottom:15px;}
         .search-type-btn{padding:8px 20px;border-radius:40px;cursor:pointer;background:#e2e8f0;border:none;}
         .search-type-btn.active{background:#facc15;}
-        .two-columns{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-        @media(max-width:768px){.two-columns{grid-template-columns:1fr;}}
         .session-card{cursor:pointer;transition:transform 0.2s;}
         .session-card:hover{transform:translateX(-5px);}
         @media(max-width:768px){.sidebar{transform:translateX(100%);}.sidebar.open{transform:translateX(0);}.main-content{margin-right:0;}.menu-toggle{display:block;}}
@@ -106,10 +104,10 @@
             </div>
             <div id="dashboardTab" class="tab-content">
                 <div class="stats-grid" id="statsGrid"></div>
-            <div class="card">
-    <h3>📅 الجلسات القادمة</h3>
-    <div id="upcomingSessions"></div>
-</div>
+                <div class="card">
+                    <h3>📅 الجلسات القادمة</h3>
+                    <div id="upcomingSessions"></div>
+                </div>
             </div>
             <div id="clientsTab" class="tab-content" style="display:none;">
                 <div class="card">
@@ -127,7 +125,7 @@
                                     <th></th>
                                  </thead>
                             <tbody>
-                                 <td colspan="7" class="loading">جاري التحميل... </tbody>
+                                 <td colspan="7" class="loading">جاري التحميل...  </tbody>
                          </div>
                 </div>
             </div>
@@ -148,7 +146,7 @@
                                     <th></th>
                                  </thead>
                             <tbody>
-                                 <td colspan="8" class="loading">جاري التحميل... </tbody>
+                                 <td colspan="8" class="loading">جاري التحميل...  </tbody>
                          </div>
                 </div>
             </div>
@@ -220,10 +218,8 @@ async function loadCases() {
     const snap = await getDocs(query(collection(db, "cases"), orderBy("createdAt", "desc")));
     casesList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     
-    // حساب تاريخ آخر جلسة لكل قضية
     casesList.forEach(c => {
         if(c.sessions && c.sessions.length > 0) {
-            // ترتيب الجلسات تنازلياً (الأحدث أولاً) للحصول على آخر جلسة
             const sortedSessions = [...c.sessions].sort((a, b) => new Date(b.date) - new Date(a.date));
             c.lastSessionDate = sortedSessions[0].date;
         } else {
@@ -231,13 +227,11 @@ async function loadCases() {
         }
     });
     
-    // ترتيب القضايا حسب آخر جلسة (الأقدم في الأعلى)
     casesList.sort((a, b) => {
-        // القضايا بدون جلسات تذهب إلى الأسفل
         if(!a.lastSessionDate && !b.lastSessionDate) return 0;
         if(!a.lastSessionDate) return 1;
         if(!b.lastSessionDate) return -1;
-      return new Date(b.lastSessionDate) - new Date(a.lastSessionDate);
+        return new Date(a.lastSessionDate) - new Date(b.lastSessionDate);
     });
     
     renderCases();
@@ -357,21 +351,27 @@ function renderClients() {
     const tbody = document.querySelector('#clientsTable tbody');
     if(!tbody) return;
     if(clients.length === 0) {
-        tbody.innerHTML = '}<td colspan="7" class="loading">لا يوجد موكلون</div>';
+        tbody.innerHTML = '<tr><td colspan="7" class="loading">لا يوجد موكلون</td></tr>';
         return;
     }
     tbody.innerHTML = clients.map(c => {
         const caseCount = casesList.filter(cas => cas.clients?.some(cl => cl.id === c.id)).length;
         return `
-            32q
-                 <td>${c.name}${c.type === 'company' ? 'شركة' : 'فرد'}${c.phone || '--'}${c.idNumber || '--'}
-                  .(c.delegationNumber ? 'رقم التوكيل: ' + c.delegationNumber : 'لا يوجد')<br><button class="btn-outline btn-sm" onclick="window.editDelegation('${c.id}')"><i class="fas fa-file-signature"></i> تعديل التوكيل</button>
-                  .${caseCount}
+            <tr>
+                <td>${c.name}</td>
+                <td>${c.type === 'company' ? 'شركة' : 'فرد'}</td>
+                <td>${c.phone || '--'}</td>
+                <td>${c.idNumber || '--'}</td>
+                <td>
+                    ${c.delegationNumber ? 'رقم التوكيل: ' + c.delegationNumber : 'لا يوجد'}
+                    <br><button class="btn-outline btn-sm" onclick="window.editDelegation('${c.id}')"><i class="fas fa-file-signature"></i> تعديل التوكيل</button>
+                </td>
+                <td>${caseCount}</td>
                 <td class="action-buttons">
                     <button class="btn-outline btn-sm" onclick="window.editClient('${c.id}')" style="background:#facc15;"><i class="fas fa-edit"></i> تعديل</button>
                     <button class="btn-outline btn-sm" onclick="window.deleteClient('${c.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i> حذف</button>
-                  </div>
-             32q
+                </td>
+            </tr>
         `;
     }).join('');
 }
@@ -443,61 +443,36 @@ function renderDashboard() {
     upcomingHtml += '</div>';
     document.getElementById('upcomingSessions').innerHTML = upcomingHtml;
 }
-// دالة الانتقال إلى القضية
+
 window.goToCase = (caseId) => {
     console.log("الانتقال إلى القضية:", caseId);
     
-    // التبديل إلى تبويب القضايا
     const casesTab = document.querySelector('.nav-item[data-tab="cases"]');
     if(casesTab) casesTab.click();
     
-    // انتظار قليلاً حتى يتم تحميل تبويب القضايا
     setTimeout(() => {
         expandedCase = caseId;
         renderCases();
         
-        // البحث عن صف القضية
         setTimeout(() => {
             const caseRow = document.querySelector(`.case-row[data-id="${caseId}"]`);
             if(caseRow) {
-                // التمرير السلس إلى موقع القضية
-                caseRow.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'center',
-                    inline: 'nearest'
-                });
-                
-                // تمييز القضية بلون مؤقت
+                caseRow.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
                 caseRow.style.backgroundColor = '#fef9c3';
                 caseRow.style.transition = 'background-color 0.3s';
                 setTimeout(() => {
                     caseRow.style.backgroundColor = '';
                 }, 2000);
-            } else {
-                // إذا لم يتم العثور على القضية، حاول مرة أخرى
-                setTimeout(() => {
-                    const retryRow = document.querySelector(`.case-row[data-id="${caseId}"]`);
-                    if(retryRow) {
-                        retryRow.scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'center',
-                            inline: 'nearest'
-                        });
-                        retryRow.style.backgroundColor = '#fef9c3';
-                        setTimeout(() => {
-                            retryRow.style.backgroundColor = '';
-                        }, 2000);
-                    }
-                }, 500);
             }
         }, 300);
     }, 300);
 };
+
 function renderCases() {
     const tbody = document.querySelector('#casesTable tbody');
     if(!tbody) return;
     if(casesList.length === 0) {
-        tbody.innerHTML = '}<td colspan="8" class="loading">لا توجد قضايا</div>';
+        tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا</td></tr>';
         return;
     }
     
@@ -505,24 +480,24 @@ function renderCases() {
         const isExpanded = expandedCase === c.id;
         const sessions = c.sessions || [];
         const caseDocs = documents.filter(d => d.caseId === c.id);
-      const lastSession = sessions.length ? new Date([...sessions].sort((a,b) => new Date(b.date) - new Date(a.date))[0].date).toLocaleDateString('ar-EG') : null;
+        const lastSession = sessions.length ? new Date([...sessions].sort((a,b) => new Date(b.date) - new Date(a.date))[0].date).toLocaleDateString('ar-EG') : null;
         let clientsHtml = c.clients ? c.clients.map(cl => cl.name + (cl.title ? ' (' + cl.title + ')' : '')).join('<br>') : '--';
         let opponentsHtml = c.opponents ? c.opponents.map(op => op.name + (op.title ? ' (' + op.title + ')' : '')).join('<br>') : '--';
         
         let row = `
             <tr class="case-row" data-id="${c.id}" onclick="window.toggleCaseDetails('${c.id}')">
-                 <i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i> 
-                 <strong>${c.caseNumber}</strong> 
-                 ${c.court || '--'}${c.circuit ? ' - ' + c.circuit : ''} 
-                 ${clientsHtml} 
-                 ${opponentsHtml} 
-                 ${c.subject || '--'}${lastSession ? '<div><span class="badge">آخر جلسة: ' + lastSession + '</span></div>' : ''} 
-                 <span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> 
+                <td><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i></td>
+                <td><strong>${c.caseNumber}</strong></td>
+                <td>${c.court || '--'}${c.circuit ? ' - ' + c.circuit : ''}</td>
+                <td>${clientsHtml}</td>
+                <td>${opponentsHtml}</td>
+                <td>${c.subject || '--'}${lastSession ? '<div><span class="badge">آخر جلسة: ' + lastSession + '</span></div>' : ''}</td>
+                <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span></td>
                 <td class="action-buttons">
                     <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.editCase('${c.id}')" style="background:#facc15;"><i class="fas fa-edit"></i></button>
                     <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.deleteCase('${c.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i></button>
-                  </div>
-             32q
+                </td>
+            </tr>
         `;
         
         if(isExpanded) {
@@ -573,23 +548,22 @@ function searchClient() {
             <h4>قضايا الموكل (${clientCases.length})</h4>`;
         if(clientCases.length === 0) html += '<p>لا توجد قضايا</p>';
         else {
-            html += '<div style="overflow-x:auto;"><table style="width:100%"><thead>32q<th>رقم القضية</th><th>المحكمة</th><th>الخصوم</th><th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th> </thead><tbody>';
+            html += '<div style="overflow-x:auto;"><table style="width:100%"><thead><tr style="background:#f1f5f9;"><th>رقم القضية</th><th>المحكمة</th><th>الخصوم</th><th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th></tr></thead><tbody>';
             clientCases.forEach(c => {
-                // حساب آخر جلسة للقضية
                 let lastSessionDate = 'لا توجد';
                 if(c.sessions && c.sessions.length > 0) {
                     const sortedSessions = [...c.sessions].sort((a, b) => new Date(b.date) - new Date(a.date));
                     lastSessionDate = new Date(sortedSessions[0].date).toLocaleDateString('ar-EG');
                 }
                 html += `<tr onclick="window.goToCase('${c.id}')" style="cursor:pointer">
-                     <strong>${c.caseNumber}</strong> 
-                     ${c.court || '--'} 
-                     ${c.opponents ? c.opponents.map(o => o.name).join(', ') : '--'} 
-                     ${c.subject || '--'} 
-                     ${lastSessionDate} 
-                     <span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> 
-                     <button class="btn-sm" onclick="event.stopPropagation(); window.goToCase('${c.id}')">عرض</button> 
-                  </div>`;
+                    <td><strong>${c.caseNumber}</strong></td>
+                    <td>${c.court || '--'}</td>
+                    <td>${c.opponents ? c.opponents.map(o => o.name).join(', ') : '--'}</td>
+                    <td>${c.subject || '--'}</td>
+                    <td>${lastSessionDate}</td>
+                    <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span>}?
+                    }<button class="btn-sm" onclick="event.stopPropagation(); window.goToCase('${c.id}')">عرض</button>}?
+                  </tr>`;
             });
             html += '</tbody></div></div>';
         }
@@ -605,9 +579,8 @@ function searchCourt() {
     const found = casesList.filter(c => c.court && c.court.toLowerCase().includes(term));
     if(found.length === 0) { div.innerHTML = '<p class="loading">❌ لا توجد قضايا</p>'; return; }
     let html = `<div style="background:#f8fafc; border-radius:20px; padding:20px;"><div style="background:#facc15; padding:12px; border-radius:16px; margin-bottom:15px;"><h3>قضايا محكمة: ${term}</h3><div>عدد القضايا: ${found.length}</div></div>
-    <div style="overflow-x:auto;"><table style="width:100%"><thead>32q<th>رقم القضية</th><th>الدائرة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th> </thead><tbody>`;
+    <div style="overflow-x:auto;"><table style="width:100%"><thead><tr style="background:#f1f5f9;"><th>رقم القضية</th><th>الدائرة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th> </thead><tbody>`;
     found.forEach(c => {
-        // حساب آخر جلسة للقضية
         let lastSessionDate = 'لا توجد';
         if(c.sessions && c.sessions.length > 0) {
             const sortedSessions = [...c.sessions].sort((a, b) => new Date(b.date) - new Date(a.date));
