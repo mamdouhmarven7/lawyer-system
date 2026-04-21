@@ -21,7 +21,30 @@
         .nav-item{display:flex;align-items:center;gap:12px;padding:14px 24px;margin:4px 12px;border-radius:12px;cursor:pointer;}
         .nav-item:hover{background:#334155;}
         .nav-item.active{background:#facc15;color:#0f172a;}
-        .main-content{flex:1;margin-right:280px;padding:24px;background:rgba(248,250,252,0.85);}
+        .main-content {
+    flex: 1;
+    margin-right: 280px;
+    padding: 24px;
+    background: rgba(248, 250, 252, 0.85);
+    position: relative;
+    z-index: 2;
+}
+
+.main-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/2997/2997911.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 40%;
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 0;
+}
         .top-bar{display:flex;justify-content:space-between;align-items:center;background:white;padding:12px 24px;border-radius:24px;margin-bottom:24px;}
         .page-title{font-size:1.6rem;font-weight:700;}
         .notif-badge{position:relative;cursor:pointer;}
