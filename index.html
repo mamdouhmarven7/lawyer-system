@@ -440,7 +440,7 @@ function renderDashboard() {
                         subject: c.subject || 'لا يوجد موضوع',
                         date: s.date,
                         notes: s.notes,
-                        lastSession: c.sessions.length > 0 ? new Date([...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date))[0].date).toLocaleDateString('ar-EG') : 'لا توجد'
+                       lastSession: c.sessions.length > 1 ? new Date([...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date))[1].date).toLocaleDateString('ar-EG') : (c.sessions.length === 1 ? new Date(c.sessions[0].date).toLocaleDateString('ar-EG') : 'لا توجد')
                     });
                 }
             });
