@@ -451,88 +451,91 @@ function renderTasks() {
     }
     
     const today = new Date(); today.setHours(0,0,0,0);
-    const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+    const fiveDaysLater = new Date(today); fiveDaysLater.setDate(fiveDaysLater.getDate() + 5);
     
-    const taskTypeNames = { session: 'جلسة', verdict: 'استلام حكم', inspection: 'معاينة', filing: 'إيداع صحيفة', other: 'أخرى' };
     let filteredTasks = tasks;
     if(currentLawyerFilter !== 'all') {
         filteredTasks = tasks.filter(t => t.lawyer === currentLawyerFilter);
     }
     
-    const todayTasks = filteredTasks.filter(t => {
+    // تصفية المهام: فقط المهام التي تاريخها خلال الـ 5 أيام القادمة (من اليوم إلى 5 أيام)
+    const upcomingTasks = filteredTasks.filter(t => {
         const taskDate = new Date(t.date); taskDate.setHours(0,0,0,0);
-        return t.status !== 'done' && taskDate.getTime() === today.getTime();
+        return t.status !== 'done' && taskDate >= today && taskDate <= fiveDaysLater;
     });
-    const tomorrowTasks = filteredTasks.filter(t => {
-        const taskDate = new Date(t.date); taskDate.setHours(0,0,0,0);
-        return t.status !== 'done' && taskDate.getTime() === tomorrow.getTime();
-    });
-    const futureTasks = filteredTasks.filter(t => {
-        const taskDate = new Date(t.date); taskDate.setHours(0,0,0,0);
-        return t.status !== 'done' && taskDate.getTime() > tomorrow.getTime();
-    });
+    
     const doneTasks = filteredTasks.filter(t => t.status === 'done');
     
+    // ترتيب المهام حسب التاريخ
+    upcomingTasks.sort((a, b) => new Date(a.date) - new Date(b.date));
+    doneTasks.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
     let html = '';
-    if(todayTasks.length > 0) {
-        html += '<h3 style="margin:15px 0 10px 0;"><i class="fas fa-calendar-day"></i> مهام اليوم</h3>';
-        todayTasks.forEach(t => {
-            html += `<div class="task-card task-today" onclick="window.editTask('${t.id}')">
-                <div class="flex-between"><div><strong>👨‍⚖️ ${t.lawyer}</strong> <span class="task-type-badge">${taskTypeNames[t.taskType] || t.taskType}</span></div>
-                <button class="task-status-btn status-pending" onclick="event.stopPropagation(); window.toggleTaskStatus('${t.id}', '${t.status}')">⏳ قيد التنفيذ</button></div>
-                <div><i class="fas fa-location-dot"></i> ${t.location}</div>
-                <div><i class="fas fa-info-circle"></i> ${t.description}</div>
-                <div class="flex-between" style="margin-top:8px;"><span><i class="fas fa-clock"></i> ${t.time || 'غير محدد'}</span>
-                <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.deleteTask('${t.id}')" style="color:#ef4444;"><i class="fas fa-trash"></i> حذف</button></div>
-            </div>`;
-        });
-    }
-    if(tomorrowTasks.length > 0) {
-        html += '<h3 style="margin:15px 0 10px 0;"><i class="fas fa-calendar-alt"></i> مهام الغد</h3>';
-        tomorrowTasks.forEach(t => {
-            html += `<div class="task-card task-tomorrow" onclick="window.editTask('${t.id}')">
-                <div class="flex-between"><div><strong>👨‍⚖️ ${t.lawyer}</strong> <span class="task-type-badge">${taskTypeNames[t.taskType] || t.taskType}</span></div>
-                <button class="task-status-btn status-pending" onclick="event.stopPropagation(); window.toggleTaskStatus('${t.id}', '${t.status}')">⏳ قيد التنفيذ</button></div>
-                <div><i class="fas fa-location-dot"></i> ${t.location}</div>
-                <div><i class="fas fa-info-circle"></i> ${t.description}</div>
-                <div class="flex-between" style="margin-top:8px;"><span><i class="fas fa-clock"></i> ${t.time || 'غير محدد'}</span>
-                <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.deleteTask('${t.id}')" style="color:#ef4444;"><i class="fas fa-trash"></i> حذف</button></div>
-            </div>`;
-        });
-    }
-    if(futureTasks.length > 0) {
-        html += '<h3 style="margin:15px 0 10px 0;"><i class="fas fa-calendar-week"></i> المهام القادمة</h3>';
-        futureTasks.forEach(t => {
+    
+    // المهام القادمة خلال 5 أيام
+    if(upcomingTasks.length > 0) {
+        html += '<h3 style="margin:15px 0 10px 0;"><i class="fas fa-calendar-day"></i> المهام القادمة (خلال 5 أيام)</h3>';
+        upcomingTasks.forEach(t => {
             const taskDate = new Date(t.date);
-            html += `<div class="task-card task-future" onclick="window.editTask('${t.id}')">
-                <div class="flex-between"><div><strong>👨‍⚖️ ${t.lawyer}</strong> <span class="task-type-badge">${taskTypeNames[t.taskType] || t.taskType}</span></div>
-                <button class="task-status-btn status-pending" onclick="event.stopPropagation(); window.toggleTaskStatus('${t.id}', '${t.status}')">⏳ قيد التنفيذ</button></div>
-                <div><i class="fas fa-calendar"></i> التاريخ: ${taskDate.toLocaleDateString('ar-EG')}</div>
-                <div><i class="fas fa-location-dot"></i> ${t.location}</div>
-                <div><i class="fas fa-info-circle"></i> ${t.description}</div>
-                <div class="flex-between" style="margin-top:8px;"><span><i class="fas fa-clock"></i> ${t.time || 'غير محدد'}</span>
-                <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.deleteTask('${t.id}')" style="color:#ef4444;"><i class="fas fa-trash"></i> حذف</button></div>
-            </div>`;
+            const diffDays = Math.ceil((taskDate - today) / (1000*60*60*24));
+            let dayText = '';
+            if(diffDays === 0) dayText = 'اليوم';
+            else if(diffDays === 1) dayText = 'غداً';
+            else dayText = `بعد ${diffDays} أيام`;
+            
+            html += `
+                <div class="task-card task-today" onclick="window.editTask('${t.id}')">
+                    <div class="flex-between">
+                        <div>
+                            <strong>👨‍⚖️ ${t.lawyer}</strong>
+                            <span class="task-type-badge" style="background:#facc15;">${t.taskType || 'مهمة'}</span>
+                        </div>
+                        <button class="task-status-btn status-pending" onclick="event.stopPropagation(); window.toggleTaskStatus('${t.id}', '${t.status}')">⏳ قيد التنفيذ</button>
+                    </div>
+                    <div><i class="fas fa-calendar"></i> ${dayText} - ${taskDate.toLocaleDateString('ar-EG')}</div>
+                    <div><i class="fas fa-location-dot"></i> ${t.location}</div>
+                    <div><i class="fas fa-info-circle"></i> ${t.description}</div>
+                    <div class="flex-between" style="margin-top:8px;">
+                        <span><i class="fas fa-clock"></i> ${t.time || 'غير محدد'}</span>
+                        <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.deleteTask('${t.id}')" style="color:#ef4444;"><i class="fas fa-trash"></i> حذف</button>
+                    </div>
+                </div>
+            `;
         });
     }
+    
+    // المهام المنجزة
     if(doneTasks.length > 0) {
         html += '<h3 style="margin:15px 0 10px 0;"><i class="fas fa-check-circle"></i> المهام المنجزة</h3>';
-        doneTasks.forEach(t => {
+        doneTasks.slice(0, 20).forEach(t => {
             const taskDate = new Date(t.date);
-            html += `<div class="task-card task-done" onclick="window.editTask('${t.id}')">
-                <div class="flex-between"><div><strong>👨‍⚖️ ${t.lawyer}</strong> <span class="task-type-badge">${taskTypeNames[t.taskType] || t.taskType}</span></div>
-                <button class="task-status-btn status-done" onclick="event.stopPropagation(); window.toggleTaskStatus('${t.id}', '${t.status}')">✓ تم الإنجاز</button></div>
-                <div><i class="fas fa-calendar"></i> التاريخ: ${taskDate.toLocaleDateString('ar-EG')}</div>
-                <div><i class="fas fa-location-dot"></i> ${t.location}</div>
-                <div><i class="fas fa-info-circle"></i> ${t.description}</div>
-                <div class="flex-between" style="margin-top:8px;"><span><i class="fas fa-clock"></i> ${t.time || 'غير محدد'}</span>
-                <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.deleteTask('${t.id}')" style="color:#ef4444;"><i class="fas fa-trash"></i> حذف</button></div>
-            </div>`;
+            html += `
+                <div class="task-card task-done" onclick="window.editTask('${t.id}')">
+                    <div class="flex-between">
+                        <div>
+                            <strong>👨‍⚖️ ${t.lawyer}</strong>
+                            <span class="task-type-badge" style="background:#22c55e; color:white;">${t.taskType || 'مهمة'}</span>
+                        </div>
+                        <button class="task-status-btn status-done" onclick="event.stopPropagation(); window.toggleTaskStatus('${t.id}', '${t.status}')">✓ تم الإنجاز</button>
+                    </div>
+                    <div><i class="fas fa-calendar"></i> ${taskDate.toLocaleDateString('ar-EG')}</div>
+                    <div><i class="fas fa-location-dot"></i> ${t.location}</div>
+                    <div><i class="fas fa-info-circle"></i> ${t.description}</div>
+                    <div class="flex-between" style="margin-top:8px;">
+                        <span><i class="fas fa-clock"></i> ${t.time || 'غير محدد'}</span>
+                        <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.deleteTask('${t.id}')" style="color:#ef4444;"><i class="fas fa-trash"></i> حذف</button>
+                    </div>
+                </div>
+            `;
         });
     }
+    
+    if(upcomingTasks.length === 0 && doneTasks.length === 0) {
+        html = '<p class="loading">لا توجد مهام في الأيام الخمسة القادمة</p>';
+    }
+    
     container.innerHTML = html;
 }
-
 let currentLawyerFilter = 'all';
 function filterTasksByLawyer(lawyer) {
     currentLawyerFilter = lawyer;
@@ -559,14 +562,8 @@ function showAddTaskModal() {
                 <input type="time" id="taskTime">
                 <label>🏛️ الجهة/المحكمة:</label>
                 <input type="text" id="taskLocation" placeholder="مثال: محكمة شمال القاهرة">
-                <label>📋 نوع المهمة:</label>
-                <select id="taskType">
-                    <option value="session">جلسة</option>
-                    <option value="verdict">استلام حكم</option>
-                    <option value="inspection">معاينة</option>
-                    <option value="filing">إيداع صحيفة</option>
-                    <option value="other">أخرى</option>
-                </select>
+               <label>📋 نوع المهمة (مثال: جلسة، استلام حكم، معاينة، إيداع صحيفة، ...):</label>
+<input type="text" id="taskType" placeholder="أدخل نوع المهمة...">
                 <label>📝 وصف المهمة:</label>
                 <textarea id="taskDescription" rows="3" placeholder="مثال: استلام حكم في القضية رقم 2025/123"></textarea>
                 <div class="modal-buttons">
@@ -619,14 +616,8 @@ window.editTask = async (taskId) => {
                 <input type="time" id="taskTime" value="${task.time || ''}">
                 <label>🏛️ الجهة/المحكمة:</label>
                 <input type="text" id="taskLocation" value="${task.location}">
-                <label>📋 نوع المهمة:</label>
-                <select id="taskType">
-                    <option value="session" ${task.taskType === 'session' ? 'selected' : ''}>جلسة</option>
-                    <option value="verdict" ${task.taskType === 'verdict' ? 'selected' : ''}>استلام حكم</option>
-                    <option value="inspection" ${task.taskType === 'inspection' ? 'selected' : ''}>معاينة</option>
-                    <option value="filing" ${task.taskType === 'filing' ? 'selected' : ''}>إيداع صحيفة</option>
-                    <option value="other" ${task.taskType === 'other' ? 'selected' : ''}>أخرى</option>
-                </select>
+               <label>📋 نوع المهمة:</label>
+<input type="text" id="taskType" value="${task.taskType || ''}" placeholder="مثال: جلسة، استلام حكم، معاينة...">
                 <label>📝 وصف المهمة:</label>
                 <textarea id="taskDescription" rows="3">${task.description}</textarea>
                 <div class="modal-buttons">
