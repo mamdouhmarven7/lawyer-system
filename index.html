@@ -201,14 +201,14 @@
                 <div class="card">
                     <div class="card-header"><h3>📋 المهام اليومية للمحامين</h3><button class="btn" id="addTaskBtn"><i class="fas fa-plus"></i> إضافة مهمة جديدة</button></div>
                     <div class="tasks-filter">
-                        <button class="filter-btn active" data-filter="all">كل المهام</button>
-                        <button class="filter-btn" data-filter="يوسف">يوسف</button>
-                        <button class="filter-btn" data-filter="مينا">مينا</button>
-                        <button class="filter-btn" data-filter="أندرو">أندرو</button>
-                        <button class="filter-btn" data-filter="ممدوح">ممدوح</button>
-                        <button class="filter-btn" data-filter="كيرلس">كيرلس</button>
-                        <button class="filter-btn" data-filter="باسم">باسم</button>
-                    </div>
+    <button class="filter-btn active" data-filter="all">كل المهام</button>
+    <button class="filter-btn" data-filter="أندرو">أندرو</button>
+    <button class="filter-btn" data-filter="يوسف">يوسف</button>
+    <button class="filter-btn" data-filter="مينا">مينا</button>
+    <button class="filter-btn" data-filter="جورج">جورج</button>
+    <button class="filter-btn" data-filter="مريم">مريم</button>
+    <button class="filter-btn" data-filter="مارسلينو">مارسلينو</button>
+</div>
                     <div id="tasksList"></div>
                 </div>
             </div>
@@ -545,14 +545,14 @@ function showAddTaskModal() {
             <div class="modal-container">
                 <h3>➕ إضافة مهمة جديدة</h3>
                 <label>👨‍⚖️ المحامي:</label>
-                <select id="taskLawyer">
-                    <option value="يوسف">يوسف</option>
-                    <option value="مينا">مينا</option>
-                    <option value="أندرو">أندرو</option>
-                    <option value="ممدوح">ممدوح</option>
-                    <option value="كيرلس">كيرلس</option>
-                    <option value="باسم">باسم</option>
-                </select>
+               <select id="taskLawyer">
+    <option value="أندرو">أندرو</option>
+    <option value="يوسف">يوسف</option>
+    <option value="مينا">مينا</option>
+    <option value="جورج">جورج</option>
+    <option value="مريم">مريم</option>
+    <option value="مارسلينو">مارسلينو</option>
+</select>
                 <label>📅 التاريخ:</label>
                 <input type="date" id="taskDate">
                 <label>⏰ الوقت (اختياري):</label>
@@ -605,14 +605,14 @@ window.editTask = async (taskId) => {
             <div class="modal-container">
                 <h3>✏️ تعديل المهمة</h3>
                 <label>👨‍⚖️ المحامي:</label>
-                <select id="taskLawyer">
-                    <option value="يوسف" ${task.lawyer === 'يوسف' ? 'selected' : ''}>يوسف</option>
-                    <option value="مينا" ${task.lawyer === 'مينا' ? 'selected' : ''}>مينا</option>
-                    <option value="أندرو" ${task.lawyer === 'أندرو' ? 'selected' : ''}>أندرو</option>
-                    <option value="ممدوح" ${task.lawyer === 'ممدوح' ? 'selected' : ''}>ممدوح</option>
-                    <option value="كيرلس" ${task.lawyer === 'كيرلس' ? 'selected' : ''}>كيرلس</option>
-                    <option value="باسم" ${task.lawyer === 'باسم' ? 'selected' : ''}>باسم</option>
-                </select>
+               <select id="taskLawyer">
+    <option value="أندرو" ${task.lawyer === 'أندرو' ? 'selected' : ''}>أندرو</option>
+    <option value="يوسف" ${task.lawyer === 'يوسف' ? 'selected' : ''}>يوسف</option>
+    <option value="مينا" ${task.lawyer === 'مينا' ? 'selected' : ''}>مينا</option>
+    <option value="جورج" ${task.lawyer === 'جورج' ? 'selected' : ''}>جورج</option>
+    <option value="مريم" ${task.lawyer === 'مريم' ? 'selected' : ''}>مريم</option>
+    <option value="مارسلينو" ${task.lawyer === 'مارسلينو' ? 'selected' : ''}>مارسلينو</option>
+</select>
                 <label>📅 التاريخ:</label>
                 <input type="date" id="taskDate" value="${task.date}">
                 <label>⏰ الوقت:</label>
