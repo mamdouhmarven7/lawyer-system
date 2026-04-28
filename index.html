@@ -778,7 +778,7 @@ function renderCases() {
     const tbody = document.querySelector('#casesTable tbody');
     if(!tbody) return;
     if(casesList.length === 0) {
-        tbody.innerHTML = '<td colspan="8" class="loading">لا توجد قضايا</td>';
+        tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا</td></tr>';
         return;
     }
     
@@ -792,26 +792,28 @@ function renderCases() {
         
         let row = `
             <tr class="case-row" data-id="${c.id}" onclick="window.toggleCaseDetails('${c.id}')">
-                 <i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i> 
-                 <strong>${c.caseNumber}</strong> 
-                 ${c.court || '--'}${c.circuit ? ' - ' + c.circuit : ''} 
-                 ${clientsHtml} 
-                 ${opponentsHtml} 
-                 ${c.subject || '--'}${lastSession ? '<div><span class="badge">آخر جلسة: ' + lastSession + '</span></div>' : ''} 
-                 <span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span> 
+                <td style="width:30px"><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i></td>
+                <td><strong>${c.caseNumber}</strong></td>
+                <td>${c.court || '--'}${c.circuit ? ' - ' + c.circuit : ''}</td>
+                <td>${clientsHtml}</td>
+                <td>${opponentsHtml}</td>
+                <td>${c.subject || '--'}${lastSession ? '<div><span class="badge">آخر جلسة: ' + lastSession + '</span></div>' : ''}</td>
+                <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${c.caseStatus || 'متداولة'}</span></td>
                 <td class="action-buttons">
-                    <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.editCase('${c.id}')" style="background:#facc15;"><i class="fas fa-edit"></i></button>
-                    <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.deleteCase('${c.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i></button>
-                 </div>
-              </div>
+                    <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.editCase('${c.id}')" style="background:#facc15;"><i class="fas fa-edit"></i> تعديل</button>
+                    <button class="btn-outline btn-sm" onclick="event.stopPropagation(); window.deleteCase('${c.id}')" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i> حذف</button>
+                </td>
+            </tr>
         `;
         
         if(isExpanded) {
             let sessionsHtml = `
-                <tr class="expanded-row"><td colspan="8"><div class="expanded-content">
-                    <div><h4>الموضوع</h4><div>${c.subjectDetails || 'لا توجد تفاصيل'}</div>
-                    <button class="btn-sm" onclick="event.stopPropagation(); window.editSubjectDetails('${c.id}')">تعديل التفاصيل</button></div>
-                    <div><h4>الجلسات</h4><button class="btn-sm" onclick="event.stopPropagation(); window.showAddSession('${c.id}')">+ إضافة جلسة</button>`;
+                <tr class="expanded-row">
+                    <td colspan="8">
+                        <div class="expanded-content">
+                            <div><h4>الموضوع</h4><div>${c.subjectDetails || 'لا توجد تفاصيل'}</div>
+                            <button class="btn-sm" onclick="event.stopPropagation(); window.editSubjectDetails('${c.id}')">تعديل التفاصيل</button></div>
+                            <div><h4>الجلسات</h4><button class="btn-sm" onclick="event.stopPropagation(); window.showAddSession('${c.id}')">+ إضافة جلسة</button>`;
             if(sessions.length === 0) sessionsHtml += '<p>لا توجد جلسات</p>';
             else sessions.forEach(s => {
                 sessionsHtml += `<div class="session-item"><div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}${s.notes ? ' - ' + s.notes : ''}</div>
@@ -831,12 +833,6 @@ function renderCases() {
         return row;
     }).join('');
 }
-
-window.toggleCaseDetails = (caseId) => {
-    expandedCase = expandedCase === caseId ? null : caseId;
-    renderCases();
-};
-
 function searchClient() {
     const term = document.getElementById('searchClientInput').value.trim().toLowerCase();
     const div = document.getElementById('searchResults');
