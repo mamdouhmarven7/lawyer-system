@@ -395,7 +395,7 @@
                                     <th>الرقم الوطني</th><th>التوكيل</th><th>القضايا</th><th></th>
                                 </tr>
                             </thead>
-                            <tbody><tr><td colspan="7" class="loading">جاري التحميل...</td></tr></tbody>
+                            <tbody><tr><td colspan="7" class="loading">جاري التحميل......</td></tr></tbody>
                         </table>
                     </div>
                 </div>
@@ -417,11 +417,11 @@
                                     <th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th>
                                 </tr>
                             </thead>
-                            <tbody><tr><td colspan="8" class="loading">جاري التحميل...<\/td><\/tr><\/tbody>
-                        <\/table>
-                    <\/div>
-                <\/div>
-            <\/div>
+                            <tbody><tr><td colspan="8" class="loading">جاري التحميل......</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
             <!-- Tasks -->
             <div id="tasksTab" class="tab-content" style="display:none;">
@@ -485,7 +485,7 @@ const firebaseConfig = {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy }
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy, getDoc }
     from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const app = initializeApp(firebaseConfig);
@@ -611,11 +611,11 @@ window.addEventListener('load', () => {
     setTimeout(() => document.getElementById('loginBtn').click(), 500);
 });
 
-onAuthStateChanged(auth, user => {
+onAuthStateChanged(auth, async (user) => {
     if (user) {
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('appContent').style.display  = 'block';
-        loadAllData();
+        await loadAllData();
         setupEvents();
     } else {
         document.getElementById('loginScreen').style.display = 'flex';
@@ -642,7 +642,7 @@ async function loadCases() {
 
     casesList.forEach(c => {
         const sessions = c.sessions || [];
-        if (sessions.length > 0) {
+        if (sessions && sessions.length > 0) {
             const sorted = [...sessions].sort((a, b) => new Date(a.date) - new Date(b.date));
             const today = new Date(); today.setHours(0,0,0,0);
             const next = sorted.find(s => new Date(s.date) >= today);
@@ -729,14 +729,19 @@ window.deleteCase = async (id) => {
 };
 
 // =============================================
-//  SESSIONS CRUD
+//  SESSIONS CRUD (Fixed - now stored as array in case document)
 // =============================================
 window.addSession = async (caseId, data) => {
-    const c = casesList.find(x => x.id === caseId);
-    if (!c) return;
-    const sessions = [...(c.sessions || []), { id: Date.now(), ...data }];
-    sessions.sort((a, b) => new Date(a.date) - new Date(b.date));
-    await updateDoc(doc(db, 'cases', caseId), { sessions });
+    const caseRef = doc(db, 'cases', caseId);
+    const caseDoc = await getDoc(caseRef);
+    if (!caseDoc.exists()) return;
+    
+    const currentSessions = caseDoc.data().sessions || [];
+    const newSession = { id: Date.now(), ...data };
+    const updatedSessions = [...currentSessions, newSession];
+    updatedSessions.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    await updateDoc(caseRef, { sessions: updatedSessions });
     addNotif('📅 تم إضافة جلسة', 'success');
     await loadCases();
 };
@@ -744,11 +749,32 @@ window.addSession = async (caseId, data) => {
 window.deleteSession = async (caseId, sessionId) => {
     const ok = await confirmDialog('حذف الجلسة', 'هل تريد حذف هذه الجلسة؟');
     if (!ok) return;
-    const c = casesList.find(x => x.id === caseId);
-    if (!c) return;
-    const sessions = (c.sessions || []).filter(s => s.id !== sessionId);
-    await updateDoc(doc(db, 'cases', caseId), { sessions });
+    
+    const caseRef = doc(db, 'cases', caseId);
+    const caseDoc = await getDoc(caseRef);
+    if (!caseDoc.exists()) return;
+    
+    const currentSessions = caseDoc.data().sessions || [];
+    const updatedSessions = currentSessions.filter(s => s.id !== sessionId);
+    
+    await updateDoc(caseRef, { sessions: updatedSessions });
     addNotif('🗑️ تم حذف الجلسة', 'warning');
+    await loadCases();
+};
+
+window.editSession = async (caseId, sessionId, newData) => {
+    const caseRef = doc(db, 'cases', caseId);
+    const caseDoc = await getDoc(caseRef);
+    if (!caseDoc.exists()) return;
+    
+    const currentSessions = caseDoc.data().sessions || [];
+    const updatedSessions = currentSessions.map(s => 
+        s.id === sessionId ? { ...s, ...newData } : s
+    );
+    updatedSessions.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    await updateDoc(caseRef, { sessions: updatedSessions });
+    addNotif('✏️ تم تعديل الجلسة', 'success');
     await loadCases();
 };
 
@@ -785,6 +811,34 @@ window.toggleTaskStatus = async (id, currentStatus) => {
 // =============================================
 //  RENDER TASKS
 // =============================================
+function taskCard(t, cardClass) {
+    const taskDate = new Date(t.date);
+    return `
+        <div class="task-card ${cardClass}" onclick="window.editTask('${esc(t.id)}')">
+            <div class="flex-between">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <strong>👨‍⚖️ ${esc(t.lawyer)}</strong>
+                    <span class="task-type-badge">${esc(t.taskType || 'مهمة')}</span>
+                </div>
+                <button class="task-status-btn ${t.status === 'done' ? 'status-done' : 'status-pending'}"
+                    onclick="event.stopPropagation(); window.toggleTaskStatus('${esc(t.id)}', '${esc(t.status)}')">
+                    ${t.status === 'done' ? '✓ تم الإنجاز' : '⏳ قيد التنفيذ'}
+                </button>
+            </div>
+            <div style="margin-top:6px;font-size:0.88rem;color:var(--slate);">
+                <i class="fas fa-calendar"></i> ${taskDate.toLocaleDateString('ar-EG')}
+                &nbsp;|&nbsp;<i class="fas fa-location-dot"></i> ${esc(t.location)}
+            </div>
+            <div style="margin-top:4px;">${esc(t.description)}</div>
+            <div class="flex-between" style="margin-top:8px;">
+                <span style="font-size:0.85rem;color:var(--muted);"><i class="fas fa-clock"></i> ${esc(t.time || 'غير محدد')}</span>
+                <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); window.deleteTask('${esc(t.id)}')">
+                    <i class="fas fa-trash"></i> حذف
+                </button>
+            </div>
+        </div>`;
+}
+
 function renderTasks() {
     const container = document.getElementById('tasksList');
     if (!container) return;
@@ -805,34 +859,6 @@ function renderTasks() {
     const tomorrowT = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d.getTime() === tomorrow.getTime(); });
     const upcoming  = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d > tomorrow && d <= tenDaysLater; });
     const future    = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d > tenDaysLater; });
-
-    function taskCard(t, cardClass) {
-        const taskDate = new Date(t.date);
-        return `
-            <div class="task-card ${cardClass}" onclick="window.editTask('${esc(t.id)}')">
-                <div class="flex-between">
-                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                        <strong>👨‍⚖️ ${esc(t.lawyer)}</strong>
-                        <span class="task-type-badge">${esc(t.taskType || 'مهمة')}</span>
-                    </div>
-                    <button class="task-status-btn ${t.status === 'done' ? 'status-done' : 'status-pending'}"
-                        onclick="event.stopPropagation(); window.toggleTaskStatus('${esc(t.id)}', '${esc(t.status)}')">
-                        ${t.status === 'done' ? '✓ تم الإنجاز' : '⏳ قيد التنفيذ'}
-                    </button>
-                </div>
-                <div style="margin-top:6px;font-size:0.88rem;color:var(--slate);">
-                    <i class="fas fa-calendar"></i> ${taskDate.toLocaleDateString('ar-EG')}
-                    &nbsp;|&nbsp;<i class="fas fa-location-dot"></i> ${esc(t.location)}
-                </div>
-                <div style="margin-top:4px;">${esc(t.description)}</div>
-                <div class="flex-between" style="margin-top:8px;">
-                    <span style="font-size:0.85rem;color:var(--muted);"><i class="fas fa-clock"></i> ${esc(t.time || 'غير محدد')}</span>
-                    <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); window.deleteTask('${esc(t.id)}')">
-                        <i class="fas fa-trash"></i> حذف
-                    </button>
-                </div>
-            </div>`;
-    }
 
     let html = '';
 
@@ -936,7 +962,7 @@ function renderClients() {
     const tbody = document.querySelector('#clientsTable tbody');
     if (!tbody) return;
     if (clients.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="loading">لا يوجد موكلون<\/td><\/tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="loading">لا يوجد موكلون</td><\/tr>';
         return;
     }
     tbody.innerHTML = clients.map(c => {
@@ -986,7 +1012,7 @@ function renderDashboard() {
 
     let upcomingSessions = [];
     casesList.forEach(c => {
-        if (c.sessions) {
+        if (c.sessions && c.sessions.length > 0) {
             c.sessions.forEach(s => {
                 const sessionDate = new Date(s.date); sessionDate.setHours(0,0,0,0);
                 if (sessionDate >= today) {
@@ -1056,7 +1082,7 @@ function renderCases() {
     const tbody = document.querySelector('#casesTable tbody');
     if (!tbody) return;
     if (casesList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا<\/td><\/tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا</td><\/tr>';
         return;
     }
 
@@ -1108,7 +1134,7 @@ function renderCases() {
                         <div class="session-item" style="margin-top:8px;">
                             <div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}${s.notes ? ' — ' + esc(s.notes) : ''}</div>
                             <div style="display:flex;gap:6px;">
-                                <button class="btn btn-sm" onclick="event.stopPropagation();window.editSession('${esc(c.id)}',${s.id})">تعديل</button>
+                                <button class="btn btn-sm" onclick="event.stopPropagation();window.editSessionModal('${esc(c.id)}',${s.id})">تعديل</button>
                                 <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteSession('${esc(c.id)}',${s.id})">حذف</button>
                             </div>
                         </div>`;
@@ -1179,7 +1205,7 @@ function searchClient() {
             <\/tr><\/thead><tbody>`;
             clientCases.forEach(c => {
                 let lastDate = 'لا توجد', lastNotes = '';
-                if (c.sessions?.length) {
+                if (c.sessions && c.sessions.length) {
                     const sorted = [...c.sessions].sort((a,b)=>new Date(b.date)-new Date(a.date));
                     lastDate  = new Date(sorted[0].date).toLocaleDateString('ar-EG');
                     lastNotes = sorted[0].notes || '';
@@ -1223,7 +1249,7 @@ function searchCourt() {
 
     found.forEach(c => {
         let lastDate = 'لا توجد', lastNotes = '';
-        if (c.sessions?.length) {
+        if (c.sessions && c.sessions.length) {
             const sorted = [...c.sessions].sort((a,b)=>new Date(b.date)-new Date(a.date));
             lastDate  = new Date(sorted[0].date).toLocaleDateString('ar-EG');
             lastNotes = sorted[0].notes || '';
@@ -1368,20 +1394,17 @@ window.editCase = (id) => {
 // =============================================
 //  SESSION MODAL (Add / Edit)
 // =============================================
-function showSessionModal(caseId, session = null) {
-    const isEdit = session !== null;
+function showAddSession(caseId) {
     const modal = `
         <div id="sessModal" class="modal-overlay">
             <div class="modal-container">
-                <h3>${isEdit ? '✏️ تعديل الجلسة' : '➕ إضافة جلسة'}</h3>
+                <h3>➕ إضافة جلسة</h3>
                 <label>التاريخ</label>
-                <input type="date" id="sDate" value="${esc(session?.date||'')}">
+                <input type="date" id="sDate" required>
                 <label>ملاحظات (اختياري)</label>
-                <textarea id="sNotes" rows="3">${esc(session?.notes||'')}</textarea>
+                <textarea id="sNotes" rows="3"></textarea>
                 <div class="modal-buttons">
-                    <button id="saveSessBtn" style="background:var(--${isEdit?'gold':'green'});color:${isEdit?'var(--navy)':'white'};">
-                        ${isEdit ? '💾 حفظ' : '✅ إضافة'}
-                    </button>
+                    <button id="saveSessBtn" style="background:var(--green);color:white;">✅ إضافة</button>
                     <button id="closeSessBtn" style="background:var(--border);">إلغاء</button>
                 </div>
             </div>
@@ -1392,27 +1415,45 @@ function showSessionModal(caseId, session = null) {
         const d = document.getElementById('sDate').value;
         if (!d) { showToast('⚠️ أدخل التاريخ', 'warning'); return; }
         const notes = document.getElementById('sNotes').value;
-        if (isEdit) {
-            const c = casesList.find(x => x.id === caseId);
-            const sessions = (c.sessions || []).map(s => s.id === session.id ? { ...s, date: d, notes } : s);
-            sessions.sort((a,b) => new Date(a.date)-new Date(b.date));
-            await updateDoc(doc(db, 'cases', caseId), { sessions });
-            addNotif('✏️ تم تعديل الجلسة', 'success');
-            await loadCases();
-        } else {
-            await addSession(caseId, { date: d, notes });
-        }
+        await window.addSession(caseId, { date: d, notes });
         document.getElementById('sessModal').remove();
     };
     document.getElementById('closeSessBtn').onclick = () => document.getElementById('sessModal').remove();
 }
 
-window.showAddSession = (id) => showSessionModal(id);
-window.editSession = (caseId, sessionId) => {
+function editSessionModal(caseId, sessionId) {
     const c = casesList.find(x => x.id === caseId);
-    const s = c?.sessions?.find(x => x.id === sessionId);
-    if (s) showSessionModal(caseId, s);
-};
+    const session = c?.sessions?.find(s => s.id === sessionId);
+    if (!session) return;
+    
+    const modal = `
+        <div id="sessModal" class="modal-overlay">
+            <div class="modal-container">
+                <h3>✏️ تعديل الجلسة</h3>
+                <label>التاريخ</label>
+                <input type="date" id="sDate" value="${esc(session.date)}" required>
+                <label>ملاحظات (اختياري)</label>
+                <textarea id="sNotes" rows="3">${esc(session.notes || '')}</textarea>
+                <div class="modal-buttons">
+                    <button id="saveSessBtn" style="background:var(--gold);">💾 حفظ</button>
+                    <button id="closeSessBtn" style="background:var(--border);">إلغاء</button>
+                </div>
+            </div>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', modal);
+
+    document.getElementById('saveSessBtn').onclick = async () => {
+        const d = document.getElementById('sDate').value;
+        if (!d) { showToast('⚠️ أدخل التاريخ', 'warning'); return; }
+        const notes = document.getElementById('sNotes').value;
+        await window.editSession(caseId, sessionId, { date: d, notes });
+        document.getElementById('sessModal').remove();
+    };
+    document.getElementById('closeSessBtn').onclick = () => document.getElementById('sessModal').remove();
+}
+
+window.showAddSession = showAddSession;
+window.editSessionModal = editSessionModal;
 
 // =============================================
 //  CLIENT MODALS
@@ -1452,8 +1493,8 @@ function showClientModal(client = null) {
             phone:    document.getElementById('clPhone').value,
             idNumber: document.getElementById('clIdNum').value,
         };
-        if (isEdit) await updateClient(client.id, { ...client, ...data });
-        else        await addClient(data);
+        if (isEdit) await window.updateClient(client.id, { ...client, ...data });
+        else        await window.addClient(data);
         document.getElementById('clientModal').remove();
     };
     document.getElementById('closeClientBtn').onclick = () => document.getElementById('clientModal').remove();
@@ -1485,7 +1526,7 @@ window.editDelegation = (id) => {
         </div>`;
     document.body.insertAdjacentHTML('beforeend', modal);
     document.getElementById('saveDelBtn').onclick = () => {
-        updateClient(id, { ...c,
+        window.updateClient(id, { ...c,
             delegationNumber:    document.getElementById('delNum').value,
             delegationDate:      document.getElementById('delDate').value,
             delegationAuthority: document.getElementById('delAuth').value
@@ -1511,7 +1552,7 @@ window.editSubjectDetails = (id) => {
         </div>`;
     document.body.insertAdjacentHTML('beforeend', modal);
     document.getElementById('saveSubBtn').onclick = () => {
-        updateCase(id, { ...c, subjectDetails: document.getElementById('details').value });
+        window.updateCase(id, { ...c, subjectDetails: document.getElementById('details').value });
         document.getElementById('subModal').remove();
     };
     document.getElementById('closeSubBtn').onclick = () => document.getElementById('subModal').remove();
@@ -1538,7 +1579,7 @@ function checkReminders() {
         }
     });
 }
-setInterval(checkReminders, 3_600_000);
+setInterval(checkReminders, 3600000);
 setTimeout(checkReminders, 2000);
 
 // =============================================
@@ -1605,6 +1646,6 @@ function setupEvents() {
     document.addEventListener('click', () => document.getElementById('notifPanel').classList.remove('open'));
     document.getElementById('notifPanel').addEventListener('click', e => e.stopPropagation());
 }
-<\/script>
-<\/body>
-<\/html>
+</script>
+</body>
+</html>
