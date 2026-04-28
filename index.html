@@ -1134,7 +1134,7 @@ function renderDashboard() {
                         <i class="fas fa-calendar-alt"></i> الجلسة: ${new Date(s.date).toLocaleDateString('ar-EG')}
                         &nbsp;|&nbsp;<i class="fas fa-history"></i> السابقة: ${esc(s.lastSession)}
                     </div>
-                    ${s.notes ? `<div style="margin-top:5px;font-size:18px;color:var(--orange);"><i class="fas fa-pen"></i> ${esc(s.notes)}</div>` : ''}
+                    ${s.notes ? `<div style="margin-top:5px;font-size:20px;color:var(--orange);"><i class="fas fa-pen"></i> ${esc(s.notes)}</div>` : ''}
                 </div>`;
         });
     }
