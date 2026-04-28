@@ -558,25 +558,15 @@ body.dark-mode td {
                 </div>
             </div>
 
-            <div id="tasksTab" class="tab-content" style="display:none;">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>📋 المهام اليومية للمحامين</h3>
-                        <button class="btn" id="addTaskBtn"><i class="fas fa-plus"></i> إضافة مهمة</button>
-                    </div>
-                    <div class="tasks-filter">
-                        <button class="filter-btn active" data-filter="all">كل المهام</button>
-                        <button class="filter-btn" data-filter="أندرو">أندرو</button>
-                        <button class="filter-btn" data-filter="يوسف">يوسف</button>
-                        <button class="filter-btn" data-filter="مينا">مينا</button>
-                        <button class="filter-btn" data-filter="جورج">جورج</button>
-                        <button class="filter-btn" data-filter="مريم">مريم</button>
-                        <button class="filter-btn" data-filter="مارسلينو">مارسلينو</button>
-                    </div>
-                    <div id="tasksList"></div>
-                </div>
-            </div>
-
+           <div id="tasksTab" class="tab-content" style="display:none;">
+    <div class="card">
+        <div class="card-header">
+            <h3>📋 المهام الإدارية</h3>
+            <button class="btn" id="addTaskBtn"><i class="fas fa-plus"></i> إضافة مهمة</button>
+        </div>
+        <div id="tasksList"></div>
+    </div>
+</div>
             <div id="searchTab" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="search-type-buttons">
@@ -845,7 +835,7 @@ window.editSession = async (caseId, sessionId, newData) => {
 
 window.addTask = async (data) => {
     await addDoc(collection(db, 'tasks'), { ...data, createdAt: new Date().toISOString() });
-    addNotif('✅ تم إضافة مهمة للمحامي ' + data.lawyer, 'success');
+    addNotif('✅ تم إضافة مهمة للقضية: ' + (data.caseNumber || 'بدون قضية'), 'success');
     await loadTasks();
 };
 
@@ -872,42 +862,53 @@ window.toggleTaskStatus = async (id, currentStatus) => {
 
 function renderTaskCard(t, cardClass) {
     const taskDate = new Date(t.date);
+    const statusText = t.status === 'done' ? '✓ تم الإنجاز' : '⏳ قيد التنفيذ';
+    const statusClass = t.status === 'done' ? 'status-done' : 'status-pending';
+    
     return `<div class="task-card ${cardClass}" onclick="window.editTask('${esc(t.id)}')">
         <div class="flex-between">
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <strong>👨‍⚖️ ${esc(t.lawyer)}</strong>
+                <strong>⚖️ ${esc(t.caseNumber || 'بدون قضية')}</strong>
                 <span class="task-type-badge">${esc(t.taskType || 'مهمة')}</span>
             </div>
-            <button class="task-status-btn ${t.status === 'done' ? 'status-done' : 'status-pending'}" onclick="event.stopPropagation(); window.toggleTaskStatus('${esc(t.id)}', '${esc(t.status)}')">
-                ${t.status === 'done' ? '✓ تم الإنجاز' : '⏳ قيد التنفيذ'}
+            <button class="task-status-btn ${statusClass}" onclick="event.stopPropagation(); window.toggleTaskStatus('${esc(t.id)}', '${esc(t.status)}')">
+                ${statusText}
             </button>
         </div>
         <div style="margin-top:6px;font-size:0.88rem;color:var(--slate);">
             <i class="fas fa-calendar"></i> ${taskDate.toLocaleDateString('ar-EG')}
-            &nbsp;|&nbsp;<i class="fas fa-location-dot"></i> ${esc(t.location)}
+            &nbsp;|&nbsp;<i class="fas fa-gavel"></i> ${esc(t.court || 'محكمة غير محددة')}
         </div>
-        <div style="margin-top:4px;">${esc(t.description)}</div>
+        <div style="margin-top:6px;font-size:0.88rem;color:var(--slate);">
+            <i class="fas fa-location-dot"></i> ${esc(t.location)}
+        </div>
+        <div style="margin-top:8px;padding:8px;background:rgba(0,0,0,0.05);border-radius:8px;">
+            <i class="fas fa-pen"></i> <strong>الطلبات/الملاحظات:</strong><br>
+            ${esc(t.notes || 'لا توجد ملاحظات')}
+        </div>
         <div class="flex-between" style="margin-top:8px;">
-            <span style="font-size:0.85rem;color:var(--muted);"><i class="fas fa-clock"></i> ${esc(t.time || 'غير محدد')}</span>
+            <span style="font-size:0.85rem;color:var(--muted);"><i class="fas fa-clock"></i> تم الإنشاء: ${new Date(t.createdAt).toLocaleDateString('ar-EG')}</span>
             <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); window.deleteTask('${esc(t.id)}')"><i class="fas fa-trash"></i> حذف</button>
         </div>
     </div>`;
 }
-
 function renderTasks() {
     const container = document.getElementById('tasksList');
     if (!container) return;
+    
     const today = new Date(); today.setHours(0,0,0,0);
     const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
     const tenDaysLater = new Date(today); tenDaysLater.setDate(tenDaysLater.getDate() + 10);
-    let filtered = currentLawyerFilter === 'all' ? tasks : tasks.filter(t => t.lawyer === currentLawyerFilter);
-    const pendingTasks = filtered.filter(t => t.status !== 'done');
-    const doneTasks = filtered.filter(t => t.status === 'done');
+    
+    const pendingTasks = tasks.filter(t => t.status !== 'done');
+    const doneTasks = tasks.filter(t => t.status === 'done');
+    
     const overdue = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d < today; });
     const todayT = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d.getTime() === today.getTime(); });
     const tomorrowT = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d.getTime() === tomorrow.getTime(); });
     const upcoming = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d > tomorrow && d <= tenDaysLater; });
     const future = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d > tenDaysLater; });
+    
     let html = '';
     if (overdue.length) { html += '<h3 style="margin:15px 0 10px;color:var(--red);"><i class="fas fa-exclamation-triangle"></i> مهام متأخرة</h3>'; overdue.forEach(t => html += renderTaskCard(t, 'task-overdue')); }
     if (todayT.length) { html += '<h3 style="margin:15px 0 10px;"><i class="fas fa-sun"></i> مهام اليوم</h3>'; todayT.forEach(t => html += renderTaskCard(t, 'task-today')); }
@@ -916,40 +917,72 @@ function renderTasks() {
     if (future.length) { html += '<h3 style="margin:15px 0 10px;color:var(--muted);"><i class="fas fa-calendar"></i> مهام مستقبلية</h3>'; future.forEach(t => html += renderTaskCard(t, 'task-future')); }
     if (doneTasks.length) { html += '<h3 style="margin:15px 0 10px;color:var(--green);"><i class="fas fa-check-circle"></i> المهام المنجزة</h3>'; doneTasks.slice(0, 20).forEach(t => html += renderTaskCard(t, 'task-done')); }
     if (!html) html = '<p class="loading">لا توجد مهام</p>';
+    
     container.innerHTML = html;
 }
-
 function filterTasksByLawyer(lawyer) { currentLawyerFilter = lawyer; renderTasks(); }
 
 function showTaskModal(task = null) {
     const isEdit = task !== null;
-    const lawyers = ['أندرو','يوسف','مينا','جورج','مريم','مارسلينو'];
+    
+    // إنشاء قائمة القضايا للاختيار منها
+    let casesOptions = '<option value="">-- اختر القضية --</option>';
+    casesList.forEach(c => {
+        casesOptions += `<option value="${esc(c.id)}" ${task?.caseId === c.id ? 'selected' : ''}>${esc(c.caseNumber)} - ${esc(c.court || 'محكمة غير محددة')}</option>`;
+    });
+    
     const modalHtml = `<div id="taskModal" class="modal-overlay"><div class="modal-container"><h3>${isEdit ? '✏️ تعديل المهمة' : '➕ إضافة مهمة جديدة'}</h3>
-        <label>👨‍⚖️ المحامي</label><select id="taskLawyer">${lawyers.map(l => `<option value="${l}" ${task?.lawyer === l ? 'selected' : ''}>${l}</option>`).join('')}</select>
-        <label>📅 التاريخ</label><input type="date" id="taskDate" value="${esc(task?.date || '')}">
-        <label>⏰ الوقت (اختياري)</label><input type="time" id="taskTime" value="${esc(task?.time || '')}">
-        <label>🏛️ الجهة / المحكمة</label><input type="text" id="taskLocation" value="${esc(task?.location || '')}" placeholder="مثال: محكمة شمال القاهرة">
-        <label>📋 نوع المهمة</label><input type="text" id="taskType" value="${esc(task?.taskType || '')}" placeholder="جلسة، استلام حكم، معاينة، إيداع صحيفة...">
-        <label>📝 وصف المهمة</label><textarea id="taskDesc" rows="3">${esc(task?.description || '')}</textarea>
-        <div class="modal-buttons"><button id="saveTaskBtn" style="background:var(--${isEdit ? 'gold' : 'green'});color:${isEdit ? 'var(--navy)' : 'white'};">${isEdit ? '💾 حفظ التعديلات' : '✅ إضافة'}</button><button id="closeTaskBtn" style="background:var(--border);">إلغاء</button></div></div></div>`;
+        <label>⚖️ القضية المرتبطة</label>
+        <select id="taskCaseId">${casesOptions}</select>
+        <label>📋 نوع المهمة</label>
+        <input type="text" id="taskType" value="${esc(task?.taskType || '')}" placeholder="مثال: تقديم مذكرة، حضور جلسة، استلام حكم...">
+        <label>📅 التاريخ</label>
+        <input type="date" id="taskDate" value="${esc(task?.date || '')}">
+        <label>📍 المكان / الجهة</label>
+        <input type="text" id="taskLocation" value="${esc(task?.location || '')}" placeholder="المحكمة، النيابة، مكتب الشهر العقاري...">
+        <label>📝 الطلبات / الملاحظات</label>
+        <textarea id="taskNotes" rows="4" placeholder="اكتب هنا الطلبات المطلوبة أو أي ملاحظات...">${esc(task?.notes || '')}</textarea>
+        <div class="modal-buttons">
+            <button id="saveTaskBtn" style="background:var(--${isEdit ? 'gold' : 'green'});color:${isEdit ? 'var(--navy)' : 'white'};">${isEdit ? '💾 حفظ التعديلات' : '✅ إضافة'}</button>
+            <button id="closeTaskBtn" style="background:var(--border);">إلغاء</button>
+        </div>
+    </div></div>`;
     document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
     document.getElementById('saveTaskBtn').onclick = async () => {
+        const caseId = document.getElementById('taskCaseId').value;
+        const taskType = document.getElementById('taskType').value.trim();
         const date = document.getElementById('taskDate').value;
         const location = document.getElementById('taskLocation').value.trim();
-        const desc = document.getElementById('taskDesc').value.trim();
+        const notes = document.getElementById('taskNotes').value.trim();
+        
+        if (!caseId) { showToast('⚠️ يرجى اختيار القضية', 'warning'); return; }
+        if (!taskType) { showToast('⚠️ يرجى إدخال نوع المهمة', 'warning'); return; }
         if (!date) { showToast('⚠️ يرجى إدخال التاريخ', 'warning'); return; }
-        if (!location) { showToast('⚠️ يرجى إدخال الجهة', 'warning'); return; }
-        if (!desc) { showToast('⚠️ يرجى إدخال وصف المهمة', 'warning'); return; }
-        const data = { lawyer: document.getElementById('taskLawyer').value, date, time: document.getElementById('taskTime').value, location, taskType: document.getElementById('taskType').value, description: desc };
+        if (!location) { showToast('⚠️ يرجى إدخال المكان', 'warning'); return; }
+        
+        // الحصول على بيانات القضية المختارة
+        const selectedCase = casesList.find(c => c.id === caseId);
+        const caseNumber = selectedCase ? selectedCase.caseNumber : '';
+        const court = selectedCase ? selectedCase.court : '';
+        
+        const data = {
+            caseId: caseId,
+            caseNumber: caseNumber,
+            court: court,
+            taskType: taskType,
+            date: date,
+            location: location,
+            notes: notes,
+            status: task?.status || 'pending'
+        };
+        
         if (isEdit) await window.updateTask(task.id, data);
-        else await window.addTask({ ...data, status: 'pending' });
+        else await window.addTask({ ...data, createdAt: new Date().toISOString(), status: 'pending' });
         document.getElementById('taskModal').remove();
     };
     document.getElementById('closeTaskBtn').onclick = () => document.getElementById('taskModal').remove();
 }
-
-window.editTask = (taskId) => { const task = tasks.find(t => t.id === taskId); if (task) showTaskModal(task); };
-
 function renderClients() {
     const tbody = document.querySelector('#clientsTable tbody');
     if (!tbody) return;
@@ -1317,8 +1350,8 @@ function setupEvents() {
     document.getElementById('searchClientInput').addEventListener('keypress', e => { if (e.key==='Enter') searchClient(); });
     document.getElementById('searchCourtInput').addEventListener('keypress', e => { if (e.key==='Enter') searchCourt(); });
     document.querySelectorAll('.search-type-btn').forEach(btn => { if (!btn.id || btn.id !== 'advSearchBtn') { btn.onclick = () => { document.querySelectorAll('.search-type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); const type = btn.dataset.type; document.getElementById('searchClientDiv').style.display = type==='client' ? 'block' : 'none'; document.getElementById('searchCourtDiv').style.display = type==='court' ? 'block' : 'none'; document.getElementById('searchResults').innerHTML = ''; }; } });
-    document.querySelectorAll('.filter-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); filterTasksByLawyer(btn.dataset.filter); }; });
-    document.querySelectorAll('.nav-item').forEach(item => { item.onclick = () => { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); item.classList.add('active'); const tab = item.dataset.tab; document.querySelectorAll('.tab-content').forEach(t => t.style.display='none'); document.getElementById(tab+'Tab').style.display = 'block'; const titles = { dashboard:'لوحة التحكم', clients:'الموكلون', cases:'القضايا', tasks:'المهام اليومية', search:'بحث' }; document.getElementById('pageTitle').textContent = titles[tab] || ''; if (tab==='clients') renderClients(); if (tab==='cases') renderCases(); if (tab==='dashboard') renderDashboard(); if (tab==='tasks') renderTasks(); if (tab==='search') document.getElementById('searchResults').innerHTML = ''; if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open'); }; });
+    
+document.querySelectorAll('.nav-item').forEach(item => { item.onclick = () => { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); item.classList.add('active'); const tab = item.dataset.tab; document.querySelectorAll('.tab-content').forEach(t => t.style.display='none'); document.getElementById(tab+'Tab').style.display = 'block'; const titles = { dashboard:'لوحة التحكم', clients:'الموكلون', cases:'القضايا', tasks:'المهام اليومية', search:'بحث' }; document.getElementById('pageTitle').textContent = titles[tab] || ''; if (tab==='clients') renderClients(); if (tab==='cases') renderCases(); if (tab==='dashboard') renderDashboard(); if (tab==='tasks') renderTasks(); if (tab==='search') document.getElementById('searchResults').innerHTML = ''; if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open'); }; });
     document.getElementById('menuToggle').onclick = () => document.getElementById('sidebar').classList.toggle('open');
     document.getElementById('notifIcon').onclick = (e) => { e.stopPropagation(); const panel = document.getElementById('notifPanel'); panel.classList.toggle('open'); if (panel.classList.contains('open')) { notifications.forEach(n => n.read = true); document.getElementById('notifCount').textContent = ''; const list = document.getElementById('notifList'); list.innerHTML = notifications.slice(0, 30).map(n => `<div class="notif-item">${esc(n.text)}</div>`).join(''); } };
     document.addEventListener('click', () => document.getElementById('notifPanel').classList.remove('open'));
