@@ -1094,19 +1094,66 @@ function renderClients() {
 
 function renderDashboard() {
     const today = new Date(); today.setHours(0,0,0,0);
+    
+    // حساب عدد المهام الصحيح - المهام التي لها taskItems فقط
+    let activeTasksCount = 0;
+    tasks.forEach(t => {
+        const taskItems = t.taskItems || [];
+        // نحسب المهمة فقط إذا كان فيها مهام فرعية ولم تكتمل كلها
+        if (taskItems.length > 0) {
+            const allCompleted = taskItems.every(item => item.completed === true);
+            if (!allCompleted) {
+                activeTasksCount++;
+            }
+        }
+    });
+    
     document.getElementById('statsGrid').innerHTML = `<div class="stat-card"><h3>الموكلين</h3><div class="stat-number">${clients.length}</div></div>
         <div class="stat-card"><h3>القضايا</h3><div class="stat-number">${casesList.length}</div></div>
-        <div class="stat-card"><h3>المهام</h3><div class="stat-number">${tasks.length}</div></div>`;
+        <div class="stat-card"><h3>المهام</h3><div class="stat-number">${activeTasksCount}</div></div>`;
+    
     let upcomingSessions = [];
-    casesList.forEach(c => { if (c.sessions && c.sessions.length > 0) { c.sessions.forEach(s => { const sessionDate = new Date(s.date); sessionDate.setHours(0,0,0,0); if (sessionDate >= today) { upcomingSessions.push({ caseNumber: c.caseNumber, caseId: c.id, clientNames: c.clients ? c.clients.map(cl => cl.name).join(', ') : 'غير معروف', date: s.date, notes: s.notes }); } }); } });
+    casesList.forEach(c => { 
+        if (c.sessions && c.sessions.length > 0) { 
+            c.sessions.forEach(s => { 
+                const sessionDate = new Date(s.date); 
+                sessionDate.setHours(0,0,0,0); 
+                if (sessionDate >= today) { 
+                    upcomingSessions.push({ 
+                        caseNumber: c.caseNumber, 
+                        caseId: c.id, 
+                        clientNames: c.clients ? c.clients.map(cl => cl.name).join(', ') : 'غير معروف', 
+                        date: s.date, 
+                        notes: s.notes 
+                    }); 
+                } 
+            }); 
+        } 
+    });
+    
     upcomingSessions.sort((a,b) => new Date(a.date)-new Date(b.date));
     let html = '<div style="display:flex;flex-direction:column;gap:12px;">';
-    if (upcomingSessions.length === 0) { html += '<p class="loading" style="font-size:16px;">لا توجد جلسات قادمة</p>'; }
-    else { upcomingSessions.forEach(s => { const sessionDate = new Date(s.date); sessionDate.setHours(0,0,0,0); const diff = Math.round((sessionDate - today) / 864e5); let dayLabel = diff === 0 ? '🔴 اليوم' : diff === 1 ? '🟡 غداً' : `🟢 بعد ${diff} أيام`; html += `<div class="session-card" onclick="window.goToCase('${esc(s.caseId)}')"><div class="flex-between"><div><strong>⚖️ ${esc(s.caseNumber)}</strong> — ${esc(s.clientNames)}</div><span class="badge">${dayLabel}</span></div><div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}</div>${s.notes ? `<div>📝 ${esc(s.notes)}</div>` : ''}</div>`; }); }
+    if (upcomingSessions.length === 0) { 
+        html += '<p class="loading" style="font-size:16px;">لا توجد جلسات قادمة</p>'; 
+    } else { 
+        upcomingSessions.forEach(s => { 
+            const sessionDate = new Date(s.date); 
+            sessionDate.setHours(0,0,0,0); 
+            const diff = Math.round((sessionDate - today) / 864e5); 
+            let dayLabel = diff === 0 ? '🔴 اليوم' : diff === 1 ? '🟡 غداً' : `🟢 بعد ${diff} أيام`; 
+            html += `<div class="session-card" onclick="window.goToCase('${esc(s.caseId)}')">
+                <div class="flex-between">
+                    <div><strong>⚖️ ${esc(s.caseNumber)}</strong> — ${esc(s.clientNames)}</div>
+                    <span class="badge">${dayLabel}</span>
+                </div>
+                <div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}</div>
+                ${s.notes ? `<div>📝 ${esc(s.notes)}</div>` : ''}
+            </div>`; 
+        }); 
+    }
     html += '</div>';
     document.getElementById('upcomingSessions').innerHTML = html;
 }
-
 function getStatusClass(s) {
     if (s === 'متداولة') return 'status-mutadawla';
     if (s === 'حكم نهائي') return 'status-hukm';
