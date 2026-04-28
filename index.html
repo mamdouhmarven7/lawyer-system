@@ -778,11 +778,12 @@ function renderCases() {
     const tbody = document.querySelector('#casesTable tbody');
     if(!tbody) return;
     if(casesList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا</td></td>';
         return;
     }
     
-    tbody.innerHTML = casesList.map(c => {
+    let html = '';
+    for(const c of casesList) {
         const isExpanded = expandedCase === c.id;
         const sessions = c.sessions || [];
         const caseDocs = documents.filter(d => d.caseId === c.id);
@@ -790,8 +791,8 @@ function renderCases() {
         let clientsHtml = c.clients ? c.clients.map(cl => cl.name + (cl.title ? ' (' + cl.title + ')' : '')).join('<br>') : '--';
         let opponentsHtml = c.opponents ? c.opponents.map(op => op.name + (op.title ? ' (' + op.title + ')' : '')).join('<br>') : '--';
         
-        let row = `
-            <tr class="case-row" data-id="${c.id}" onclick="window.toggleCaseDetails('${c.id}')">
+        html += `
+            <tr class="case-row" data-id="${c.id}" onclick="window.toggleCaseDetails('${c.id}')" style="cursor:pointer;">
                 <td style="width:30px"><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i></td>
                 <td><strong>${c.caseNumber}</strong></td>
                 <td>${c.court || '--'}${c.circuit ? ' - ' + c.circuit : ''}</td>
@@ -807,32 +808,73 @@ function renderCases() {
         `;
         
         if(isExpanded) {
-            let sessionsHtml = `
+            html += `
                 <tr class="expanded-row">
                     <td colspan="8">
                         <div class="expanded-content">
-                            <div><h4>الموضوع</h4><div>${c.subjectDetails || 'لا توجد تفاصيل'}</div>
-                            <button class="btn-sm" onclick="event.stopPropagation(); window.editSubjectDetails('${c.id}')">تعديل التفاصيل</button></div>
-                            <div><h4>الجلسات</h4><button class="btn-sm" onclick="event.stopPropagation(); window.showAddSession('${c.id}')">+ إضافة جلسة</button>`;
-            if(sessions.length === 0) sessionsHtml += '<p>لا توجد جلسات</p>';
-            else sessions.forEach(s => {
-                sessionsHtml += `<div class="session-item"><div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}${s.notes ? ' - ' + s.notes : ''}</div>
-                <div><button class="btn-sm" onclick="event.stopPropagation(); window.editSession('${c.id}', ${s.id})">تعديل</button>
-                <button class="btn-sm" onclick="event.stopPropagation(); window.deleteSession('${c.id}', ${s.id})" style="background:#ef4444;color:white;">حذف</button></div></div>`;
-            });
-            sessionsHtml += `</div><div><h4>المستندات</h4><button class="btn-sm" onclick="event.stopPropagation(); window.showUploadDocument('${c.id}')">+ رفع مستند</button>`;
-            if(caseDocs.length === 0) sessionsHtml += '<p>لا توجد مستندات</p>';
-            else caseDocs.forEach(d => {
-                sessionsHtml += `<div class="doc-item"><div>${d.name} (${d.date})</div>
-                <div><a href="${d.fileData}" download="${d.name}" class="btn-sm">تحميل</a>
-                <button class="btn-sm" onclick="event.stopPropagation(); window.deleteDoc('${d.id}')" style="background:#ef4444;color:white;">حذف</button></div></div>`;
-            });
-            sessionsHtml += `</div></div></div></div>`;
-            row += sessionsHtml;
+                            <div>
+                                <h4>الموضوع</h4>
+                                <div>${c.subjectDetails || 'لا توجد تفاصيل'}</div>
+                                <button class="btn-sm" onclick="event.stopPropagation(); window.editSubjectDetails('${c.id}')">تعديل التفاصيل</button>
+                            </div>
+                            <div>
+                                <h4>الجلسات</h4>
+                                <button class="btn-sm" onclick="event.stopPropagation(); window.showAddSession('${c.id}')">+ إضافة جلسة</button>
+            `;
+            if(sessions.length === 0) {
+                html += '<p>لا توجد جلسات</p>';
+            } else {
+                sessions.forEach(s => {
+                    html += `
+                        <div class="session-item">
+                            <div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}${s.notes ? ' - ' + s.notes : ''}</div>
+                            <div>
+                                <button class="btn-sm" onclick="event.stopPropagation(); window.editSession('${c.id}', ${s.id})">تعديل</button>
+                                <button class="btn-sm" onclick="event.stopPropagation(); window.deleteSession('${c.id}', ${s.id})" style="background:#ef4444;color:white;">حذف</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            html += `
+                            </div>
+                            <div>
+                                <h4>المستندات</h4>
+                                <button class="btn-sm" onclick="event.stopPropagation(); window.showUploadDocument('${c.id}')">+ رفع مستند</button>
+            `;
+            if(caseDocs.length === 0) {
+                html += '<p>لا توجد مستندات</p>';
+            } else {
+                caseDocs.forEach(d => {
+                    html += `
+                        <div class="doc-item">
+                            <div>${d.name} (${d.date})</div>
+                            <div>
+                                <a href="${d.fileData}" download="${d.name}" class="btn-sm">تحميل</a>
+                                <button class="btn-sm" onclick="event.stopPropagation(); window.deleteDoc('${d.id}')" style="background:#ef4444;color:white;">حذف</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            html += `
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `;
         }
-        return row;
-    }).join('');
+    }
+    tbody.innerHTML = html;
 }
+    window.toggleCaseDetails = (caseId) => {
+    if(expandedCase === caseId) {
+        expandedCase = null;
+    } else {
+        expandedCase = caseId;
+    }
+    renderCases();
+};
 function searchClient() {
     const term = document.getElementById('searchClientInput').value.trim().toLowerCase();
     const div = document.getElementById('searchResults');
