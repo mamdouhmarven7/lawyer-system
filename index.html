@@ -6,576 +6,467 @@
     <title>مكتب المستشارين</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-        --gold: #facc15;
-        --gold-dark: #d97706;
-        --navy: #0f172a;
-        --navy-mid: #1e293b;
-        --navy-light: #334155;
-        --slate: #475569;
-        --muted: #94a3b8;
-        --border: #e2e8f0;
-        --bg: #f8fafc;
-        --white: #ffffff;
-        --red: #ef4444;
-        --green: #22c55e;
-        --orange: #f97316;
-        --purple: #8b5cf6;
-        --radius-sm: 12px;
-        --radius-md: 20px;
-        --radius-lg: 28px;
-        --shadow: 0 4px 24px rgba(15,23,42,0.08);
-        --shadow-lg: 0 8px 40px rgba(15,23,42,0.14);
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--navy); font-weight: 600; }
+    <style>
+        :root {
+            --gold: #facc15;
+            --gold-dark: #d97706;
+            --navy: #0f172a;
+            --navy-mid: #1e293b;
+            --navy-light: #334155;
+            --slate: #475569;
+            --muted: #94a3b8;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --red: #ef4444;
+            --green: #22c55e;
+            --orange: #f97316;
+            --purple: #8b5cf6;
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 28px;
+            --shadow: 0 4px 24px rgba(15,23,42,0.08);
+            --shadow-lg: 0 8px 40px rgba(15,23,42,0.14);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--navy); font-weight: 600; transition: background 0.3s, color 0.3s; }
 
-    /* ===== TOAST NOTIFICATIONS ===== */
-    #toastContainer {
-        position: fixed; top: 20px; left: 20px; z-index: 99999;
-        display: flex; flex-direction: column; gap: 10px; pointer-events: none;
-    }
-    .toast {
-        background: var(--navy); color: white; padding: 12px 20px;
-        border-radius: var(--radius-sm); font-size: 0.9rem;
-        box-shadow: var(--shadow-lg); pointer-events: all;
-        animation: slideIn 0.3s ease; max-width: 320px;
-        border-right: 4px solid var(--gold);
-    }
-    .toast.success { border-right-color: var(--green); }
-    .toast.error   { border-right-color: var(--red); }
-    .toast.warning { border-right-color: var(--orange); }
-    @keyframes slideIn { from { opacity:0; transform:translateX(-20px); } to { opacity:1; transform:translateX(0); } }
-    @keyframes fadeOut { to { opacity:0; transform:translateX(-20px); } }
+        #toastContainer {
+            position: fixed; top: 20px; left: 20px; z-index: 99999;
+            display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+        }
+        .toast {
+            background: var(--navy); color: white; padding: 12px 20px;
+            border-radius: var(--radius-sm); font-size: 0.9rem;
+            box-shadow: var(--shadow-lg); pointer-events: all;
+            animation: slideIn 0.3s ease; max-width: 320px;
+            border-right: 4px solid var(--gold);
+        }
+        .toast.success { border-right-color: var(--green); }
+        .toast.error   { border-right-color: var(--red); }
+        .toast.warning { border-right-color: var(--orange); }
+        @keyframes slideIn { from { opacity:0; transform:translateX(-20px); } to { opacity:1; transform:translateX(0); } }
+        @keyframes fadeOut { to { opacity:0; transform:translateX(-20px); } }
 
-    /* ===== NOTIFICATION PANEL ===== */
-    #notifPanel {
-        position: fixed; top: 70px; left: 20px; width: 340px;
-        background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
-        z-index: 9998; display: none; max-height: 500px; overflow-y: auto;
-    }
-    #notifPanel.open { display: block; }
-    .notif-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .notif-item { padding: 12px 20px; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
-    .notif-item.unread { background: #fef9c3; }
-    .notif-empty { padding: 30px; text-align: center; color: var(--muted); }
+        #notifPanel {
+            position: fixed; top: 70px; left: 20px; width: 340px;
+            background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+            z-index: 9998; display: none; max-height: 500px; overflow-y: auto;
+        }
+        #notifPanel.open { display: block; }
+        .notif-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .notif-item { padding: 12px 20px; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+        .notif-item.unread { background: #fef9c3; }
+        .notif-empty { padding: 30px; text-align: center; color: var(--muted); }
 
-    /* ===== LOGIN ===== */
-    .login-container {
-        display: flex; justify-content: center; align-items: center;
-        min-height: 100vh; background: linear-gradient(135deg, var(--navy), var(--navy-mid));
-        position: fixed; inset: 0; z-index: 100;
-    }
-    .login-card {
-        background: white; padding: 40px; border-radius: var(--radius-lg);
-        width: 90%; max-width: 400px; text-align: center;
-        box-shadow: var(--shadow-lg);
-    }
-    .login-card h2 { font-size: 1.5rem; color: var(--navy); margin-bottom: 8px; }
-    .login-card p  { color: var(--muted); margin-bottom: 24px; }
-    .login-card input {
-        width: 100%; padding: 12px 16px; margin: 8px 0;
-        border: 1.5px solid var(--border); border-radius: 40px;
-        font-family: 'Cairo', sans-serif; font-size: 0.95rem;
-        outline: none; transition: border 0.2s;
-    }
-    .login-card input:focus { border-color: var(--gold); }
-    .login-card button {
-        width: 100%; padding: 13px; background: var(--gold);
-        border: none; border-radius: 40px; font-weight: 700;
-        font-family: 'Cairo', sans-serif; font-size: 1rem;
-        cursor: pointer; margin-top: 12px; transition: background 0.2s;
-    }
-    .login-card button:hover { background: var(--gold-dark); }
-    #loginError { color: var(--red); margin-top: 12px; font-size: 0.9rem; min-height: 20px; }
+        .login-container {
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+            position: fixed; inset: 0; z-index: 100;
+        }
+        .login-card {
+            background: white; padding: 40px; border-radius: var(--radius-lg);
+            width: 90%; max-width: 400px; text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+        .login-card h2 { font-size: 1.5rem; color: var(--navy); margin-bottom: 8px; }
+        .login-card p  { color: var(--muted); margin-bottom: 24px; }
+        .login-card input {
+            width: 100%; padding: 12px 16px; margin: 8px 0;
+            border: 1.5px solid var(--border); border-radius: 40px;
+            font-family: 'Cairo', sans-serif; font-size: 0.95rem;
+            outline: none; transition: border 0.2s;
+        }
+        .login-card input:focus { border-color: var(--gold); }
+        .login-card button {
+            width: 100%; padding: 13px; background: var(--gold);
+            border: none; border-radius: 40px; font-weight: 700;
+            font-family: 'Cairo', sans-serif; font-size: 1rem;
+            cursor: pointer; margin-top: 12px; transition: background 0.2s;
+        }
+        .login-card button:hover { background: var(--gold-dark); }
+        #loginError { color: var(--red); margin-top: 12px; font-size: 0.9rem; min-height: 20px; }
 
-    /* ===== LAYOUT ===== */
-    .app-container { display: flex; min-height: 100vh; }
-    .sidebar {
-        width: 280px; background: linear-gradient(180deg, var(--navy), var(--navy-mid));
-        color: #e2e8f0; position: fixed; right: 0; top: 0; bottom: 0;
-        overflow-y: auto; z-index: 50; transition: transform 0.3s;
-    }
-    .sidebar-header { padding: 24px 20px; border-bottom: 1px solid var(--navy-light); text-align: center; }
-    .sidebar-header h2 { font-size: 1.2rem; color: var(--gold); }
-    .lawyer-name       { font-size: 0.9rem; color: #cbd5e1; margin-top: 6px; }
-    .lawyer-name-small { font-size: 0.82rem; color: var(--muted); margin-top: 3px; }
-    .consultant-text   { font-size: 0.78rem; color: var(--muted); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--navy-light); }
-    .nav-menu { padding: 16px 0; }
-    .nav-item {
-        display: flex; align-items: center; gap: 12px;
-        padding: 13px 24px; margin: 3px 12px; border-radius: var(--radius-sm);
-        cursor: pointer; transition: all 0.2s; font-size: 0.95rem;
-    }
-    .nav-item:hover  { background: var(--navy-light); }
-    .nav-item.active { background: var(--gold); color: var(--navy); font-weight: 700; }
+        .app-container { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 280px; background: linear-gradient(180deg, var(--navy), var(--navy-mid));
+            color: #e2e8f0; position: fixed; right: 0; top: 0; bottom: 0;
+            overflow-y: auto; z-index: 50; transition: transform 0.3s;
+        }
+        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid var(--navy-light); text-align: center; }
+        .sidebar-header h2 { font-size: 1.2rem; color: var(--gold); }
+        .lawyer-name       { font-size: 0.9rem; color: #cbd5e1; margin-top: 6px; }
+        .lawyer-name-small { font-size: 0.82rem; color: var(--muted); margin-top: 3px; }
+        .consultant-text   { font-size: 0.78rem; color: var(--muted); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--navy-light); }
+        .nav-menu { padding: 16px 0; }
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 13px 24px; margin: 3px 12px; border-radius: var(--radius-sm);
+            cursor: pointer; transition: all 0.2s; font-size: 0.95rem;
+        }
+        .nav-item:hover  { background: var(--navy-light); }
+        .nav-item.active { background: var(--gold); color: var(--navy); font-weight: 700; }
 
-    /* ===== MAIN CONTENT ===== */
-    .main-content {
-        flex: 1; margin-right: 280px; padding: 24px;
-        background: var(--bg); position: relative; z-index: 2; min-height: 100vh;
-    }
-    .main-content::before {
-        content: ""; position: fixed;
-        top: 50%; left: 40%; transform: translate(-50%, -50%);
-        width: 100%; height: 100%;
-        background-image: url('https://raw.githubusercontent.com/mamdouhmarven7/lawyer-system/main/logo.png.png');
-        background-repeat: no-repeat; background-position: center;
-        background-size: 50%; opacity: 0.06; pointer-events: none; z-index: 0;
-    }
+        .main-content {
+            flex: 1; margin-right: 280px; padding: 24px;
+            background: var(--bg); position: relative; z-index: 2; min-height: 100vh;
+            transition: background 0.3s;
+        }
+        .main-content::before {
+            content: ""; position: fixed;
+            top: 50%; left: 40%; transform: translate(-50%, -50%);
+            width: 100%; height: 100%;
+            background-image: url('https://raw.githubusercontent.com/mamdouhmarven7/lawyer-system/main/logo.png.png');
+            background-repeat: no-repeat; background-position: center;
+            background-size: 50%; opacity: 0.06; pointer-events: none; z-index: 0;
+        }
 
-    /* ===== TOP BAR ===== */
-    .top-bar {
-        display: flex; justify-content: space-between; align-items: center;
-        background: white; padding: 12px 24px; border-radius: var(--radius-md);
-        margin-bottom: 24px; box-shadow: var(--shadow);
-    }
-    .page-title { font-size: 1.5rem; font-weight: 800; }
-    .top-actions { display: flex; gap: 10px; align-items: center; }
-    .logout-btn {
-        background: var(--red); color: white; border: none;
-        padding: 8px 18px; border-radius: 40px; cursor: pointer;
-        font-family: 'Cairo', sans-serif; font-weight: 600; transition: opacity 0.2s;
-    }
-    .logout-btn:hover { opacity: 0.85; }
-    .notif-badge { position: relative; cursor: pointer; padding: 8px; }
-    .badge-count {
-        position: absolute; top: 0; left: 0;
-        background: var(--red); color: white; border-radius: 50%;
-        width: 20px; height: 20px; font-size: 11px;
-        display: flex; align-items: center; justify-content: center;
-    }
+        .top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            background: white; padding: 12px 24px; border-radius: var(--radius-md);
+            margin-bottom: 24px; box-shadow: var(--shadow);
+        }
+        .page-title { font-size: 1.5rem; font-weight: 800; }
+        .top-actions { display: flex; gap: 10px; align-items: center; }
+        .logout-btn {
+            background: var(--red); color: white; border: none;
+            padding: 8px 18px; border-radius: 40px; cursor: pointer;
+            font-family: 'Cairo', sans-serif; font-weight: 600; transition: opacity 0.2s;
+        }
+        .logout-btn:hover { opacity: 0.85; }
+        .notif-badge { position: relative; cursor: pointer; padding: 8px; }
+        .badge-count {
+            position: absolute; top: 0; left: 0;
+            background: var(--red); color: white; border-radius: 50%;
+            width: 20px; height: 20px; font-size: 11px;
+            display: flex; align-items: center; justify-content: center;
+        }
 
-    /* ===== STATS ===== */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-    .stat-card {
-        background: white; padding: 20px; border-radius: var(--radius-md);
-        border-right: 5px solid var(--gold); box-shadow: var(--shadow);
-    }
-    .stat-card h3 { font-size: 0.9rem; color: var(--slate); margin-bottom: 8px; }
-    .stat-number { font-size: 2rem; font-weight: 800; color: var(--navy); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card {
+            background: white; padding: 20px; border-radius: var(--radius-md);
+            border-right: 5px solid var(--gold); box-shadow: var(--shadow);
+        }
+        .stat-card h3 { font-size: 0.9rem; color: var(--slate); margin-bottom: 8px; }
+        .stat-number { font-size: 2rem; font-weight: 800; color: var(--navy); }
 
-    /* ===== CARDS ===== */
-    .card { background: white; border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow); }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .card { background: white; border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow); transition: background 0.3s; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
 
-    /* ===== BUTTONS ===== */
-    .btn {
-        background: var(--gold); color: var(--navy); border: none;
-        padding: 9px 18px; border-radius: 40px; font-weight: 700;
-        cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-        font-family: 'Cairo', sans-serif; font-size: 0.9rem; transition: all 0.2s;
-    }
-    .btn:hover { background: var(--gold-dark); }
-    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--slate); }
-    .btn-outline:hover { background: var(--bg); }
-    .btn-sm { padding: 5px 13px; font-size: 0.8rem; }
-    .btn-danger { background: var(--red); color: white; }
-    .btn-danger:hover { background: #dc2626; }
-    .btn-success { background: var(--green); color: white; }
-    .btn-success:hover { background: #16a34a; }
+        .btn {
+            background: var(--gold); color: var(--navy); border: none;
+            padding: 9px 18px; border-radius: 40px; font-weight: 700;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+            font-family: 'Cairo', sans-serif; font-size: 0.9rem; transition: all 0.2s;
+        }
+        .btn:hover { background: var(--gold-dark); }
+        .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--slate); }
+        .btn-outline:hover { background: var(--bg); }
+        .btn-sm { padding: 5px 13px; font-size: 0.8rem; }
+        .btn-danger { background: var(--red); color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-success { background: var(--green); color: white; }
+        .btn-success:hover { background: #16a34a; }
 
-    /* ===== TABLES ===== */
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { text-align: right; padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-    th { font-weight: 700; color: var(--slate); background: var(--bg); }
-    tr:hover td { background: #f8fafc; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: right; padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { font-weight: 700; color: var(--slate); background: var(--bg); }
+        tr:hover td { background: #f8fafc; }
 
-    /* ===== FORMS ===== */
-    label { display: block; font-weight: 700; font-size: 0.88rem; color: var(--slate); margin-bottom: 4px; margin-top: 12px; }
-    input, select, textarea {
-        width: 100%; padding: 10px 14px;
-        border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-        font-family: 'Cairo', sans-serif; font-size: 0.9rem;
-        outline: none; transition: border 0.2s; background: white;
-    }
-    input:focus, select:focus, textarea:focus { border-color: var(--gold); }
-    textarea { resize: vertical; }
+        label { display: block; font-weight: 700; font-size: 0.88rem; color: var(--slate); margin-bottom: 4px; margin-top: 12px; }
+        input, select, textarea {
+            width: 100%; padding: 10px 14px;
+            border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+            font-family: 'Cairo', sans-serif; font-size: 0.9rem;
+            outline: none; transition: border 0.2s; background: white;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--gold); }
+        textarea { resize: vertical; }
 
-    /* ===== MODAL ===== */
-    .modal-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-        display: flex; justify-content: center; align-items: center;
-        z-index: 9999; padding: 20px; animation: fadeIn 0.2s ease;
-    }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .modal-container {
-        background: white; border-radius: var(--radius-lg);
-        width: 90%; max-width: 580px; max-height: 90vh;
-        overflow-y: auto; padding: 28px; text-align: right;
-        box-shadow: var(--shadow-lg); animation: popIn 0.25s ease;
-    }
-    @keyframes popIn { from { transform:scale(0.95); opacity:0; } to { transform:scale(1); opacity:1; } }
-    .modal-container h3 { font-size: 1.2rem; margin-bottom: 16px; }
-    .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
-    .modal-buttons button { flex: 1; padding: 12px; border-radius: 40px; font-weight: 700; cursor: pointer; border: none; font-family: 'Cairo', sans-serif; font-size: 0.9rem; }
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; padding: 20px; animation: fadeIn 0.2s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-container {
+            background: white; border-radius: var(--radius-lg);
+            width: 90%; max-width: 580px; max-height: 90vh;
+            overflow-y: auto; padding: 28px; text-align: right;
+            box-shadow: var(--shadow-lg); animation: popIn 0.25s ease;
+        }
+        @keyframes popIn { from { transform:scale(0.95); opacity:0; } to { transform:scale(1); opacity:1; } }
+        .modal-container h3 { font-size: 1.2rem; margin-bottom: 16px; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-buttons button { flex: 1; padding: 12px; border-radius: 40px; font-weight: 700; cursor: pointer; border: none; font-family: 'Cairo', sans-serif; font-size: 0.9rem; }
 
-    /* ===== STATUS BADGES ===== */
-    .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-block; }
-    .status-mutadawla  { background: var(--gold); color: var(--navy); }
-    .status-hukm       { background: var(--green); color: white; }
-    .status-mostanfa   { background: var(--orange); color: white; }
-    .status-naqd       { background: var(--purple); color: white; }
-    .badge { background: var(--gold); color: var(--navy); padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-block; }
+        .status-mutadawla  { background: var(--gold); color: var(--navy); }
+        .status-hukm       { background: var(--green); color: white; }
+        .status-mostanfa   { background: var(--orange); color: white; }
+        .status-naqd       { background: var(--purple); color: white; }
+        .badge { background: var(--gold); color: var(--navy); padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
 
-    /* ===== CASES ===== */
-    .case-row { cursor: pointer; transition: background 0.15s; }
-    .case-row:hover td { background: #fef9c3 !important; }
-    .expanded-content { padding: 20px; background: var(--bg); border-radius: var(--radius-sm); }
-    .expanded-content h4 { margin: 16px 0 8px; font-size: 1rem; color: var(--slate); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-    .session-item {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 10px 14px; border-radius: 10px; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;
-        background: #fef9c3;
-    }
+        .case-row { cursor: pointer; transition: background 0.15s; }
+        .case-row:hover td { background: #fef9c3 !important; }
+        .expanded-content { padding: 20px; background: var(--bg); border-radius: var(--radius-sm); }
+        .expanded-content h4 { margin: 16px 0 8px; font-size: 1rem; color: var(--slate); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        .session-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 14px; border-radius: 10px; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;
+            background: #fef9c3;
+        }
 
-    /* ===== SESSIONS (DASHBOARD) ===== */
-    .session-card {
-        background: #fef9c3; padding: 14px 16px; border-radius: var(--radius-md);
-        border-right: 4px solid var(--gold); cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;
-    }
-    .session-card:hover { transform: translateX(-4px); box-shadow: var(--shadow); }
+        .session-card {
+            background: #fef9c3; padding: 14px 16px; border-radius: var(--radius-md);
+            border-right: 4px solid var(--gold); cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;
+        }
+        .session-card:hover { transform: translateX(-4px); box-shadow: var(--shadow); }
 
-    /* ===== TASKS ===== */
-    .tasks-filter { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-    .filter-btn { padding: 7px 16px; border-radius: 30px; cursor: pointer; background: var(--border); border: none; font-family: 'Cairo', sans-serif; font-size: 0.88rem; transition: all 0.2s; }
-    .filter-btn.active { background: var(--gold); font-weight: 700; color: var(--navy); }
-    .task-card { border-radius: var(--radius-sm); padding: 15px; margin-bottom: 12px; border-right: 4px solid; cursor: pointer; transition: transform 0.2s; }
-    .task-card:hover { transform: translateX(-3px); }
-    .task-today    { border-right-color: var(--gold); background: #fef9c3; }
-    .task-tomorrow { border-right-color: var(--orange); background: #fff7ed; }
-    .task-future   { border-right-color: var(--muted); background: var(--bg); }
-    .task-done     { border-right-color: var(--green); background: #f0fdf4; opacity: 0.85; }
-    .task-overdue  { border-right-color: var(--red); background: #fef2f2; }
-    .task-status-btn { padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; border: none; font-family: 'Cairo', sans-serif; font-weight: 700; }
-    .status-pending { background: var(--orange); color: white; }
-    .status-done    { background: var(--green); color: white; }
-    .task-type-badge { padding: 2px 9px; border-radius: 20px; font-size: 11px; background: var(--border); }
+        .tasks-filter { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-btn { padding: 7px 16px; border-radius: 30px; cursor: pointer; background: var(--border); border: none; font-family: 'Cairo', sans-serif; font-size: 0.88rem; transition: all 0.2s; }
+        .filter-btn.active { background: var(--gold); font-weight: 700; color: var(--navy); }
+        .task-card { border-radius: var(--radius-sm); padding: 15px; margin-bottom: 12px; border-right: 4px solid; cursor: pointer; transition: transform 0.2s; }
+        .task-card:hover { transform: translateX(-3px); }
+        .task-today    { border-right-color: var(--gold); background: #fef9c3; }
+        .task-tomorrow { border-right-color: var(--orange); background: #fff7ed; }
+        .task-future   { border-right-color: var(--muted); background: var(--bg); }
+        .task-done     { border-right-color: var(--green); background: #f0fdf4; opacity: 0.85; }
+        .task-overdue  { border-right-color: var(--red); background: #fef2f2; }
+        .task-status-btn { padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; border: none; font-family: 'Cairo', sans-serif; font-weight: 700; }
+        .status-pending { background: var(--orange); color: white; }
+        .status-done    { background: var(--green); color: white; }
+        .task-type-badge { padding: 2px 9px; border-radius: 20px; font-size: 11px; background: var(--border); }
 
-    /* ===== SEARCH ===== */
-    .search-type-buttons { display: flex; gap: 10px; margin-bottom: 16px; }
-    .search-type-btn { padding: 8px 20px; border-radius: 40px; cursor: pointer; background: var(--border); border: none; font-family: 'Cairo', sans-serif; font-weight: 600; transition: all 0.2s; }
-    .search-type-btn.active { background: var(--gold); }
+        .search-type-buttons { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+        .search-type-btn { padding: 8px 20px; border-radius: 40px; cursor: pointer; background: var(--border); border: none; font-family: 'Cairo', sans-serif; font-weight: 600; transition: all 0.2s; }
+        .search-type-btn.active { background: var(--gold); }
 
-    /* ===== HELPERS ===== */
-    .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .loading { text-align: center; padding: 40px; color: var(--muted); }
-    .action-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
-    .party-item { display: flex; align-items: center; gap: 8px; background: var(--bg); padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; }
-    .remove-party { background: none; border: none; color: var(--red); cursor: pointer; font-size: 1rem; margin-right: auto; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .loading { text-align: center; padding: 40px; color: var(--muted); }
+        .action-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
+        .party-item { display: flex; align-items: center; gap: 8px; background: var(--bg); padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; }
+        .remove-party { background: none; border: none; color: var(--red); cursor: pointer; font-size: 1rem; margin-right: auto; }
 
-    /* ===== RESPONSIVE ===== */
-    .menu-toggle { display: none; background: var(--navy); color: white; border: none; font-size: 1.4rem; cursor: pointer; padding: 6px 10px; border-radius: 10px; }
-    @media (max-width: 768px) {
-        .sidebar { transform: translateX(100%); }
-        .sidebar.open { transform: translateX(0); }
-        .main-content { margin-right: 0; }
-        .menu-toggle { display: block; }
-        .stats-grid { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 480px) {
-        .stats-grid { grid-template-columns: 1fr; }
-        .main-content { padding: 14px; }
-    }
+        .menu-toggle { display: none; background: var(--navy); color: white; border: none; font-size: 1.4rem; cursor: pointer; padding: 6px 10px; border-radius: 10px; }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-right: 0; }
+            .menu-toggle { display: block; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .main-content { padding: 14px; }
+        }
 
-    /* ===== CONFIRM DIALOG ===== */
-    .confirm-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-        display: flex; justify-content: center; align-items: center; z-index: 99999;
-    }
-    .confirm-box {
-        background: white; border-radius: var(--radius-lg); padding: 28px;
-        width: 90%; max-width: 400px; text-align: center; box-shadow: var(--shadow-lg);
-    }
-    .confirm-box h3 { margin-bottom: 10px; font-size: 1.1rem; }
-    .confirm-box p  { color: var(--slate); font-size: 0.9rem; margin-bottom: 20px; }
-    .confirm-btns   { display: flex; gap: 12px; justify-content: center; }
-    .confirm-btns button { flex: 1; padding: 11px; border-radius: 40px; border: none; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; }
+        .confirm-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            display: flex; justify-content: center; align-items: center; z-index: 99999;
+        }
+        .confirm-box {
+            background: white; border-radius: var(--radius-lg); padding: 28px;
+            width: 90%; max-width: 400px; text-align: center; box-shadow: var(--shadow-lg);
+        }
+        .confirm-box h3 { margin-bottom: 10px; font-size: 1.1rem; }
+        .confirm-box p  { color: var(--slate); font-size: 0.9rem; margin-bottom: 20px; }
+        .confirm-btns   { display: flex; gap: 12px; justify-content: center; }
+        .confirm-btns button { flex: 1; padding: 11px; border-radius: 40px; border: none; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; }
 
-    /* ===== تكبير الخطوط الافتراضي ===== */
-    #clientsTable td, #clientsTable th, #casesTable td, #casesTable th {
-        font-size: 18px;
-        font-weight: 700;
-    }
-    #casesTable td:nth-child(2), #casesTable td:nth-child(2) strong { font-weight: 800; }
-    #clientsTable td:first-child, #clientsTable td:first-child strong { font-weight: 700; }
-    .expanded-content .session-item { font-size: 17px; font-weight: 600; }
-    .expanded-content h4 { font-size: 19px; font-weight: 800; }
-    .action-buttons .btn-sm { font-size: 15px; font-weight: 700; }
-    .status-badge { font-size: 15px; font-weight: 800; }
-    #clientsTable th, #casesTable th { font-size: 18px; font-weight: 800; }
+        #clientsTable td, #clientsTable th, #casesTable td, #casesTable th {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        #casesTable td:nth-child(2), #casesTable td:nth-child(2) strong { font-weight: 800; }
+        #clientsTable td:first-child, #clientsTable td:first-child strong { font-weight: 700; }
+        .expanded-content .session-item { font-size: 17px; font-weight: 600; }
+        .expanded-content h4 { font-size: 19px; font-weight: 800; }
+        .action-buttons .btn-sm { font-size: 15px; font-weight: 700; }
+        .status-badge { font-size: 15px; font-weight: 800; }
+        #clientsTable th, #casesTable th { font-size: 18px; font-weight: 800; }
 
-    /* ===== تكبير الخطوط في لوحة التحكم (داشبورد) ===== */
-    #dashboardTab .stat-card h3 {
-        font-size: 22px !important;
-        font-weight: 800 !important;
-    }
+        #dashboardTab .stat-card h3 {
+            font-size: 22px !important;
+            font-weight: 800 !important;
+        }
+        #dashboardTab .stat-number {
+            font-size: 36px !important;
+            font-weight: 900 !important;
+        }
+        #dashboardTab .card h3 {
+            font-size: 24px !important;
+            font-weight: 800 !important;
+            margin-bottom: 20px !important;
+        }
+        #dashboardTab .session-card {
+            font-size: 18px !important;
+        }
+        #dashboardTab .session-card .flex-between div strong,
+        #dashboardTab .session-card .flex-between div span {
+            font-size: 19px !important;
+            font-weight: 800 !important;
+        }
+        #dashboardTab .session-card .badge {
+            font-size: 16px !important;
+            padding: 8px 14px !important;
+            font-weight: 800 !important;
+        }
 
-    #dashboardTab .stat-number {
-        font-size: 36px !important;
-        font-weight: 900 !important;
-    }
+        /* ===== DARK MODE ===== */
+        body.dark-mode {
+            --bg: #0f172a;
+            --navy: #f1f5f9;
+            --border: #334155;
+            --white: #1e293b;
+            --slate: #cbd5e1;
+            --muted: #94a3b8;
+        }
+        body.dark-mode .card,
+        body.dark-mode .top-bar,
+        body.dark-mode .stat-card,
+        body.dark-mode .modal-container,
+        body.dark-mode .confirm-box,
+        body.dark-mode .columns-panel {
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+        body.dark-mode .main-content::before { opacity: 0.02; }
+        body.dark-mode input,
+        body.dark-mode select,
+        body.dark-mode textarea {
+            background: #0f172a;
+            border-color: #334155;
+            color: #f1f5f9;
+        }
+        body.dark-mode .session-card,
+        body.dark-mode .task-today,
+        body.dark-mode .task-card {
+            background: #334155;
+        }
+        body.dark-mode .task-future { background: #1e293b; }
+        body.dark-mode .task-overdue { background: #450a0a; }
+        body.dark-mode .session-item { background: #334155; }
 
-    #dashboardTab .card h3 {
-        font-size: 24px !important;
-        font-weight: 800 !important;
-        margin-bottom: 20px !important;
-    }
+        .dark-mode-toggle {
+            background: var(--navy);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-left: 10px;
+        }
+        .dark-mode-toggle:hover { transform: scale(1.05); }
 
-    #dashboardTab .session-card {
-        font-size: 18px !important;
-    }
+        .columns-panel {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            z-index: 9997;
+            display: none;
+            padding: 15px;
+            min-width: 200px;
+        }
+        .columns-panel.open { display: block; }
+        .columns-panel h4 { margin-bottom: 10px; font-size: 16px; }
+        .columns-panel label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .columns-panel input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
 
-    #dashboardTab .session-card .flex-between div strong,
-    #dashboardTab .session-card .flex-between div span {
-        font-size: 19px !important;
-        font-weight: 800 !important;
-    }
+        .advanced-search {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            display: none;
+        }
+        .advanced-search.show { display: block; }
+        .advanced-search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .advanced-search label { margin-top: 0; font-size: 13px; }
+        .advanced-search input, .advanced-search select { margin-top: 5px; }
 
-    #dashboardTab .session-card .badge {
-        font-size: 16px !important;
-        padding: 8px 14px !important;
-        font-weight: 800 !important;
-    }
+        .keyboard-shortcuts {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--navy);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 9996;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+        .keyboard-shortcuts:hover { opacity: 1; }
+        .keyboard-shortcuts kbd {
+            background: var(--gold);
+            color: var(--navy);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
 
-    #dashboardTab .session-card div[style*="margin-top:8px"] {
-        font-size: 18px !important;
-    }
-
-    #dashboardTab .session-card div[style*="margin-top:6px"] {
-        font-size: 17px !important;
-    }
-
-    #dashboardTab .session-card div[style*="margin-top:10px"] {
-        font-size: 17px !important;
-    }
-      /* ===== DARK MODE (وضع الليل) ===== */
-body.dark-mode {
-    --bg: #0f172a;
-    --navy: #f1f5f9;
-    --navy-mid: #1e293b;
-    --border: #334155;
-    --white: #1e293b;
-    --slate: #cbd5e1;
-    --muted: #94a3b8;
-    background: #0f172a;
-}
-
-body.dark-mode .card,
-body.dark-mode .top-bar,
-body.dark-mode .stat-card,
-body.dark-mode .modal-container,
-body.dark-mode .confirm-box {
-    background: #1e293b;
-    color: #f1f5f9;
-}
-
-body.dark-mode .main-content::before {
-    opacity: 0.02;
-}
-
-body.dark-mode .toast {
-    background: #1e293b;
-    color: #f1f5f9;
-}
-
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode textarea {
-    background: #0f172a;
-    border-color: #334155;
-    color: #f1f5f9;
-}
-
-body.dark-mode .session-card,
-body.dark-mode .session-item,
-body.dark-mode .task-today,
-body.dark-mode .task-card {
-    background: #334155;
-}
-
-body.dark-mode .task-future {
-    background: #1e293b;
-}
-
-body.dark-mode .task-overdue {
-    background: #450a0a;
-}
-
-/* ===== زر وضع الليل ===== */
-.dark-mode-toggle {
-    background: var(--navy);
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 40px;
-    cursor: pointer;
-    font-family: 'Cairo', sans-serif;
-    font-weight: 600;
-    transition: all 0.3s;
-    margin-left: 10px;
-}
-
-.dark-mode-toggle:hover {
-    transform: scale(1.05);
-}
-
-/* ===== تخصيص الأعمدة ===== */
-.columns-panel {
-    position: fixed;
-    top: 80px;
-    left: 20px;
-    background: white;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    z-index: 9997;
-    display: none;
-    padding: 15px;
-    min-width: 200px;
-}
-
-body.dark-mode .columns-panel {
-    background: #1e293b;
-    border: 1px solid #334155;
-}
-
-.columns-panel.open {
-    display: block;
-}
-
-.columns-panel h4 {
-    margin-bottom: 10px;
-    font-size: 16px;
-}
-
-.columns-panel label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 8px 0;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.columns-panel input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
-
-/* ===== بحث متقدم ===== */
-.advanced-search {
-    background: var(--bg);
-    padding: 15px;
-    border-radius: var(--radius-md);
-    margin-bottom: 20px;
-    display: none;
-}
-
-.advanced-search.show {
-    display: block;
-}
-
-.advanced-search-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.advanced-search label {
-    margin-top: 0;
-    font-size: 13px;
-}
-
-.advanced-search input,
-.advanced-search select {
-    margin-top: 5px;
-}
-
-/* ===== اختصارات لوحة المفاتيح ===== */
-.keyboard-shortcuts {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: var(--navy);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 40px;
-    font-size: 12px;
-    cursor: pointer;
-    z-index: 9996;
-    opacity: 0.6;
-    transition: opacity 0.3s;
-}
-
-.keyboard-shortcuts:hover {
-    opacity: 1;
-}
-
-.shortcuts-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 25px;
-    z-index: 10000;
-    min-width: 300px;
-    display: none;
-}
-
-body.dark-mode .shortcuts-modal {
-    background: #1e293b;
-}
-
-.shortcuts-modal.open {
-    display: block;
-}
-
-.shortcuts-modal h3 {
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.shortcuts-modal table {
-    width: 100%;
-}
-
-.shortcuts-modal td {
-    padding: 8px;
-    border: none;
-}
-
-.shortcuts-modal kbd {
-    background: #facc15;
-    color: #0f172a;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-weight: bold;
-    font-family: monospace;
-}
-</style>
+        .shortcuts-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            z-index: 10000;
+            min-width: 350px;
+            display: none;
+        }
+        body.dark-mode .shortcuts-modal { background: #1e293b; }
+        .shortcuts-modal.open { display: block; }
+        .shortcuts-modal h3 { margin-bottom: 15px; text-align: center; }
+        .shortcuts-modal table { width: 100%; }
+        .shortcuts-modal td { padding: 8px; border: none; }
+        .shortcuts-modal kbd {
+            background: var(--gold);
+            color: var(--navy);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-family: monospace;
+        }
+    </style>
 </head>
 <body>
 
-<!-- Toast Container -->
 <div id="toastContainer"></div>
 
-<!-- Notification Panel -->
 <div id="notifPanel">
     <div class="notif-header">
         <strong>🔔 الإشعارات</strong>
-        <button onclick="markAllRead()" class="btn btn-sm">قراءة الكل</button>
+        <button onclick="window.markAllRead && window.markAllRead()" class="btn btn-sm">قراءة الكل</button>
     </div>
     <div id="notifList"><div class="notif-empty">لا توجد إشعارات</div></div>
 </div>
 
-<!-- Login -->
 <div id="loginScreen" class="login-container">
     <div class="login-card">
         <h2><i class="fas fa-gavel"></i> مكتب المستشارين</h2>
@@ -587,10 +478,8 @@ body.dark-mode .shortcuts-modal {
     </div>
 </div>
 
-<!-- App -->
 <div id="appContent" style="display:none;">
     <div class="app-container">
-        <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h2><i class="fas fa-gavel"></i> مكتب المستشارين</h2>
@@ -607,7 +496,6 @@ body.dark-mode .shortcuts-modal {
             </div>
         </div>
 
-        <!-- Main -->
         <div class="main-content">
             <div class="top-bar">
                 <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
@@ -621,7 +509,6 @@ body.dark-mode .shortcuts-modal {
                 </div>
             </div>
 
-            <!-- Dashboard -->
             <div id="dashboardTab" class="tab-content">
                 <div class="stats-grid" id="statsGrid"></div>
                 <div class="card">
@@ -630,20 +517,18 @@ body.dark-mode .shortcuts-modal {
                 </div>
             </div>
 
-            <!-- Clients -->
             <div id="clientsTab" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="card-header">
                         <h3>قائمة الموكلين</h3>
-                        <button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> إضافة موكل</button>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> إضافة موكل</button>
+                        </div>
                     </div>
                     <div class="table-wrap">
                         <table id="clientsTable">
                             <thead>
-                                <tr>
-                                    <th>الاسم</th><th>النوع</th><th>الهاتف</th>
-                                    <th>الرقم الوطني</th><th>التوكيل</th><th>القضايا</th><th></th>
-                                </tr>
+                                <tr><th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>التوكيل</th><th>القضايا</th><th></th></tr>
                             </thead>
                             <tbody><tr><td colspan="7" class="loading">جاري التحميل...</td></tr></tbody>
                         </table>
@@ -651,29 +536,23 @@ body.dark-mode .shortcuts-modal {
                 </div>
             </div>
 
-            <!-- Cases -->
             <div id="casesTab" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="card-header">
                         <h3>القضايا</h3>
-                        <button class="btn" id="addCaseBtn"><i class="fas fa-plus"></i> قضية جديدة</button>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn" id="addCaseBtn"><i class="fas fa-plus"></i> قضية جديدة</button>
+                        </div>
                     </div>
                     <div class="table-wrap">
                         <table id="casesTable">
-                            <thead>
-                                <tr>
-                                    <th style="width:30px"></th>
-                                    <th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th>
-                                    <th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th style="width:30px"></th><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th></tr></thead>
                             <tbody><tr><td colspan="8" class="loading">جاري التحميل...</td></tr></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Tasks -->
             <div id="tasksTab" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="card-header">
@@ -693,7 +572,6 @@ body.dark-mode .shortcuts-modal {
                 </div>
             </div>
 
-            <!-- Search -->
             <div id="searchTab" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="search-type-buttons">
@@ -715,14 +593,11 @@ body.dark-mode .shortcuts-modal {
                     <div id="searchResults" style="margin-top:20px;"></div>
                 </div>
             </div>
-        </div><!-- /main-content -->
-    </div><!-- /app-container -->
-</div><!-- /appContent -->
+        </div>
+    </div>
+</div>
 
 <script type="module">
-// =============================================
-//  FIREBASE CONFIG  — ضع بياناتك هنا فقط
-// =============================================
 const firebaseConfig = {
     apiKey: "AIzaSyB8EHWxJrl_rPnHJBVZiF-ihZacUiNVYJs",
     authDomain: "lawyer-system-2aefd.firebaseapp.com",
@@ -733,44 +608,27 @@ const firebaseConfig = {
 };
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
-    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy }
-    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject }
-    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
-// =============================================
-//  STATE
-// =============================================
-let clients     = [];
-let casesList   = [];
-let documents   = [];
-let notifications = [];
-let tasks       = [];
-let expandedCase = null;
-let currentLawyerFilter = 'all';
 
-// =============================================
-//  SECURITY: HTML ESCAPING (يمنع XSS)
-// =============================================
+let clients = [];
+let casesList = [];
+let notifications = [];
+let tasks = [];
+let expandedCaseId = null;
+let currentLawyerFilter = 'all';
+let tempClients = [];
+let tempOpponents = [];
+
 function esc(str) {
     if (str == null) return '';
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-// =============================================
-//  TOAST NOTIFICATIONS
-// =============================================
 function showToast(msg, type = 'info') {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
@@ -783,68 +641,42 @@ function showToast(msg, type = 'info') {
     }, 3500);
 }
 
-// =============================================
-//  CONFIRM DIALOG (بدل alert/confirm)
-// =============================================
 function confirmDialog(title, text) {
     return new Promise(resolve => {
         const div = document.createElement('div');
         div.className = 'confirm-overlay';
-        div.innerHTML = `
-            <div class="confirm-box">
-                <h3>${esc(title)}</h3>
-                <p>${esc(text)}</p>
-                <div class="confirm-btns">
-                    <button id="cfmYes" style="background:var(--red);color:white;">تأكيد الحذف</button>
-                    <button id="cfmNo"  style="background:var(--border);">إلغاء</button>
-                </div>
-            </div>`;
+        div.innerHTML = `<div class="confirm-box"><h3>${esc(title)}</h3><p>${esc(text)}</p><div class="confirm-btns"><button id="cfmYes" style="background:var(--red);color:white;">تأكيد الحذف</button><button id="cfmNo" style="background:var(--border);">إلغاء</button></div></div>`;
         document.body.appendChild(div);
         div.querySelector('#cfmYes').onclick = () => { div.remove(); resolve(true); };
-        div.querySelector('#cfmNo').onclick  = () => { div.remove(); resolve(false); };
+        div.querySelector('#cfmNo').onclick = () => { div.remove(); resolve(false); };
     });
 }
 
-// =============================================
-//  IN-APP NOTIFICATIONS
-// =============================================
 function addNotif(msg, type = 'info') {
     notifications.unshift({ id: Date.now(), text: msg, type, read: false });
     if (notifications.length > 100) notifications.pop();
-    updateNotifBadge();
-    showToast(msg, type);
-    renderNotifPanel();
-}
-
-function updateNotifBadge() {
     const unread = notifications.filter(n => !n.read).length;
     document.getElementById('notifCount').textContent = unread > 0 ? unread : '';
-}
-
-function renderNotifPanel() {
+    showToast(msg, type);
     const list = document.getElementById('notifList');
     if (notifications.length === 0) {
         list.innerHTML = '<div class="notif-empty">لا توجد إشعارات</div>';
-        return;
+    } else {
+        list.innerHTML = notifications.slice(0, 30).map(n => `<div class="notif-item ${n.read ? '' : 'unread'}">${esc(n.text)}</div>`).join('');
     }
-    list.innerHTML = notifications.slice(0, 30).map(n => `
-        <div class="notif-item ${n.read ? '' : 'unread'}">${esc(n.text)}</div>
-    `).join('');
 }
 
 window.markAllRead = () => {
     notifications.forEach(n => n.read = true);
-    updateNotifBadge();
-    renderNotifPanel();
+    document.getElementById('notifCount').textContent = '';
+    const list = document.getElementById('notifList');
+    list.innerHTML = notifications.slice(0, 30).map(n => `<div class="notif-item">${esc(n.text)}</div>`).join('');
 };
 
-// =============================================
-//  AUTH
-// =============================================
 document.getElementById('loginBtn').onclick = async () => {
-    const email    = document.getElementById('loginEmail').value.trim();
+    const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
-    const errEl    = document.getElementById('loginError');
+    const errEl = document.getElementById('loginError');
     errEl.textContent = '';
     if (!email || !password) { errEl.textContent = 'يرجى إدخال البريد وكلمة المرور'; return; }
     try {
@@ -856,33 +688,24 @@ document.getElementById('loginBtn').onclick = async () => {
     }
 };
 
-document.getElementById('loginPassword').addEventListener('keypress', e => {
-    if (e.key === 'Enter') document.getElementById('loginBtn').click();
-});
+window.addEventListener('load', () => { setTimeout(() => document.getElementById('loginBtn').click(), 500); });
 
-// تسجيل دخول تلقائي عند فتح الصفحة
-window.addEventListener('load', () => {
-    setTimeout(() => document.getElementById('loginBtn').click(), 500);
-});
-
-onAuthStateChanged(auth, user => {
+onAuthStateChanged(auth, async (user) => {
     if (user) {
         document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('appContent').style.display  = 'block';
-        loadAllData();
+        document.getElementById('appContent').style.display = 'block';
+        await loadAllData();
         setupEvents();
+        setupUIEnhancements();
     } else {
         document.getElementById('loginScreen').style.display = 'flex';
-        document.getElementById('appContent').style.display  = 'none';
+        document.getElementById('appContent').style.display = 'none';
         document.getElementById('loginBtn').textContent = 'دخول';
     }
 });
 
 document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-// =============================================
-//  DATA LOADING
-// =============================================
 async function loadClients() {
     const snap = await getDocs(collection(db, 'clients'));
     clients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -891,12 +714,11 @@ async function loadClients() {
 }
 
 async function loadCases() {
-   const snap = await getDocs(query(collection(db, 'cases'), orderBy('createdAt', 'desc')));
+    const snap = await getDocs(query(collection(db, 'cases'), orderBy('createdAt', 'asc')));
     casesList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
     casesList.forEach(c => {
         const sessions = c.sessions || [];
-        if (sessions.length > 0) {
+        if (sessions && sessions.length > 0) {
             const sorted = [...sessions].sort((a, b) => new Date(a.date) - new Date(b.date));
             const today = new Date(); today.setHours(0,0,0,0);
             const next = sorted.find(s => new Date(s.date) >= today);
@@ -907,23 +729,8 @@ async function loadCases() {
             c.lastSessionDate = null;
         }
     });
-
-    // ترتيب: القضايا اللي عندها جلسة قادمة الأول، ثم الباقي
-    casesList.sort((a, b) => {
-        if (!a.nextSessionDate && !b.nextSessionDate) return 0;
-        if (!a.nextSessionDate) return 1;
-        if (!b.nextSessionDate) return -1;
-        return new Date(b.nextSessionDate) - new Date(a.nextSessionDate);
-    });
-
     renderCases();
     renderDashboard();
-}
-
-async function loadDocuments() {
-    const snap = await getDocs(collection(db, 'documents'));
-    documents = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderCases();
 }
 
 async function loadTasks() {
@@ -933,13 +740,10 @@ async function loadTasks() {
 }
 
 async function loadAllData() {
-    await Promise.all([loadClients(), loadCases(), loadDocuments(), loadTasks()]);
+    await Promise.all([loadClients(), loadCases(), loadTasks()]);
     checkReminders();
 }
 
-// =============================================
-//  CLIENTS CRUD
-// =============================================
 window.addClient = async (data) => {
     await addDoc(collection(db, 'clients'), { ...data, createdAt: new Date().toISOString() });
     addNotif('✅ تم إضافة موكل: ' + data.name, 'success');
@@ -954,27 +758,15 @@ window.updateClient = async (id, data) => {
 
 window.deleteClient = async (id) => {
     const client = clients.find(c => c.id === id);
-    const ok = await confirmDialog('حذف الموكل', `هل تريد حذف الموكل "${client?.name || ''}" وجميع قضاياه ومستنداته؟`);
+    const ok = await confirmDialog('حذف الموكل', `هل تريد حذف الموكل "${client?.name || ''}" وجميع قضاياه؟`);
     if (!ok) return;
     const related = casesList.filter(c => c.clients?.some(cl => cl.id === id));
-    for (const c of related) {
-        const docs = documents.filter(d => d.caseId === c.id);
-        for (const d of docs) {
-            if (d.storageRef) {
-                try { await deleteObject(ref(storage, d.storageRef)); } catch {}
-            }
-            await deleteDoc(doc(db, 'documents', d.id));
-        }
-        await deleteDoc(doc(db, 'cases', c.id));
-    }
+    for (const c of related) { await deleteDoc(doc(db, 'cases', c.id)); }
     await deleteDoc(doc(db, 'clients', id));
     addNotif('🗑️ تم حذف الموكل وجميع بياناته', 'warning');
     await loadAllData();
 };
 
-// =============================================
-//  CASES CRUD
-// =============================================
 window.addCase = async (data) => {
     await addDoc(collection(db, 'cases'), { ...data, sessions: [], createdAt: new Date().toISOString() });
     addNotif('✅ تم إضافة قضية: ' + data.caseNumber, 'success');
@@ -991,27 +783,20 @@ window.deleteCase = async (id) => {
     const c = casesList.find(x => x.id === id);
     const ok = await confirmDialog('حذف القضية', `هل تريد حذف القضية رقم "${c?.caseNumber || ''}"؟`);
     if (!ok) return;
-    const docs = documents.filter(d => d.caseId === id);
-    for (const d of docs) {
-        if (d.storageRef) {
-            try { await deleteObject(ref(storage, d.storageRef)); } catch {}
-        }
-        await deleteDoc(doc(db, 'documents', d.id));
-    }
     await deleteDoc(doc(db, 'cases', id));
     addNotif('🗑️ تم حذف القضية', 'warning');
     await loadAllData();
 };
 
-// =============================================
-//  SESSIONS CRUD
-// =============================================
 window.addSession = async (caseId, data) => {
-    const c = casesList.find(x => x.id === caseId);
-    if (!c) return;
-    const sessions = [...(c.sessions || []), { id: Date.now(), ...data }];
-    sessions.sort((a, b) => new Date(a.date) - new Date(b.date));
-    await updateDoc(doc(db, 'cases', caseId), { sessions });
+    const caseRef = doc(db, 'cases', caseId);
+    const caseDoc = await getDoc(caseRef);
+    if (!caseDoc.exists()) return;
+    const currentSessions = caseDoc.data().sessions || [];
+    const newSession = { id: Date.now(), ...data };
+    const updatedSessions = [...currentSessions, newSession];
+    updatedSessions.sort((a, b) => new Date(a.date) - new Date(b.date));
+    await updateDoc(caseRef, { sessions: updatedSessions });
     addNotif('📅 تم إضافة جلسة', 'success');
     await loadCases();
 };
@@ -1019,54 +804,28 @@ window.addSession = async (caseId, data) => {
 window.deleteSession = async (caseId, sessionId) => {
     const ok = await confirmDialog('حذف الجلسة', 'هل تريد حذف هذه الجلسة؟');
     if (!ok) return;
-    const c = casesList.find(x => x.id === caseId);
-    if (!c) return;
-    const sessions = (c.sessions || []).filter(s => s.id !== sessionId);
-    await updateDoc(doc(db, 'cases', caseId), { sessions });
+    const caseRef = doc(db, 'cases', caseId);
+    const caseDoc = await getDoc(caseRef);
+    if (!caseDoc.exists()) return;
+    const currentSessions = caseDoc.data().sessions || [];
+    const updatedSessions = currentSessions.filter(s => s.id !== sessionId);
+    await updateDoc(caseRef, { sessions: updatedSessions });
     addNotif('🗑️ تم حذف الجلسة', 'warning');
     await loadCases();
 };
 
-// =============================================
-//  DOCUMENTS — Firebase Storage (بدل base64)
-// =============================================
-window.uploadDoc = async (caseId, file, name) => {
-    if (file.size > 5 * 1024 * 1024) { showToast('❌ الملف أكبر من 5MB', 'error'); return; }
-    try {
-        const storagePath = `documents/${caseId}/${Date.now()}_${file.name}`;
-        const storageRef  = ref(storage, storagePath);
-        await uploadBytes(storageRef, file);
-        const downloadURL = await getDownloadURL(storageRef);
-        await addDoc(collection(db, 'documents'), {
-            name, caseId,
-            fileURL: downloadURL,
-            storageRef: storagePath,
-            fileType: file.type,
-            date: new Date().toLocaleDateString('ar-EG'),
-            createdAt: new Date().toISOString()
-        });
-        addNotif('📎 تم رفع المستند: ' + name, 'success');
-        await loadDocuments();
-    } catch (e) {
-        showToast('❌ فشل رفع الملف: ' + e.message, 'error');
-    }
+window.editSession = async (caseId, sessionId, newData) => {
+    const caseRef = doc(db, 'cases', caseId);
+    const caseDoc = await getDoc(caseRef);
+    if (!caseDoc.exists()) return;
+    const currentSessions = caseDoc.data().sessions || [];
+    const updatedSessions = currentSessions.map(s => s.id === sessionId ? { ...s, ...newData } : s);
+    updatedSessions.sort((a, b) => new Date(a.date) - new Date(b.date));
+    await updateDoc(caseRef, { sessions: updatedSessions });
+    addNotif('✏️ تم تعديل الجلسة', 'success');
+    await loadCases();
 };
 
-window.deleteDoc = async (id) => {
-    const ok = await confirmDialog('حذف المستند', 'هل تريد حذف هذا المستند نهائياً؟');
-    if (!ok) return;
-    const d = documents.find(x => x.id === id);
-    if (d?.storageRef) {
-        try { await deleteObject(ref(storage, d.storageRef)); } catch {}
-    }
-    await deleteDoc(doc(db, 'documents', id));
-    addNotif('🗑️ تم حذف المستند', 'warning');
-    await loadDocuments();
-};
-
-// =============================================
-//  TASKS CRUD
-// =============================================
 window.addTask = async (data) => {
     await addDoc(collection(db, 'tasks'), { ...data, createdAt: new Date().toISOString() });
     addNotif('✅ تم إضافة مهمة للمحامي ' + data.lawyer, 'success');
@@ -1094,928 +853,253 @@ window.toggleTaskStatus = async (id, currentStatus) => {
     await loadTasks();
 };
 
-// =============================================
-//  RENDER TASKS
-// =============================================
+function renderTaskCard(t, cardClass) {
+    const taskDate = new Date(t.date);
+    return `<div class="task-card ${cardClass}" onclick="window.editTask('${esc(t.id)}')">
+        <div class="flex-between">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <strong>👨‍⚖️ ${esc(t.lawyer)}</strong>
+                <span class="task-type-badge">${esc(t.taskType || 'مهمة')}</span>
+            </div>
+            <button class="task-status-btn ${t.status === 'done' ? 'status-done' : 'status-pending'}" onclick="event.stopPropagation(); window.toggleTaskStatus('${esc(t.id)}', '${esc(t.status)}')">
+                ${t.status === 'done' ? '✓ تم الإنجاز' : '⏳ قيد التنفيذ'}
+            </button>
+        </div>
+        <div style="margin-top:6px;font-size:0.88rem;color:var(--slate);">
+            <i class="fas fa-calendar"></i> ${taskDate.toLocaleDateString('ar-EG')}
+            &nbsp;|&nbsp;<i class="fas fa-location-dot"></i> ${esc(t.location)}
+        </div>
+        <div style="margin-top:4px;">${esc(t.description)}</div>
+        <div class="flex-between" style="margin-top:8px;">
+            <span style="font-size:0.85rem;color:var(--muted);"><i class="fas fa-clock"></i> ${esc(t.time || 'غير محدد')}</span>
+            <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); window.deleteTask('${esc(t.id)}')"><i class="fas fa-trash"></i> حذف</button>
+        </div>
+    </div>`;
+}
+
 function renderTasks() {
     const container = document.getElementById('tasksList');
     if (!container) return;
-
     const today = new Date(); today.setHours(0,0,0,0);
     const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
     const tenDaysLater = new Date(today); tenDaysLater.setDate(tenDaysLater.getDate() + 10);
-
-    let filtered = currentLawyerFilter === 'all'
-        ? tasks
-        : tasks.filter(t => t.lawyer === currentLawyerFilter);
-
-    const pendingTasks  = filtered.filter(t => t.status !== 'done');
-    const doneTasks     = filtered.filter(t => t.status === 'done');
-
-    // تقسيم المهام: متأخرة / اليوم / غداً / قريباً / مستقبلية
-    const overdue   = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d < today; });
-    const todayT    = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d.getTime() === today.getTime(); });
+    let filtered = currentLawyerFilter === 'all' ? tasks : tasks.filter(t => t.lawyer === currentLawyerFilter);
+    const pendingTasks = filtered.filter(t => t.status !== 'done');
+    const doneTasks = filtered.filter(t => t.status === 'done');
+    const overdue = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d < today; });
+    const todayT = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d.getTime() === today.getTime(); });
     const tomorrowT = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d.getTime() === tomorrow.getTime(); });
-    const upcoming  = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d > tomorrow && d <= tenDaysLater; });
-    const future    = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d > tenDaysLater; });
-
-    function taskCard(t, cardClass) {
-        const taskDate = new Date(t.date);
-        return `
-            <div class="task-card ${cardClass}" onclick="window.editTask('${esc(t.id)}')">
-                <div class="flex-between">
-                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                        <strong>👨‍⚖️ ${esc(t.lawyer)}</strong>
-                        <span class="task-type-badge">${esc(t.taskType || 'مهمة')}</span>
-                    </div>
-                    <button class="task-status-btn ${t.status === 'done' ? 'status-done' : 'status-pending'}"
-                        onclick="event.stopPropagation(); window.toggleTaskStatus('${esc(t.id)}', '${esc(t.status)}')">
-                        ${t.status === 'done' ? '✓ تم الإنجاز' : '⏳ قيد التنفيذ'}
-                    </button>
-                </div>
-                <div style="margin-top:6px;font-size:0.88rem;color:var(--slate);">
-                    <i class="fas fa-calendar"></i> ${taskDate.toLocaleDateString('ar-EG')}
-                    &nbsp;|&nbsp;<i class="fas fa-location-dot"></i> ${esc(t.location)}
-                </div>
-                <div style="margin-top:4px;">${esc(t.description)}</div>
-                <div class="flex-between" style="margin-top:8px;">
-                    <span style="font-size:0.85rem;color:var(--muted);"><i class="fas fa-clock"></i> ${esc(t.time || 'غير محدد')}</span>
-                    <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); window.deleteTask('${esc(t.id)}')">
-                        <i class="fas fa-trash"></i> حذف
-                    </button>
-                </div>
-            </div>`;
-    }
-
+    const upcoming = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d > tomorrow && d <= tenDaysLater; });
+    const future = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d > tenDaysLater; });
     let html = '';
-
-    if (overdue.length) {
-        html += '<h3 style="margin:15px 0 10px;color:var(--red);"><i class="fas fa-exclamation-triangle"></i> مهام متأخرة</h3>';
-        overdue.forEach(t => html += taskCard(t, 'task-overdue'));
-    }
-    if (todayT.length) {
-        html += '<h3 style="margin:15px 0 10px;"><i class="fas fa-sun"></i> مهام اليوم</h3>';
-        todayT.forEach(t => html += taskCard(t, 'task-today'));
-    }
-    if (tomorrowT.length) {
-        html += '<h3 style="margin:15px 0 10px;"><i class="fas fa-calendar-day"></i> مهام الغد</h3>';
-        tomorrowT.forEach(t => html += taskCard(t, 'task-tomorrow'));
-    }
-    if (upcoming.length) {
-        html += '<h3 style="margin:15px 0 10px;"><i class="fas fa-calendar-week"></i> المهام القادمة (10 أيام)</h3>';
-        upcoming.forEach(t => html += taskCard(t, 'task-future'));
-    }
-    if (future.length) {
-        html += '<h3 style="margin:15px 0 10px;color:var(--muted);"><i class="fas fa-calendar"></i> مهام مستقبلية</h3>';
-        future.forEach(t => html += taskCard(t, 'task-future'));
-    }
-    if (doneTasks.length) {
-        html += '<h3 style="margin:15px 0 10px;color:var(--green);"><i class="fas fa-check-circle"></i> المهام المنجزة</h3>';
-        doneTasks.slice(0, 20).forEach(t => html += taskCard(t, 'task-done'));
-    }
+    if (overdue.length) { html += '<h3 style="margin:15px 0 10px;color:var(--red);"><i class="fas fa-exclamation-triangle"></i> مهام متأخرة</h3>'; overdue.forEach(t => html += renderTaskCard(t, 'task-overdue')); }
+    if (todayT.length) { html += '<h3 style="margin:15px 0 10px;"><i class="fas fa-sun"></i> مهام اليوم</h3>'; todayT.forEach(t => html += renderTaskCard(t, 'task-today')); }
+    if (tomorrowT.length) { html += '<h3 style="margin:15px 0 10px;"><i class="fas fa-calendar-day"></i> مهام الغد</h3>'; tomorrowT.forEach(t => html += renderTaskCard(t, 'task-tomorrow')); }
+    if (upcoming.length) { html += '<h3 style="margin:15px 0 10px;"><i class="fas fa-calendar-week"></i> المهام القادمة (10 أيام)</h3>'; upcoming.forEach(t => html += renderTaskCard(t, 'task-future')); }
+    if (future.length) { html += '<h3 style="margin:15px 0 10px;color:var(--muted);"><i class="fas fa-calendar"></i> مهام مستقبلية</h3>'; future.forEach(t => html += renderTaskCard(t, 'task-future')); }
+    if (doneTasks.length) { html += '<h3 style="margin:15px 0 10px;color:var(--green);"><i class="fas fa-check-circle"></i> المهام المنجزة</h3>'; doneTasks.slice(0, 20).forEach(t => html += renderTaskCard(t, 'task-done')); }
     if (!html) html = '<p class="loading">لا توجد مهام</p>';
-
     container.innerHTML = html;
 }
 
-function filterTasksByLawyer(lawyer) {
-    currentLawyerFilter = lawyer;
-    renderTasks();
-}
+function filterTasksByLawyer(lawyer) { currentLawyerFilter = lawyer; renderTasks(); }
 
-// =============================================
-//  TASK MODAL (Add / Edit موحد)
-// =============================================
 function showTaskModal(task = null) {
     const isEdit = task !== null;
     const lawyers = ['أندرو','يوسف','مينا','جورج','مريم','مارسلينو'];
-
-    const modalHtml = `
-        <div id="taskModal" class="modal-overlay">
-            <div class="modal-container">
-                <h3>${isEdit ? '✏️ تعديل المهمة' : '➕ إضافة مهمة جديدة'}</h3>
-                <label>👨‍⚖️ المحامي</label>
-                <select id="taskLawyer">
-                    ${lawyers.map(l => `<option value="${l}" ${task?.lawyer === l ? 'selected' : ''}>${l}</option>`).join('')}
-                </select>
-                <label>📅 التاريخ</label>
-                <input type="date" id="taskDate" value="${esc(task?.date || '')}">
-                <label>⏰ الوقت (اختياري)</label>
-                <input type="time" id="taskTime" value="${esc(task?.time || '')}">
-                <label>🏛️ الجهة / المحكمة</label>
-                <input type="text" id="taskLocation" value="${esc(task?.location || '')}" placeholder="مثال: محكمة شمال القاهرة">
-                <label>📋 نوع المهمة</label>
-                <input type="text" id="taskType" value="${esc(task?.taskType || '')}" placeholder="جلسة، استلام حكم، معاينة، إيداع صحيفة...">
-                <label>📝 وصف المهمة</label>
-                <textarea id="taskDesc" rows="3">${esc(task?.description || '')}</textarea>
-                <div class="modal-buttons">
-                    <button id="saveTaskBtn" style="background:var(--${isEdit ? 'gold' : 'green'});color:${isEdit ? 'var(--navy)' : 'white'};">
-                        ${isEdit ? '💾 حفظ التعديلات' : '✅ إضافة'}
-                    </button>
-                    <button id="closeTaskBtn" style="background:var(--border);">إلغاء</button>
-                </div>
-            </div>
-        </div>`;
+    const modalHtml = `<div id="taskModal" class="modal-overlay"><div class="modal-container"><h3>${isEdit ? '✏️ تعديل المهمة' : '➕ إضافة مهمة جديدة'}</h3>
+        <label>👨‍⚖️ المحامي</label><select id="taskLawyer">${lawyers.map(l => `<option value="${l}" ${task?.lawyer === l ? 'selected' : ''}>${l}</option>`).join('')}</select>
+        <label>📅 التاريخ</label><input type="date" id="taskDate" value="${esc(task?.date || '')}">
+        <label>⏰ الوقت (اختياري)</label><input type="time" id="taskTime" value="${esc(task?.time || '')}">
+        <label>🏛️ الجهة / المحكمة</label><input type="text" id="taskLocation" value="${esc(task?.location || '')}" placeholder="مثال: محكمة شمال القاهرة">
+        <label>📋 نوع المهمة</label><input type="text" id="taskType" value="${esc(task?.taskType || '')}" placeholder="جلسة، استلام حكم، معاينة، إيداع صحيفة...">
+        <label>📝 وصف المهمة</label><textarea id="taskDesc" rows="3">${esc(task?.description || '')}</textarea>
+        <div class="modal-buttons"><button id="saveTaskBtn" style="background:var(--${isEdit ? 'gold' : 'green'});color:${isEdit ? 'var(--navy)' : 'white'};">${isEdit ? '💾 حفظ التعديلات' : '✅ إضافة'}</button><button id="closeTaskBtn" style="background:var(--border);">إلغاء</button></div></div></div>`;
     document.body.insertAdjacentHTML('beforeend', modalHtml);
-
     document.getElementById('saveTaskBtn').onclick = async () => {
-        const date     = document.getElementById('taskDate').value;
+        const date = document.getElementById('taskDate').value;
         const location = document.getElementById('taskLocation').value.trim();
-        const desc     = document.getElementById('taskDesc').value.trim();
-        if (!date)     { showToast('⚠️ يرجى إدخال التاريخ', 'warning'); return; }
+        const desc = document.getElementById('taskDesc').value.trim();
+        if (!date) { showToast('⚠️ يرجى إدخال التاريخ', 'warning'); return; }
         if (!location) { showToast('⚠️ يرجى إدخال الجهة', 'warning'); return; }
-        if (!desc)     { showToast('⚠️ يرجى إدخال وصف المهمة', 'warning'); return; }
-        const data = {
-            lawyer:   document.getElementById('taskLawyer').value,
-            date, time: document.getElementById('taskTime').value,
-            location, taskType: document.getElementById('taskType').value, description: desc
-        };
-        if (isEdit) await updateTask(task.id, data);
-        else        await addTask({ ...data, status: 'pending' });
+        if (!desc) { showToast('⚠️ يرجى إدخال وصف المهمة', 'warning'); return; }
+        const data = { lawyer: document.getElementById('taskLawyer').value, date, time: document.getElementById('taskTime').value, location, taskType: document.getElementById('taskType').value, description: desc };
+        if (isEdit) await window.updateTask(task.id, data);
+        else await window.addTask({ ...data, status: 'pending' });
         document.getElementById('taskModal').remove();
     };
     document.getElementById('closeTaskBtn').onclick = () => document.getElementById('taskModal').remove();
 }
 
-window.editTask = (taskId) => {
-    const task = tasks.find(t => t.id === taskId);
-    if (task) showTaskModal(task);
-};
+window.editTask = (taskId) => { const task = tasks.find(t => t.id === taskId); if (task) showTaskModal(task); };
 
-// =============================================
-//  RENDER CLIENTS
-// =============================================
 function renderClients() {
     const tbody = document.querySelector('#clientsTable tbody');
     if (!tbody) return;
-    if (clients.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="loading">لا يوجد موكلون</td></tr>';
-        return;
-    }
-    tbody.innerHTML = clients.map(c => {
-        const caseCount = casesList.filter(cas => cas.clients?.some(cl => cl.id === c.id)).length;
-        return `
-            <tr>
-                <td>${esc(c.name)}</td>
-                <td>${c.type === 'company' ? 'شركة' : 'فرد'}</td>
-                <td>${esc(c.phone || '--')}</td>
-                <td>${esc(c.idNumber || '--')}</td>
-                <td>
-                    ${c.delegationNumber ? 'رقم: ' + esc(c.delegationNumber) : 'لا يوجد'}
-                    <br>
-                    <button class="btn btn-outline btn-sm" onclick="window.editDelegation('${esc(c.id)}')">
-                        <i class="fas fa-file-signature"></i> تعديل التوكيل
-                    </button>
-                </td>
-                <td>${caseCount}</td>
-                <td class="action-buttons">
-                    <button class="btn btn-sm" style="background:var(--gold);" onclick="window.editClient('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button>
-                    <button class="btn btn-sm btn-danger" onclick="window.deleteClient('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button>
-                </td>
-            </tr>`;
+    if (clients.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="loading">لا يوجد موكلون</td></tr>'; return; }
+    tbody.innerHTML = clients.map(c => { const caseCount = casesList.filter(cas => cas.clients?.some(cl => cl.id === c.id)).length;
+        return `<tr>
+            <td>${esc(c.name)}</td>
+            <td>${c.type === 'company' ? 'شركة' : 'فرد'}</td>
+            <td>${esc(c.phone || '--')}</td>
+            <td>${esc(c.idNumber || '--')}</td>
+            <td>${c.delegationNumber ? 'رقم: ' + esc(c.delegationNumber) : 'لا يوجد'}<br><button class="btn btn-outline btn-sm" onclick="window.editDelegation('${esc(c.id)}')"><i class="fas fa-file-signature"></i> تعديل التوكيل</button></td>
+            <td>${caseCount}</td>
+            <td class="action-buttons"><button class="btn btn-sm" style="background:var(--gold);" onclick="window.editClient('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button>
+            <button class="btn btn-sm btn-danger" onclick="window.deleteClient('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button></td>
+        </tr>`;
     }).join('');
 }
 
-// =============================================
-//  RENDER DASHBOARD
-// =============================================
 function renderDashboard() {
     const today = new Date(); today.setHours(0,0,0,0);
-
-    // إحصائيات المهام المتأخرة
-    const overdueTasks = tasks.filter(t => {
-        if (t.status === 'done') return false;
-        const d = new Date(t.date); d.setHours(0,0,0,0);
-        return d < today;
-    });
-
-    document.getElementById('statsGrid').innerHTML = `
-        <div class="stat-card"><h3>الموكلون</h3><div class="stat-number">${clients.length}</div></div>
+    const overdueTasks = tasks.filter(t => { if (t.status === 'done') return false; const d = new Date(t.date); d.setHours(0,0,0,0); return d < today; });
+    document.getElementById('statsGrid').innerHTML = `<div class="stat-card"><h3>الموكلين</h3><div class="stat-number">${clients.length}</div></div>
         <div class="stat-card"><h3>القضايا</h3><div class="stat-number">${casesList.length}</div></div>
-        <div class="stat-card"><h3>المستندات</h3><div class="stat-number">${documents.length}</div></div>
-        <div class="stat-card" style="border-right-color:${overdueTasks.length > 0 ? 'var(--red)' : 'var(--green)'};">
-            <h3>مهام متأخرة</h3>
-            <div class="stat-number" style="color:${overdueTasks.length > 0 ? 'var(--red)' : 'var(--green)'};">${overdueTasks.length}</div>
-        </div>
-    `;
-
+        <div class="stat-card" style="border-right-color:${overdueTasks.length > 0 ? 'var(--red)' : 'var(--green)'};"><h3>مهام متأخرة</h3><div class="stat-number" style="color:${overdueTasks.length > 0 ? 'var(--red)' : 'var(--green)'};">${overdueTasks.length}</div></div>`;
     let upcomingSessions = [];
-    casesList.forEach(c => {
-        if (c.sessions) {
-            c.sessions.forEach(s => {
-                const sessionDate = new Date(s.date); sessionDate.setHours(0,0,0,0);
-                if (sessionDate >= today) {
-                    const sorted = [...(c.sessions || [])].sort((a,b) => new Date(b.date)-new Date(a.date));
-                    const prev = sorted.find(x => new Date(x.date) < new Date(s.date));
-                    upcomingSessions.push({
-                        caseNumber:  c.caseNumber,
-                        caseId:      c.id,
-                        clientNames: c.clients ? c.clients.map(cl => cl.name).join(', ') : 'غير معروف',
-                        subject:     c.subject || 'لا يوجد موضوع',
-                        date:        s.date,
-                        notes:       s.notes,
-                        lastSession: prev ? new Date(prev.date).toLocaleDateString('ar-EG') : 'لا توجد'
-                    });
-                }
-            });
-        }
-    });
+    casesList.forEach(c => { if (c.sessions && c.sessions.length > 0) { c.sessions.forEach(s => { const sessionDate = new Date(s.date); sessionDate.setHours(0,0,0,0); if (sessionDate >= today) { const sorted = [...(c.sessions || [])].sort((a,b) => new Date(b.date)-new Date(a.date)); const prev = sorted.find(x => new Date(x.date) < new Date(s.date)); upcomingSessions.push({ caseNumber: c.caseNumber, caseId: c.id, clientNames: c.clients ? c.clients.map(cl => cl.name).join(', ') : 'غير معروف', subject: c.subject || 'لا يوجد موضوع', date: s.date, notes: s.notes, lastSession: prev ? new Date(prev.date).toLocaleDateString('ar-EG') : 'لا توجد' }); } }); } });
     upcomingSessions.sort((a,b) => new Date(a.date)-new Date(b.date));
-
-    let html = '<div style="display:flex;flex-direction:column;gap:10px;">';
-    if (upcomingSessions.length === 0) {
-        html += '<p class="loading">لا توجد جلسات قادمة</p>';
-    } else {
-        upcomingSessions.forEach(s => {
-            const sessionDate = new Date(s.date); sessionDate.setHours(0,0,0,0);
-            const diff = Math.round((sessionDate - today) / 864e5);
-            let dayLabel = diff === 0 ? '🔴 اليوم' : diff === 1 ? '🟡 غداً' : `🟢 بعد ${diff} أيام`;
-            html += `
-                <div class="session-card" onclick="window.goToCase('${esc(s.caseId)}')">
-                    <div class="flex-between">
-                        <div><strong>⚖️ ${esc(s.caseNumber)}</strong> — ${esc(s.clientNames)}</div>
-                        <span class="badge">${dayLabel}</span>
-                    </div>
-                    <div style="margin-top:5px;font-size:13px;color:var(--slate);"><i class="fas fa-tag"></i> ${esc(s.subject)}</div>
-                    <div style="margin-top:6px;font-size:13px;">
-                        <i class="fas fa-calendar-alt"></i> الجلسة: ${new Date(s.date).toLocaleDateString('ar-EG')}
-                        &nbsp;|&nbsp;<i class="fas fa-history"></i> السابقة: ${esc(s.lastSession)}
-                    </div>
-                    ${s.notes ? `<div style="margin-top:5px;font-size:20px;color:var(--orange);"><i class="fas fa-pen"></i> ${esc(s.notes)}</div>` : ''}
-                </div>`;
-        });
-    }
+    let html = '<div style="display:flex;flex-direction:column;gap:12px;">';
+    if (upcomingSessions.length === 0) { html += '<p class="loading" style="font-size:16px;">لا توجد جلسات قادمة</p>'; }
+    else { upcomingSessions.forEach(s => { const sessionDate = new Date(s.date); sessionDate.setHours(0,0,0,0); const diff = Math.round((sessionDate - today) / 864e5); let dayLabel = diff === 0 ? '🔴 اليوم' : diff === 1 ? '🟡 غداً' : `🟢 بعد ${diff} أيام`; html += `<div class="session-card" onclick="window.goToCase('${esc(s.caseId)}')" style="padding:15px;"><div class="flex-between" style="margin-bottom:10px;"><div style="font-size:17px;font-weight:700;"><strong>⚖️ ${esc(s.caseNumber)}</strong> — <span style="font-weight:600;">${esc(s.clientNames)}</span></div><span class="badge" style="font-size:13px;padding:6px 12px;font-weight:bold;">${dayLabel}</span></div><div style="margin-top:8px;margin-bottom:8px;font-size:15px;font-weight:600;color:var(--slate);"><i class="fas fa-tag"></i> الموضوع: ${esc(s.subject)}</div><div style="margin-top:6px;margin-bottom:6px;font-size:14px;font-weight:600;"><i class="fas fa-calendar-alt"></i> الجلسة القادمة: <span style="font-weight:700;">${new Date(s.date).toLocaleDateString('ar-EG')}</span>&nbsp;|&nbsp;<i class="fas fa-history"></i> آخر جلسة: <span style="font-weight:700;">${esc(s.lastSession)}</span></div>${s.notes ? `<div style="margin-top:10px;font-size:15px;color:var(--orange);font-weight:600;background:#fef3c7;padding:8px 12px;border-radius:10px;"><i class="fas fa-pen"></i> ملاحظات: ${esc(s.notes)}</div>` : ''}</div>`; }); }
     html += '</div>';
     document.getElementById('upcomingSessions').innerHTML = html;
 }
 
-// =============================================
-//  STATUS HELPERS
-// =============================================
 function getStatusClass(s) {
-    if (s === 'متداولة')   return 'status-mutadawla';
+    if (s === 'متداولة') return 'status-mutadawla';
     if (s === 'حكم نهائي') return 'status-hukm';
-    if (s === 'مستأنفة')   return 'status-mostanfa';
-    if (s === 'نقض')       return 'status-naqd';
+    if (s === 'مستأنفة') return 'status-mostanfa';
+    if (s === 'نقض') return 'status-naqd';
     return '';
 }
 
-// =============================================
-//  RENDER CASES
-// =============================================
 function renderCases() {
     const tbody = document.querySelector('#casesTable tbody');
     if (!tbody) return;
-    if (casesList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا</td></tr>';
-        return;
-    }
-
+    if (casesList.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا</td></tr>'; return; }
     let html = '';
     for (const c of casesList) {
-        const isExpanded  = expandedCase === c.id;
-        const sessions    = c.sessions || [];
-        const caseDocs    = documents.filter(d => d.caseId === c.id);
-        const sortedSess  = [...sessions].sort((a,b) => new Date(b.date)-new Date(a.date));
+        const isExpanded = expandedCaseId === c.id;
+        const sessions = c.sessions || [];
+        const sortedSess = [...sessions].sort((a,b) => new Date(b.date)-new Date(a.date));
         const lastSession = sortedSess[0] ? new Date(sortedSess[0].date).toLocaleDateString('ar-EG') : null;
-        const clientsHtml   = c.clients   ? c.clients.map(cl => esc(cl.name) + (cl.title ? ` (${esc(cl.title)})` : '')).join('<br>') : '--';
+        const clientsHtml = c.clients ? c.clients.map(cl => esc(cl.name) + (cl.title ? ` (${esc(cl.title)})` : '')).join('<br>') : '--';
         const opponentsHtml = c.opponents ? c.opponents.map(op => esc(op.name) + (op.title ? ` (${esc(op.title)})` : '')).join('<br>') : '--';
-
-        html += `
-            <tr class="case-row" data-id="${esc(c.id)}" onclick="window.toggleCaseDetails('${esc(c.id)}')">
-                <td><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i></td>
-                <td><strong>${esc(c.caseNumber)}</strong></td>
-                <td>${esc(c.court || '--')}${c.circuit ? ' — ' + esc(c.circuit) : ''}</td>
-                <td>${clientsHtml}</td>
-                <td>${opponentsHtml}</td>
-                <td>
-                    ${esc(c.subject || '--')}
-                    ${lastSession ? `<div><span class="badge" style="font-size:11px;">آخر جلسة: ${lastSession}</span></div>` : ''}
-                </td>
-                <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span></td>
-                <td class="action-buttons">
-                    <button class="btn btn-sm" style="background:var(--gold);" onclick="event.stopPropagation();window.editCase('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button>
-                    <button class="btn btn-sm btn-danger"                       onclick="event.stopPropagation();window.deleteCase('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button>
-                </td>
-            </tr>`;
-
+        html += `<tr class="case-row" data-id="${esc(c.id)}" onclick="window.toggleCaseDetails('${esc(c.id)}')"><td style="width:30px"><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i></td>
+            <td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.court || '--')}${c.circuit ? ' — ' + esc(c.circuit) : ''}</td>
+            <td>${clientsHtml}</td><td>${opponentsHtml}</td>
+            <td>${esc(c.subject || '--')}${lastSession ? `<div><span class="badge" style="font-size:11px;">آخر جلسة: ${lastSession}</span></div>` : ''}</td>
+            <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span></td>
+            <td class="action-buttons"><button class="btn btn-sm" style="background:var(--gold);" onclick="event.stopPropagation();window.editCase('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button>
+            <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteCase('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button></td>
+        </tr>`;
         if (isExpanded) {
-            html += `
-                <tr class="expanded-row">
-                    <td colspan="8">
-                        <div class="expanded-content">
-                            <!-- تفاصيل الموضوع -->
-                            <h4>📄 تفاصيل الموضوع</h4>
-                            <div style="background:white;padding:12px;border-radius:10px;margin-bottom:8px;">${esc(c.subjectDetails || 'لا توجد تفاصيل')}</div>
-                            <button class="btn btn-sm" onclick="event.stopPropagation();window.editSubjectDetails('${esc(c.id)}')">تعديل التفاصيل</button>
-
-                            <!-- الجلسات -->
-                            <h4>📅 الجلسات</h4>
-                            <button class="btn btn-sm btn-success" onclick="event.stopPropagation();window.showAddSession('${esc(c.id)}')">+ إضافة جلسة</button>`;
-
-            if (sessions.length === 0) {
-                html += '<p style="margin-top:8px;color:var(--muted);">لا توجد جلسات</p>';
-            } else {
-                const sorted = [...sessions].sort((a,b) => new Date(a.date)-new Date(b.date));
-                sorted.forEach(s => {
-                    html += `
-                        <div class="session-item" style="margin-top:8px;">
-                            <div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}${s.notes ? ' — ' + esc(s.notes) : ''}</div>
-                            <div style="display:flex;gap:6px;">
-                                <button class="btn btn-sm" onclick="event.stopPropagation();window.editSession('${esc(c.id)}',${s.id})">تعديل</button>
-                                <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteSession('${esc(c.id)}',${s.id})">حذف</button>
-                            </div>
-                        </div>`;
-                });
-            }
-
-            html += `
-                            <!-- المستندات -->
-                            <h4>📎 المستندات</h4>
-                            <button class="btn btn-sm btn-success" onclick="event.stopPropagation();window.showUploadDocument('${esc(c.id)}')">+ رفع مستند</button>`;
-
-            if (caseDocs.length === 0) {
-                html += '<p style="margin-top:8px;color:var(--muted);">لا توجد مستندات</p>';
-            } else {
-                caseDocs.forEach(d => {
-                    html += `
-                        <div class="doc-item" style="margin-top:8px;">
-                            <div>${esc(d.name)} <span style="font-size:12px;color:var(--muted);">(${esc(d.date)})</span></div>
-                            <div style="display:flex;gap:6px;">
-                                <a href="${d.fileURL}" target="_blank" class="btn btn-sm" style="text-decoration:none;">فتح</a>
-                                <a href="${d.fileURL}" download="${esc(d.name)}" class="btn btn-outline btn-sm" style="text-decoration:none;">تحميل</a>
-                                <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteDoc('${esc(d.id)}')">حذف</button>
-                            </div>
-                        </div>`;
-                });
-            }
-
-            html += `
-                        </div>
-                    </td>
-                </tr>`;
+            html += `<tr class="expanded-row"><td colspan="8"><div class="expanded-content"><h4>📄 تفاصيل الموضوع</h4><div style="background:white;padding:12px;border-radius:10px;margin-bottom:8px;">${esc(c.subjectDetails || 'لا توجد تفاصيل')}</div>
+                <button class="btn btn-sm" onclick="event.stopPropagation();window.editSubjectDetails('${esc(c.id)}')">تعديل التفاصيل</button>
+                <h4>📅 الجلسات</h4><button class="btn btn-sm btn-success" onclick="event.stopPropagation();window.showAddSession('${esc(c.id)}')">+ إضافة جلسة</button>`;
+            if (sessions.length === 0) { html += '<p style="margin-top:8px;color:var(--muted);">لا توجد جلسات</p>'; }
+            else { const sorted = [...sessions].sort((a,b) => new Date(a.date)-new Date(b.date)); sorted.forEach(s => { html += `<div class="session-item" style="margin-top:8px;"><div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}${s.notes ? ' — ' + esc(s.notes) : ''}</div><div style="display:flex;gap:6px;"><button class="btn btn-sm" onclick="event.stopPropagation();window.editSessionModal('${esc(c.id)}',${s.id})">تعديل</button><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteSession('${esc(c.id)}',${s.id})">حذف</button></div></div>`; }); }
+            html += `</div></td></tr>`;
         }
     }
     tbody.innerHTML = html;
 }
 
-window.toggleCaseDetails = (caseId) => {
-    expandedCase = expandedCase === caseId ? null : caseId;
-    renderCases();
-};
+window.toggleCaseDetails = (caseId) => { expandedCaseId = expandedCaseId === caseId ? null : caseId; renderCases(); };
+window.goToCase = (caseId) => { document.querySelector('.nav-item[data-tab="cases"]')?.click(); setTimeout(() => { expandedCaseId = caseId; renderCases(); setTimeout(() => { const row = document.querySelector(`.case-row[data-id="${caseId}"]`); if (row) { row.scrollIntoView({ behavior: 'smooth', block: 'center' }); row.querySelectorAll('td').forEach(td => td.style.background = '#fef9c3'); setTimeout(() => row.querySelectorAll('td').forEach(td => td.style.background = ''), 2000); } }, 300); }, 300); };
 
-window.goToCase = (caseId) => {
-    document.querySelector('.nav-item[data-tab="cases"]')?.click();
-    setTimeout(() => {
-        expandedCase = caseId;
-        renderCases();
-        setTimeout(() => {
-            const row = document.querySelector(`.case-row[data-id="${caseId}"]`);
-            if (row) {
-                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                row.style.transition = 'background 0.3s';
-                row.querySelectorAll('td').forEach(td => td.style.background = '#fef9c3');
-                setTimeout(() => row.querySelectorAll('td').forEach(td => td.style.background = ''), 2000);
-            }
-        }, 300);
-    }, 300);
-};
+function searchClient() { const term = document.getElementById('searchClientInput').value.trim().toLowerCase(); const div = document.getElementById('searchResults'); if (!term) { div.innerHTML = '<p class="loading">أدخل اسم موكل للبحث</p>'; return; } const found = clients.filter(c => (c.name||'').toLowerCase().includes(term)); if (!found.length) { div.innerHTML = '<p class="loading">❌ لا توجد نتائج</p>'; return; } let html = ''; found.forEach(client => { const clientCases = casesList.filter(c => c.clients?.some(cl => cl.id === client.id)); html += `<div style="background:var(--bg);border-radius:var(--radius-md);padding:20px;margin-bottom:20px;border-right:4px solid var(--gold);"><div style="background:var(--gold);padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:14px;"><div class="flex-between"><h3><i class="fas fa-user"></i> ${esc(client.name)}</h3><span class="badge">${client.type === 'company' ? 'شركة' : 'فرد'}</span></div><div style="font-size:0.88rem;margin-top:4px;">${client.phone ? '📞 ' + esc(client.phone) : ''}${client.delegationNumber ? ' &nbsp;|&nbsp; 📜 توكيل: ' + esc(client.delegationNumber) : ''}</div></div><h4 style="margin-bottom:10px;">قضايا الموكل (${clientCases.length})</h4>`; if (clientCases.length === 0) { html += '<p style="color:var(--muted);">لا توجد قضايا</p>'; } else { html += `<div class="table-wrap"><table style="width:100%"><thead><tr style="background:var(--bg);"><th>رقم القضية</th><th>المحكمة</th><th>الخصوم</th><th>الموضوع</th><th>آخر جلسة</th><th>ملاحظات</th><th>الحالة</th><th></th></tr></thead><tbody>`; clientCases.forEach(c => { let lastDate = 'لا توجد', lastNotes = ''; if (c.sessions && c.sessions.length) { const sorted = [...c.sessions].sort((a,b)=>new Date(b.date)-new Date(a.date)); lastDate = new Date(sorted[0].date).toLocaleDateString('ar-EG'); lastNotes = sorted[0].notes || ''; } html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.court||'--')}</td><td>${c.opponents ? c.opponents.map(o=>esc(o.name)).join(', ') : '--'}</td><td>${esc(c.subject||'--')}</td><td>${esc(lastDate)}</td><td style="max-width:180px;word-break:break-word;">${esc(lastNotes||'--')}</td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span></td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td></tr>`; }); html += '</tbody></table></div>'; } html += '</div>'; }); div.innerHTML = html; }
 
-// =============================================
-//  SEARCH
-// =============================================
-function searchClient() {
-    const term = document.getElementById('searchClientInput').value.trim().toLowerCase();
-    const div  = document.getElementById('searchResults');
-    if (!term) { div.innerHTML = '<p class="loading">أدخل اسم موكل للبحث</p>'; return; }
+function searchCourt() { const term = document.getElementById('searchCourtInput').value.trim().toLowerCase(); const div = document.getElementById('searchResults'); if (!term) { div.innerHTML = '<p class="loading">أدخل اسم محكمة للبحث</p>'; return; } const found = casesList.filter(c => c.court && c.court.toLowerCase().includes(term)); if (!found.length) { div.innerHTML = '<p class="loading">❌ لا توجد قضايا</p>'; return; } let html = `<div style="background:var(--bg);border-radius:var(--radius-md);padding:20px;"><div style="background:var(--gold);padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:14px;"><h3>قضايا المحكمة (${esc(term)})</h3><div>عدد القضايا: ${found.length}</div></div><div class="table-wrap"><table style="width:100%"><thead><tr style="background:var(--bg);"><th>رقم القضية</th><th>الدائرة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>آخر جلسة</th><th>ملاحظات</th><th>الحالة</th><th></th></tr></thead><tbody>`; found.forEach(c => { let lastDate = 'لا توجد', lastNotes = ''; if (c.sessions && c.sessions.length) { const sorted = [...c.sessions].sort((a,b)=>new Date(b.date)-new Date(a.date)); lastDate = new Date(sorted[0].date).toLocaleDateString('ar-EG'); lastNotes = sorted[0].notes || ''; } html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.circuit||'--')}</td><td>${c.clients ? c.clients.map(cl=>esc(cl.name)).join(', ') : '--'}</td><td>${c.opponents ? c.opponents.map(op=>esc(op.name)).join(', ') : '--'}</td><td>${esc(c.subject||'--')}</td><td>${esc(lastDate)}</td><td style="max-width:180px;word-break:break-word;">${esc(lastNotes||'--')}</td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span></td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td></tr>`; }); html += '</tbody></table></div></div>'; div.innerHTML = html; }
 
-    const found = clients.filter(c => (c.name||'').toLowerCase().includes(term));
-    if (!found.length) { div.innerHTML = '<p class="loading">❌ لا توجد نتائج</p>'; return; }
-
-    let html = '';
-    found.forEach(client => {
-        const clientCases = casesList.filter(c => c.clients?.some(cl => cl.id === client.id));
-        html += `
-            <div style="background:var(--bg);border-radius:var(--radius-md);padding:20px;margin-bottom:20px;border-right:4px solid var(--gold);">
-                <div style="background:var(--gold);padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:14px;">
-                    <div class="flex-between">
-                        <h3><i class="fas fa-user"></i> ${esc(client.name)}</h3>
-                        <span class="badge">${client.type === 'company' ? 'شركة' : 'فرد'}</span>
-                    </div>
-                    <div style="font-size:0.88rem;margin-top:4px;">
-                        ${client.phone ? '📞 ' + esc(client.phone) : ''}
-                        ${client.delegationNumber ? ' &nbsp;|&nbsp; 📜 توكيل: ' + esc(client.delegationNumber) : ''}
-                    </div>
-                </div>
-                <h4 style="margin-bottom:10px;">قضايا الموكل (${clientCases.length})</h4>`;
-
-        if (clientCases.length === 0) {
-            html += '<p style="color:var(--muted);">لا توجد قضايا</p>';
-        } else {
-            html += `<div class="table-wrap"><table><thead><tr style="background:var(--bg);">
-                <th>رقم القضية</th><th>المحكمة</th><th>الخصوم</th><th>الموضوع</th>
-                <th>آخر جلسة</th><th>ملاحظات</th><th>الحالة</th><th></th>
-            </tr></thead><tbody>`;
-            clientCases.forEach(c => {
-                let lastDate = 'لا توجد', lastNotes = '';
-                if (c.sessions?.length) {
-                    const sorted = [...c.sessions].sort((a,b)=>new Date(b.date)-new Date(a.date));
-                    lastDate  = new Date(sorted[0].date).toLocaleDateString('ar-EG');
-                    lastNotes = sorted[0].notes || '';
-                }
-                html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;">
-                    <td><strong>${esc(c.caseNumber)}</strong></td>
-                    <td>${esc(c.court||'--')}</td>
-                    <td>${c.opponents ? c.opponents.map(o=>esc(o.name)).join(', ') : '--'}</td>
-                    <td>${esc(c.subject||'--')}</td>
-                    <td>${esc(lastDate)}</td>
-                    <td style="max-width:180px;word-break:break-word;">${esc(lastNotes||'--')}</td>
-                    <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span></td>
-                    <td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td>
-                </tr>`;
-            });
-            html += '</tbody></table></div>';
-        }
-        html += '</div>';
-    });
-    div.innerHTML = html;
-}
-
-function searchCourt() {
-    const term = document.getElementById('searchCourtInput').value.trim().toLowerCase();
-    const div  = document.getElementById('searchResults');
-    if (!term) { div.innerHTML = '<p class="loading">أدخل اسم محكمة للبحث</p>'; return; }
-
-    const found = casesList.filter(c => c.court && c.court.toLowerCase().includes(term));
-    if (!found.length) { div.innerHTML = '<p class="loading">❌ لا توجد قضايا</p>'; return; }
-
-    let html = `
-        <div style="background:var(--bg);border-radius:var(--radius-md);padding:20px;">
-            <div style="background:var(--gold);padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:14px;">
-                <h3>قضايا المحكمة (${esc(term)})</h3>
-                <div>عدد القضايا: ${found.length}</div>
-            </div>
-            <div class="table-wrap"><table><thead><tr style="background:var(--bg);">
-                <th>رقم القضية</th><th>الدائرة</th><th>الموكلون</th><th>الخصوم</th>
-                <th>الموضوع</th><th>آخر جلسة</th><th>ملاحظات</th><th>الحالة</th><th></th>
-            </tr></thead><tbody>`;
-
-    found.forEach(c => {
-        let lastDate = 'لا توجد', lastNotes = '';
-        if (c.sessions?.length) {
-            const sorted = [...c.sessions].sort((a,b)=>new Date(b.date)-new Date(a.date));
-            lastDate  = new Date(sorted[0].date).toLocaleDateString('ar-EG');
-            lastNotes = sorted[0].notes || '';
-        }
-        html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;">
-            <td><strong>${esc(c.caseNumber)}</strong></td>
-            <td>${esc(c.circuit||'--')}</td>
-            <td>${c.clients ? c.clients.map(cl=>esc(cl.name)).join(', ') : '--'}</td>
-            <td>${c.opponents ? c.opponents.map(op=>esc(op.name)).join(', ') : '--'}</td>
-            <td>${esc(c.subject||'--')}</td>
-            <td>${esc(lastDate)}</td>
-            <td style="max-width:180px;word-break:break-word;">${esc(lastNotes||'--')}</td>
-            <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span></td>
-            <td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td>
-        </tr>`;
-    });
-    html += '</tbody></table></div></div>';
-    div.innerHTML = html;
-}
 window.searchClient = searchClient;
-window.searchCourt  = searchCourt;
-
-// =============================================
-//  CASE MODAL (Add / Edit موحد)
-// =============================================
-let tempClients = [], tempOpponents = [];
+window.searchCourt = searchCourt;
 
 function showCaseModal(caseData = null) {
     if (clients.length === 0) { showToast('⚠️ أضف موكلاً أولاً', 'warning'); return; }
     const isEdit = caseData !== null;
-    tempClients   = isEdit ? [...(caseData.clients   || [])] : [];
+    tempClients = isEdit ? [...(caseData.clients || [])] : [];
     tempOpponents = isEdit ? [...(caseData.opponents || [])] : [];
-
     const statusOptions = ['متداولة','حكم نهائي','مستأنفة','نقض'];
-
-    const modal = `
-        <div id="caseModal" class="modal-overlay">
-            <div class="modal-container">
-                <h3>${isEdit ? '✏️ تعديل القضية' : '➕ إضافة قضية جديدة'}</h3>
-                <label>رقم القضية</label>
-                <input type="text" id="caseNumber" value="${esc(caseData?.caseNumber||'')}">
-                <label>المحكمة</label>
-                <input type="text" id="court" value="${esc(caseData?.court||'')}">
-                <label>الدائرة</label>
-                <input type="text" id="circuit" value="${esc(caseData?.circuit||'')}">
-                <label>الموضوع</label>
-                <input type="text" id="subject" value="${esc(caseData?.subject||'')}">
-                <label>الحالة</label>
-                <select id="caseStatus">
-                    ${statusOptions.map(s => `<option ${(caseData?.caseStatus||'متداولة')===s?'selected':''}>${s}</option>`).join('')}
-                </select>
-                <h4 style="margin-top:16px;">الموكلون</h4>
-                <div id="clientsCont"></div>
-                <div class="flex-between" style="margin-top:8px;">
-                    <select id="selectClient" style="flex:1;margin:0;">
-                        ${clients.map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}
-                    </select>
-                    <button class="btn btn-sm" id="addClientBtn2">+ إضافة</button>
-                </div>
-                <h4 style="margin-top:16px;">الخصوم</h4>
-                <div id="opponentsCont"></div>
-                <div class="flex-between" style="margin-top:8px;gap:6px;">
-                    <input type="text" id="newOppName"  placeholder="اسم الخصم" style="flex:2;margin:0;">
-                    <input type="text" id="newOppTitle" placeholder="الصفة" style="flex:1;margin:0;">
-                    <button class="btn btn-sm" id="addOppBtn2">+ إضافة</button>
-                </div>
-                <div class="modal-buttons">
-                    <button id="saveCaseBtn" style="background:var(--gold);">${isEdit ? '💾 حفظ' : '✅ إضافة'}</button>
-                    <button id="closeCaseBtn" style="background:var(--border);">إلغاء</button>
-                </div>
-            </div>
-        </div>`;
+    const modal = `<div id="caseModal" class="modal-overlay"><div class="modal-container"><h3>${isEdit ? '✏️ تعديل القضية' : '➕ إضافة قضية جديدة'}</h3>
+        <label>رقم القضية</label><input type="text" id="caseNumber" value="${esc(caseData?.caseNumber||'')}">
+        <label>المحكمة</label><input type="text" id="court" value="${esc(caseData?.court||'')}">
+        <label>الدائرة</label><input type="text" id="circuit" value="${esc(caseData?.circuit||'')}">
+        <label>الموضوع</label><input type="text" id="subject" value="${esc(caseData?.subject||'')}">
+        <label>الحالة</label><select id="caseStatus">${statusOptions.map(s => `<option ${(caseData?.caseStatus||'متداولة')===s?'selected':''}>${s}</option>`).join('')}</select>
+        <h4 style="margin-top:16px;">الموكلون</h4><div id="clientsCont"></div><div class="flex-between" style="margin-top:8px;"><select id="selectClient" style="flex:1;margin:0;">${clients.map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select><button class="btn btn-sm" id="addClientBtn2">+ إضافة</button></div>
+        <h4 style="margin-top:16px;">الخصوم</h4><div id="opponentsCont"></div><div class="flex-between" style="margin-top:8px;gap:6px;"><input type="text" id="newOppName" placeholder="اسم الخصم" style="flex:2;margin:0;"><input type="text" id="newOppTitle" placeholder="الصفة" style="flex:1;margin:0;"><button class="btn btn-sm" id="addOppBtn2">+ إضافة</button></div>
+        <div class="modal-buttons"><button id="saveCaseBtn" style="background:var(--gold);">${isEdit ? '💾 حفظ' : '✅ إضافة'}</button><button id="closeCaseBtn" style="background:var(--border);">إلغاء</button></div></div></div>`;
     document.body.insertAdjacentHTML('beforeend', modal);
-
-    const renderC = () => {
-        document.getElementById('clientsCont').innerHTML = tempClients.length
-            ? tempClients.map((cl,i) => `
-                <div class="party-item">
-                    <span>${esc(cl.name)}${cl.title ? ' ('+esc(cl.title)+')' : ''}</span>
-                    <button class="remove-party" onclick="removeTC(${i})">✖</button>
-                </div>`).join('')
-            : '<p style="color:var(--muted);font-size:0.88rem;margin:6px 0;">لا يوجد موكلون</p>';
-    };
-    const renderO = () => {
-        document.getElementById('opponentsCont').innerHTML = tempOpponents.length
-            ? tempOpponents.map((op,i) => `
-                <div class="party-item">
-                    <span>${esc(op.name)}${op.title ? ' ('+esc(op.title)+')' : ''}</span>
-                    <button class="remove-party" onclick="removeTO(${i})">✖</button>
-                </div>`).join('')
-            : '<p style="color:var(--muted);font-size:0.88rem;margin:6px 0;">لا يوجد خصوم</p>';
-    };
-
-    window.removeTC = (i) => { tempClients.splice(i,1);   renderC(); };
+    const renderC = () => { document.getElementById('clientsCont').innerHTML = tempClients.length ? tempClients.map((cl,i) => `<div class="party-item"><span>${esc(cl.name)}${cl.title ? ' ('+esc(cl.title)+')' : ''}</span><button class="remove-party" onclick="window.removeTC(${i})">✖</button></div>`).join('') : '<p style="color:var(--muted);font-size:0.88rem;margin:6px 0;">لا يوجد موكلون</p>'; };
+    const renderO = () => { document.getElementById('opponentsCont').innerHTML = tempOpponents.length ? tempOpponents.map((op,i) => `<div class="party-item"><span>${esc(op.name)}${op.title ? ' ('+esc(op.title)+')' : ''}</span><button class="remove-party" onclick="window.removeTO(${i})">✖</button></div>`).join('') : '<p style="color:var(--muted);font-size:0.88rem;margin:6px 0;">لا يوجد خصوم</p>'; };
+    window.removeTC = (i) => { tempClients.splice(i,1); renderC(); };
     window.removeTO = (i) => { tempOpponents.splice(i,1); renderO(); };
-
-    document.getElementById('addClientBtn2').onclick = () => {
-        const id = document.getElementById('selectClient').value;
-        const c  = clients.find(x => x.id === id);
-        if (c && !tempClients.some(x => x.id === c.id)) {
-            const title = window.prompt('صفة الموكل (اختياري):');
-            tempClients.push({ id: c.id, name: c.name, title: title || '' });
-            renderC();
-        }
-    };
-    document.getElementById('addOppBtn2').onclick = () => {
-        const name = document.getElementById('newOppName').value.trim();
-        if (!name) return;
-        tempOpponents.push({ name, title: document.getElementById('newOppTitle').value.trim() });
-        document.getElementById('newOppName').value  = '';
-        document.getElementById('newOppTitle').value = '';
-        renderO();
-    };
-
+    document.getElementById('addClientBtn2').onclick = () => { const id = document.getElementById('selectClient').value; const c = clients.find(x => x.id === id); if (c && !tempClients.some(x => x.id === c.id)) { const title = window.prompt('صفة الموكل (اختياري):'); tempClients.push({ id: c.id, name: c.name, title: title || '' }); renderC(); } };
+    document.getElementById('addOppBtn2').onclick = () => { const name = document.getElementById('newOppName').value.trim(); if (!name) return; tempOpponents.push({ name, title: document.getElementById('newOppTitle').value.trim() }); document.getElementById('newOppName').value = ''; document.getElementById('newOppTitle').value = ''; renderO(); };
     renderC(); renderO();
-
-    document.getElementById('saveCaseBtn').onclick = async () => {
-        const cn = document.getElementById('caseNumber').value.trim();
-        if (!cn)                       { showToast('⚠️ رقم القضية مطلوب', 'warning'); return; }
-        if (tempClients.length === 0)  { showToast('⚠️ أضف موكلاً واحداً على الأقل', 'warning'); return; }
-        const data = {
-            caseNumber: cn,
-            court:      document.getElementById('court').value,
-            circuit:    document.getElementById('circuit').value,
-            clients:    tempClients, opponents: tempOpponents,
-            subject:    document.getElementById('subject').value,
-            caseStatus: document.getElementById('caseStatus').value,
-            subjectDetails: caseData?.subjectDetails || ''
-        };
-        if (isEdit) await updateCase(caseData.id, data);
-        else        await addCase(data);
-        document.getElementById('caseModal').remove();
-    };
+    document.getElementById('saveCaseBtn').onclick = async () => { const cn = document.getElementById('caseNumber').value.trim(); if (!cn) { showToast('⚠️ رقم القضية مطلوب', 'warning'); return; } if (tempClients.length === 0) { showToast('⚠️ أضف موكلاً واحداً على الأقل', 'warning'); return; } const data = { caseNumber: cn, court: document.getElementById('court').value, circuit: document.getElementById('circuit').value, clients: tempClients, opponents: tempOpponents, subject: document.getElementById('subject').value, caseStatus: document.getElementById('caseStatus').value, subjectDetails: caseData?.subjectDetails || '' }; if (isEdit) await window.updateCase(caseData.id, data); else await window.addCase(data); document.getElementById('caseModal').remove(); };
     document.getElementById('closeCaseBtn').onclick = () => document.getElementById('caseModal').remove();
 }
 
-window.editCase = (id) => {
-    const c = casesList.find(x => x.id === id);
-    if (c) showCaseModal(c);
-};
+window.editCase = (id) => { const c = casesList.find(x => x.id === id); if (c) showCaseModal(c); };
 
-// =============================================
-//  SESSION MODAL (Add / Edit موحد)
-// =============================================
-function showSessionModal(caseId, session = null) {
-    const isEdit = session !== null;
-    const modal = `
-        <div id="sessModal" class="modal-overlay">
-            <div class="modal-container">
-                <h3>${isEdit ? '✏️ تعديل الجلسة' : '➕ إضافة جلسة'}</h3>
-                <label>التاريخ</label>
-                <input type="date" id="sDate" value="${esc(session?.date||'')}">
-                <label>ملاحظات (اختياري)</label>
-                <textarea id="sNotes" rows="3">${esc(session?.notes||'')}</textarea>
-                <div class="modal-buttons">
-                    <button id="saveSessBtn" style="background:var(--${isEdit?'gold':'green'});color:${isEdit?'var(--navy)':'white'};">
-                        ${isEdit ? '💾 حفظ' : '✅ إضافة'}
-                    </button>
-                    <button id="closeSessBtn" style="background:var(--border);">إلغاء</button>
-                </div>
-            </div>
-        </div>`;
+function showAddSession(caseId) {
+    const modal = `<div id="sessModal" class="modal-overlay"><div class="modal-container"><h3>➕ إضافة جلسة</h3><label>التاريخ</label><input type="date" id="sDate" required><label>ملاحظات (اختياري)</label><textarea id="sNotes" rows="3"></textarea><div class="modal-buttons"><button id="saveSessBtn" style="background:var(--green);color:white;">✅ إضافة</button><button id="closeSessBtn" style="background:var(--border);">إلغاء</button></div></div></div>`;
     document.body.insertAdjacentHTML('beforeend', modal);
-
-    document.getElementById('saveSessBtn').onclick = async () => {
-        const d = document.getElementById('sDate').value;
-        if (!d) { showToast('⚠️ أدخل التاريخ', 'warning'); return; }
-        const notes = document.getElementById('sNotes').value;
-        if (isEdit) {
-            const c = casesList.find(x => x.id === caseId);
-            const sessions = (c.sessions || []).map(s => s.id === session.id ? { ...s, date: d, notes } : s);
-            sessions.sort((a,b) => new Date(a.date)-new Date(b.date));
-            await updateDoc(doc(db, 'cases', caseId), { sessions });
-            addNotif('✏️ تم تعديل الجلسة', 'success');
-            await loadCases();
-        } else {
-            await addSession(caseId, { date: d, notes });
-        }
-        document.getElementById('sessModal').remove();
-    };
+    document.getElementById('saveSessBtn').onclick = async () => { const d = document.getElementById('sDate').value; if (!d) { showToast('⚠️ أدخل التاريخ', 'warning'); return; } const notes = document.getElementById('sNotes').value; await window.addSession(caseId, { date: d, notes }); document.getElementById('sessModal').remove(); };
     document.getElementById('closeSessBtn').onclick = () => document.getElementById('sessModal').remove();
 }
 
-window.showAddSession = (id) => showSessionModal(id);
-window.editSession = (caseId, sessionId) => {
+function editSessionModal(caseId, sessionId) {
     const c = casesList.find(x => x.id === caseId);
-    const s = c?.sessions?.find(x => x.id === sessionId);
-    if (s) showSessionModal(caseId, s);
-};
-
-// =============================================
-//  UPLOAD DOCUMENT MODAL
-// =============================================
-window.showUploadDocument = (id) => {
-    const modal = `
-        <div id="uploadModal" class="modal-overlay">
-            <div class="modal-container">
-                <h3>📤 رفع مستند</h3>
-                <label>اسم المستند</label>
-                <input type="text" id="docName">
-                <label>الملف (PDF أو صورة، بحد أقصى 5MB)</label>
-                <input type="file" id="docFile" accept=".pdf,.jpg,.jpeg,.png">
-                <div id="uploadProgress" style="margin-top:10px;font-size:0.88rem;color:var(--slate);"></div>
-                <div class="modal-buttons">
-                    <button id="uploadBtn" class="btn btn-success">📤 رفع</button>
-                    <button id="closeUploadBtn" style="background:var(--border);border:none;padding:12px;border-radius:40px;font-family:Cairo,sans-serif;font-weight:700;cursor:pointer;">إلغاء</button>
-                </div>
-            </div>
-        </div>`;
+    const session = c?.sessions?.find(s => s.id === sessionId);
+    if (!session) return;
+    const modal = `<div id="sessModal" class="modal-overlay"><div class="modal-container"><h3>✏️ تعديل الجلسة</h3><label>التاريخ</label><input type="date" id="sDate" value="${esc(session.date)}" required><label>ملاحظات (اختياري)</label><textarea id="sNotes" rows="3">${esc(session.notes || '')}</textarea><div class="modal-buttons"><button id="saveSessBtn" style="background:var(--gold);">💾 حفظ</button><button id="closeSessBtn" style="background:var(--border);">إلغاء</button></div></div></div>`;
     document.body.insertAdjacentHTML('beforeend', modal);
+    document.getElementById('saveSessBtn').onclick = async () => { const d = document.getElementById('sDate').value; if (!d) { showToast('⚠️ أدخل التاريخ', 'warning'); return; } const notes = document.getElementById('sNotes').value; await window.editSession(caseId, sessionId, { date: d, notes }); document.getElementById('sessModal').remove(); };
+    document.getElementById('closeSessBtn').onclick = () => document.getElementById('sessModal').remove();
+}
 
-    document.getElementById('uploadBtn').onclick = async () => {
-        const name = document.getElementById('docName').value.trim();
-        const file = document.getElementById('docFile').files[0];
-        if (!name) { showToast('⚠️ أدخل اسم المستند', 'warning'); return; }
-        if (!file) { showToast('⚠️ اختر ملفاً', 'warning'); return; }
-        document.getElementById('uploadProgress').textContent = 'جاري الرفع...';
-        document.getElementById('uploadBtn').disabled = true;
-        await uploadDoc(id, file, name);
-        document.getElementById('uploadModal').remove();
-    };
-    document.getElementById('closeUploadBtn').onclick = () => document.getElementById('uploadModal').remove();
-};
+window.showAddSession = showAddSession;
+window.editSessionModal = editSessionModal;
 
-// =============================================
-//  CLIENT MODALS
-// =============================================
 function showClientModal(client = null) {
     const isEdit = client !== null;
-    const modal = `
-        <div id="clientModal" class="modal-overlay">
-            <div class="modal-container">
-                <h3>${isEdit ? '✏️ تعديل الموكل' : '➕ إضافة موكل جديد'}</h3>
-                <label>الاسم</label>
-                <input type="text" id="clName" value="${esc(client?.name||'')}">
-                <label>النوع</label>
-                <select id="clType">
-                    <option value="individual" ${(!client||client.type==='individual')?'selected':''}>فرد</option>
-                    <option value="company"    ${client?.type==='company'?'selected':''}>شركة</option>
-                </select>
-                <label>الهاتف</label>
-                <input type="text" id="clPhone" value="${esc(client?.phone||'')}">
-                <label>الرقم الوطني</label>
-                <input type="text" id="clIdNum" value="${esc(client?.idNumber||'')}">
-                <div class="modal-buttons">
-                    <button id="saveClientBtn" style="background:var(--${isEdit?'gold':'green'});color:${isEdit?'var(--navy)':'white'};">
-                        ${isEdit ? '💾 حفظ' : '✅ إضافة'}
-                    </button>
-                    <button id="closeClientBtn" style="background:var(--border);">إلغاء</button>
-                </div>
-            </div>
-        </div>`;
+    const modal = `<div id="clientModal" class="modal-overlay"><div class="modal-container"><h3>${isEdit ? '✏️ تعديل الموكل' : '➕ إضافة موكل جديد'}</h3>
+        <label>الاسم</label><input type="text" id="clName" value="${esc(client?.name||'')}">
+        <label>النوع</label><select id="clType"><option value="individual" ${(!client||client.type==='individual')?'selected':''}>فرد</option><option value="company" ${client?.type==='company'?'selected':''}>شركة</option></select>
+        <label>الهاتف</label><input type="text" id="clPhone" value="${esc(client?.phone||'')}">
+        <label>الرقم الوطني</label><input type="text" id="clIdNum" value="${esc(client?.idNumber||'')}">
+        <div class="modal-buttons"><button id="saveClientBtn" style="background:var(--${isEdit?'gold':'green'});color:${isEdit?'var(--navy)':'white'};">${isEdit ? '💾 حفظ' : '✅ إضافة'}</button><button id="closeClientBtn" style="background:var(--border);">إلغاء</button></div></div></div>`;
     document.body.insertAdjacentHTML('beforeend', modal);
-
-    document.getElementById('saveClientBtn').onclick = async () => {
-        const name = document.getElementById('clName').value.trim();
-        if (!name) { showToast('⚠️ الاسم مطلوب', 'warning'); return; }
-        const data = {
-            name, type: document.getElementById('clType').value,
-            phone:    document.getElementById('clPhone').value,
-            idNumber: document.getElementById('clIdNum').value,
-            ...(isEdit ? {} : {})
-        };
-        if (isEdit) await updateClient(client.id, { ...client, ...data });
-        else        await addClient(data);
-        document.getElementById('clientModal').remove();
-    };
+    document.getElementById('saveClientBtn').onclick = async () => { const name = document.getElementById('clName').value.trim(); if (!name) { showToast('⚠️ الاسم مطلوب', 'warning'); return; } const data = { name, type: document.getElementById('clType').value, phone: document.getElementById('clPhone').value, idNumber: document.getElementById('clIdNum').value }; if (isEdit) await window.updateClient(client.id, { ...client, ...data }); else await window.addClient(data); document.getElementById('clientModal').remove(); };
     document.getElementById('closeClientBtn').onclick = () => document.getElementById('clientModal').remove();
 }
 
-window.editClient = (id) => {
-    const c = clients.find(x => x.id === id);
-    if (c) showClientModal(c);
-};
+window.editClient = (id) => { const c = clients.find(x => x.id === id); if (c) showClientModal(c); };
 
-window.editDelegation = (id) => {
-    const c = clients.find(x => x.id === id);
-    if (!c) return;
-    const modal = `
-        <div id="delModal" class="modal-overlay">
-            <div class="modal-container">
-                <h3>📜 بيانات التوكيل — ${esc(c.name)}</h3>
-                <label>رقم التوكيل</label>
-                <input type="text" id="delNum" value="${esc(c.delegationNumber||'')}">
-                <label>تاريخ التوكيل</label>
-                <input type="date" id="delDate" value="${esc(c.delegationDate||'')}">
-                <label>جهة التوثيق</label>
-                <input type="text" id="delAuth" value="${esc(c.delegationAuthority||'')}">
-                <div class="modal-buttons">
-                    <button id="saveDelBtn" class="btn btn-success">💾 حفظ</button>
-                    <button id="closeDelBtn" style="background:var(--border);">إلغاء</button>
-                </div>
-            </div>
-        </div>`;
-    document.body.insertAdjacentHTML('beforeend', modal);
-    document.getElementById('saveDelBtn').onclick = () => {
-        updateClient(id, { ...c,
-            delegationNumber:    document.getElementById('delNum').value,
-            delegationDate:      document.getElementById('delDate').value,
-            delegationAuthority: document.getElementById('delAuth').value
-        });
-        document.getElementById('delModal').remove();
-    };
-    document.getElementById('closeDelBtn').onclick = () => document.getElementById('delModal').remove();
-};
+window.editDelegation = (id) => { const c = clients.find(x => x.id === id); if (!c) return; const modal = `<div id="delModal" class="modal-overlay"><div class="modal-container"><h3>📜 بيانات التوكيل — ${esc(c.name)}</h3><label>رقم التوكيل</label><input type="text" id="delNum" value="${esc(c.delegationNumber||'')}"><label>تاريخ التوكيل</label><input type="date" id="delDate" value="${esc(c.delegationDate||'')}"><label>جهة التوثيق</label><input type="text" id="delAuth" value="${esc(c.delegationAuthority||'')}"><div class="modal-buttons"><button id="saveDelBtn" class="btn btn-success">💾 حفظ</button><button id="closeDelBtn" style="background:var(--border);">إلغاء</button></div></div></div>`; document.body.insertAdjacentHTML('beforeend', modal); document.getElementById('saveDelBtn').onclick = () => { window.updateClient(id, { ...c, delegationNumber: document.getElementById('delNum').value, delegationDate: document.getElementById('delDate').value, delegationAuthority: document.getElementById('delAuth').value }); document.getElementById('delModal').remove(); }; document.getElementById('closeDelBtn').onclick = () => document.getElementById('delModal').remove(); };
 
-window.editSubjectDetails = (id) => {
-    const c = casesList.find(x => x.id === id);
-    if (!c) return;
-    const modal = `
-        <div id="subModal" class="modal-overlay">
-            <div class="modal-container">
-                <h3>📝 تفاصيل الموضوع</h3>
-                <textarea id="details" rows="6">${esc(c.subjectDetails||'')}</textarea>
-                <div class="modal-buttons">
-                    <button id="saveSubBtn" class="btn btn-success">💾 حفظ</button>
-                    <button id="closeSubBtn" style="background:var(--border);">إلغاء</button>
-                </div>
-            </div>
-        </div>`;
-    document.body.insertAdjacentHTML('beforeend', modal);
-    document.getElementById('saveSubBtn').onclick = () => {
-        updateCase(id, { ...c, subjectDetails: document.getElementById('details').value });
-        document.getElementById('subModal').remove();
-    };
-    document.getElementById('closeSubBtn').onclick = () => document.getElementById('subModal').remove();
-};
+window.editSubjectDetails = (id) => { const c = casesList.find(x => x.id === id); if (!c) return; const modal = `<div id="subModal" class="modal-overlay"><div class="modal-container"><h3>📝 تفاصيل الموضوع</h3><textarea id="details" rows="6">${esc(c.subjectDetails||'')}</textarea><div class="modal-buttons"><button id="saveSubBtn" class="btn btn-success">💾 حفظ</button><button id="closeSubBtn" style="background:var(--border);">إلغاء</button></div></div></div>`; document.body.insertAdjacentHTML('beforeend', modal); document.getElementById('saveSubBtn').onclick = () => { window.updateCase(id, { ...c, subjectDetails: document.getElementById('details').value }); document.getElementById('subModal').remove(); }; document.getElementById('closeSubBtn').onclick = () => document.getElementById('subModal').remove(); };
 
-// =============================================
-//  REMINDERS — بدون localStorage
-// =============================================
 const shownReminders = new Set();
-
-function checkReminders() {
-    const today = new Date(); today.setHours(0,0,0,0);
-    tasks.forEach(t => {
-        if (t.status === 'done' || !t.date) return;
-        const taskDate = new Date(t.date); taskDate.setHours(0,0,0,0);
-        const diff = Math.round((taskDate - today) / 864e5);
-        if (diff === 0 || diff === 1) {
-            const key = `${t.id}_${diff}`;
-            if (!shownReminders.has(key)) {
-                shownReminders.add(key);
-                const when = diff === 0 ? '🚨 اليوم' : '⚠️ غداً';
-                addNotif(`📋 مهمة ${when} — ${t.lawyer}: ${t.description}`, 'warning');
-            }
-        }
-    });
-}
-setInterval(checkReminders, 3_600_000);
+function checkReminders() { const today = new Date(); today.setHours(0,0,0,0); tasks.forEach(t => { if (t.status === 'done' || !t.date) return; const taskDate = new Date(t.date); taskDate.setHours(0,0,0,0); const diff = Math.round((taskDate - today) / 864e5); if (diff === 0 || diff === 1) { const key = `${t.id}_${diff}`; if (!shownReminders.has(key)) { shownReminders.add(key); const when = diff === 0 ? '🚨 اليوم' : '⚠️ غداً'; addNotif(`📋 مهمة ${when} — ${t.lawyer}: ${t.description}`, 'warning'); } } }); }
+setInterval(checkReminders, 3600000);
 setTimeout(checkReminders, 2000);
 
 // =============================================
-//  SETUP EVENTS
+//  UI ENHANCEMENTS (تحسينات الواجهة)
 // =============================================
-function setupEvents() {
-    document.getElementById('addClientBtn').onclick = () => showClientModal();
-    document.getElementById('addCaseBtn').onclick   = () => showCaseModal();
-    document.getElementById('addTaskBtn').onclick   = () => showTaskModal();
-    document.getElementById('searchClientBtn').onclick = searchClient;
-    document.getElementById('searchCourtBtn').onclick  = searchCourt;
-    document.getElementById('searchClientInput').addEventListener('keypress', e => { if (e.key==='Enter') searchClient(); });
-    document.getElementById('searchCourtInput').addEventListener('keypress', e => { if (e.key==='Enter') searchCourt(); });
 
-    // Search type toggle
-    document.querySelectorAll('.search-type-btn').forEach(btn => {
-        btn.onclick = () => {
-            document.querySelectorAll('.search-type-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const type = btn.dataset.type;
-            document.getElementById('searchClientDiv').style.display = type==='client' ? 'block' : 'none';
-            document.getElementById('searchCourtDiv').style.display  = type==='court'  ? 'block' : 'none';
-            document.getElementById('searchResults').innerHTML = '';
-        };
-    });
-
-    // Task filter
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.onclick = () => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            filterTasksByLawyer(btn.dataset.filter);
-        };
-    });
-
-    // Nav
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.onclick = () => {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            item.classList.add('active');
-            const tab = item.dataset.tab;
-            document.querySelectorAll('.tab-content').forEach(t => t.style.display='none');
-            document.getElementById(tab+'Tab').style.display = 'block';
-            const titles = { dashboard:'لوحة التحكم', clients:'الموكلون', cases:'القضايا', tasks:'المهام اليومية', search:'بحث' };
-            document.getElementById('pageTitle').textContent = titles[tab] || '';
-            if (tab==='clients')   renderClients();
-            if (tab==='cases')     renderCases();
-            if (tab==='dashboard') renderDashboard();
-            if (tab==='tasks')     renderTasks();
-            if (tab==='search')    document.getElementById('searchResults').innerHTML = '';
-            // أغلق السايدبار على موبايل
-            if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
-        };
-    });
-
-    // Menu toggle
-    document.getElementById('menuToggle').onclick = () => document.getElementById('sidebar').classList.toggle('open');
-
-    // Notification panel
-    document.getElementById('notifIcon').onclick = (e) => {
-        e.stopPropagation();
-        const panel = document.getElementById('notifPanel');
-        panel.classList.toggle('open');
-        if (panel.classList.contains('open')) {
-            notifications.forEach(n => n.read = true);
-            updateNotifBadge();
-            renderNotifPanel();
-        }
-    };
-    document.addEventListener('click', () => document.getElementById('notifPanel').classList.remove('open'));
-    document.getElementById('notifPanel').addEventListener('click', e => e.stopPropagation());
-}
-    // إضافة تحسينات الواجهة
-loadDarkModePreference();
-addDarkModeButton();
-addColumnButtons();
-addKeyboardShortcuts();
-addAdvancedSearchButton();
-
-// تحميل تفضيلات الأعمدة بعد تحميل الجداول
-setTimeout(() => {
-    loadColumnsPreference('clientsTable');
-    loadColumnsPreference('casesTable');
-}, 500);
-      // =============================================
-//  DARK MODE (وضع الليل)
-// =============================================
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
     addNotif(document.body.classList.contains('dark-mode') ? '🌙 تم تفعيل الوضع الليلي' : '☀️ تم تفعيل الوضع النهاري', 'info');
 }
 
-function loadDarkModePreference() {
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (savedDarkMode) {
-        document.body.classList.add('dark-mode');
-    }
-}
-
-// =============================================
-//  إضافة زر وضع الليل في شريط الأعلى
-// =============================================
 function addDarkModeButton() {
     const topActions = document.querySelector('.top-actions');
     if (topActions && !document.querySelector('.dark-mode-toggle')) {
@@ -2028,9 +1112,13 @@ function addDarkModeButton() {
     }
 }
 
-// =============================================
-//  تخصيص الأعمدة
-// =============================================
+function loadDarkModePreference() {
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (savedDarkMode) {
+        document.body.classList.add('dark-mode');
+    }
+}
+
 function showColumnsPanel(tableId, panelId) {
     let panel = document.getElementById(panelId);
     if (!panel) {
@@ -2039,13 +1127,10 @@ function showColumnsPanel(tableId, panelId) {
         panel.className = 'columns-panel';
         document.body.appendChild(panel);
     }
-    
     const table = document.getElementById(tableId);
     if (!table) return;
-    
     const headers = table.querySelectorAll('thead th');
     const savedColumns = JSON.parse(localStorage.getItem(`${tableId}_columns`) || '[]');
-    
     let html = `<h4><i class="fas fa-eye"></i> إظهار/إخفاء الأعمدة</h4>`;
     headers.forEach((th, index) => {
         const colName = th.innerText.trim() || `عمود ${index + 1}`;
@@ -2057,20 +1142,15 @@ function showColumnsPanel(tableId, panelId) {
     panel.classList.toggle('open');
 }
 
-function applyColumnsVisibility(tableId, panelId) {
+window.applyColumnsVisibility = (tableId, panelId) => {
     const table = document.getElementById(tableId);
     const panel = document.getElementById(panelId);
     const checkboxes = panel.querySelectorAll('input[type="checkbox"]');
     const visibleColumns = [];
-    
     checkboxes.forEach((cb, idx) => {
-        if (cb.checked) {
-            visibleColumns.push(idx);
-        }
+        if (cb.checked) visibleColumns.push(idx);
     });
-    
     localStorage.setItem(`${tableId}_columns`, JSON.stringify(visibleColumns));
-    
     const rows = table.querySelectorAll('tr');
     rows.forEach(row => {
         const cells = row.querySelectorAll('th, td');
@@ -2082,17 +1162,15 @@ function applyColumnsVisibility(tableId, panelId) {
             }
         });
     });
-    
     panel.classList.remove('open');
     addNotif('✅ تم تحديث عرض الأعمدة', 'success');
-}
+};
 
 function loadColumnsPreference(tableId) {
     const table = document.getElementById(tableId);
     if (!table) return;
     const savedColumns = JSON.parse(localStorage.getItem(`${tableId}_columns`) || '[]');
     if (savedColumns.length === 0) return;
-    
     const rows = table.querySelectorAll('tr');
     rows.forEach(row => {
         const cells = row.querySelectorAll('th, td');
@@ -2106,164 +1184,103 @@ function loadColumnsPreference(tableId) {
     });
 }
 
-// إضافة زر تخصيص الأعمدة في الجداول
 function addColumnButtons() {
-    const clientsCard = document.querySelector('#clientsTab .card-header');
-    const casesCard = document.querySelector('#casesTab .card-header');
-    
-    if (clientsCard && !document.querySelector('#clientsColumnBtn')) {
+    const clientsCardHeader = document.querySelector('#clientsTab .card-header');
+    const casesCardHeader = document.querySelector('#casesTab .card-header');
+    if (clientsCardHeader && !document.querySelector('#clientsColumnBtn')) {
         const btn = document.createElement('button');
         btn.id = 'clientsColumnBtn';
         btn.className = 'btn btn-outline btn-sm';
         btn.innerHTML = '<i class="fas fa-columns"></i> تخصيص الأعمدة';
         btn.onclick = () => showColumnsPanel('clientsTable', 'clientsColumnsPanel');
-        clientsCard.appendChild(btn);
+        clientsCardHeader.appendChild(btn);
     }
-    
-    if (casesCard && !document.querySelector('#casesColumnBtn')) {
+    if (casesCardHeader && !document.querySelector('#casesColumnBtn')) {
         const btn = document.createElement('button');
         btn.id = 'casesColumnBtn';
         btn.className = 'btn btn-outline btn-sm';
         btn.innerHTML = '<i class="fas fa-columns"></i> تخصيص الأعمدة';
         btn.onclick = () => showColumnsPanel('casesTable', 'casesColumnsPanel');
-        casesCard.appendChild(btn);
+        casesCardHeader.appendChild(btn);
     }
 }
 
-// =============================================
-//  بحث متقدم
-// =============================================
 function showAdvancedSearch() {
-    const searchDiv = document.getElementById('advancedSearchPanel');
-    if (!searchDiv) {
-        const parentCard = document.querySelector('#searchTab .card');
-        if (parentCard) {
+    let panel = document.getElementById('advancedSearchPanel');
+    if (!panel) {
+        const searchCard = document.querySelector('#searchTab .card');
+        if (searchCard) {
             const advancedHtml = `
                 <div id="advancedSearchPanel" class="advanced-search">
                     <h4><i class="fas fa-filter"></i> بحث متقدم</h4>
                     <div class="advanced-search-grid">
-                        <div>
-                            <label>رقم القضية</label>
-                            <input type="text" id="advCaseNumber" placeholder="رقم القضية...">
-                        </div>
-                        <div>
-                            <label>المحكمة</label>
-                            <input type="text" id="advCourt" placeholder="المحكمة...">
-                        </div>
-                        <div>
-                            <label>الموكل</label>
-                            <input type="text" id="advClient" placeholder="اسم الموكل...">
-                        </div>
-                        <div>
-                            <label>الحالة</label>
-                            <select id="advStatus">
-                                <option value="">الكل</option>
-                                <option value="متداولة">متداولة</option>
-                                <option value="حكم نهائي">حكم نهائي</option>
-                                <option value="مستأنفة">مستأنفة</option>
-                                <option value="نقض">نقض</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>من تاريخ</label>
-                            <input type="date" id="advDateFrom">
-                        </div>
-                        <div>
-                            <label>إلى تاريخ</label>
-                            <input type="date" id="advDateTo">
-                        </div>
+                        <div><label>رقم القضية</label><input type="text" id="advCaseNumber" placeholder="رقم القضية..."></div>
+                        <div><label>المحكمة</label><input type="text" id="advCourt" placeholder="المحكمة..."></div>
+                        <div><label>الموكل</label><input type="text" id="advClient" placeholder="اسم الموكل..."></div>
+                        <div><label>الحالة</label><select id="advStatus"><option value="">الكل</option><option value="متداولة">متداولة</option><option value="حكم نهائي">حكم نهائي</option><option value="مستأنفة">مستأنفة</option><option value="نقض">نقض</option></select></div>
+                        <div><label>من تاريخ</label><input type="date" id="advDateFrom"></div>
+                        <div><label>إلى تاريخ</label><input type="date" id="advDateTo"></div>
                     </div>
-                    <div class="flex-between">
-                        <button class="btn" onclick="performAdvancedSearch()"><i class="fas fa-search"></i> بحث</button>
-                        <button class="btn btn-outline" onclick="clearAdvancedSearch()"><i class="fas fa-eraser"></i> مسح</button>
-                    </div>
+                    <div class="flex-between"><button class="btn" onclick="performAdvancedSearch()"><i class="fas fa-search"></i> بحث</button><button class="btn btn-outline" onclick="clearAdvancedSearch()"><i class="fas fa-eraser"></i> مسح</button></div>
                 </div>
             `;
-            parentCard.insertAdjacentHTML('afterbegin', advancedHtml);
+            searchCard.insertAdjacentHTML('afterbegin', advancedHtml);
+            panel = document.getElementById('advancedSearchPanel');
         }
     }
-    const panel = document.getElementById('advancedSearchPanel');
-    panel.classList.toggle('show');
+    if (panel) panel.classList.toggle('show');
 }
 
-function performAdvancedSearch() {
+window.performAdvancedSearch = () => {
     const caseNumber = document.getElementById('advCaseNumber')?.value.trim().toLowerCase() || '';
     const court = document.getElementById('advCourt')?.value.trim().toLowerCase() || '';
     const client = document.getElementById('advClient')?.value.trim().toLowerCase() || '';
     const status = document.getElementById('advStatus')?.value || '';
     const dateFrom = document.getElementById('advDateFrom')?.value;
     const dateTo = document.getElementById('advDateTo')?.value;
-    
     const results = casesList.filter(c => {
         if (caseNumber && !(c.caseNumber || '').toLowerCase().includes(caseNumber)) return false;
         if (court && !(c.court || '').toLowerCase().includes(court)) return false;
         if (status && c.caseStatus !== status) return false;
-        if (client) {
-            const clientMatch = (c.clients || []).some(cl => (cl.name || '').toLowerCase().includes(client));
-            if (!clientMatch) return false;
-        }
-        if (dateFrom && c.createdAt) {
-            const caseDate = new Date(c.createdAt).toISOString().split('T')[0];
-            if (caseDate < dateFrom) return false;
-        }
-        if (dateTo && c.createdAt) {
-            const caseDate = new Date(c.createdAt).toISOString().split('T')[0];
-            if (caseDate > dateTo) return false;
-        }
+        if (client) { const clientMatch = (c.clients || []).some(cl => (cl.name || '').toLowerCase().includes(client)); if (!clientMatch) return false; }
+        if (dateFrom && c.createdAt) { const caseDate = new Date(c.createdAt).toISOString().split('T')[0]; if (caseDate < dateFrom) return false; }
+        if (dateTo && c.createdAt) { const caseDate = new Date(c.createdAt).toISOString().split('T')[0]; if (caseDate > dateTo) return false; }
         return true;
     });
-    
-    displaySearchResults(results);
-    addNotif(`🔍 تم العثور على ${results.length} نتيجة`, 'info');
-}
-
-function clearAdvancedSearch() {
-    const fields = ['advCaseNumber', 'advCourt', 'advClient', 'advStatus', 'advDateFrom', 'advDateTo'];
-    fields.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
-    performAdvancedSearch();
-}
-
-function displaySearchResults(results) {
     const div = document.getElementById('searchResults');
-    if (!div) return;
-    
-    if (results.length === 0) {
-        div.innerHTML = '<p class="loading">❌ لا توجد نتائج مطابقة</p>';
-        return;
+    if (results.length === 0) { div.innerHTML = '<p class="loading">❌ لا توجد نتائج مطابقة</p>'; }
+    else {
+        let html = `<div class="table-wrap"><table style="width:100%"><thead><tr style="background:var(--bg);"><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th></tr></thead><tbody>`;
+        results.forEach(c => {
+            let lastDate = 'لا توجد';
+            if (c.sessions && c.sessions.length) { const sorted = [...c.sessions].sort((a,b) => new Date(b.date)-new Date(a.date)); lastDate = new Date(sorted[0].date).toLocaleDateString('ar-EG'); }
+            html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.court || '--')}</td><td>${c.clients ? c.clients.map(cl=>esc(cl.name)).join(', ') : '--'}</td><td>${c.opponents ? c.opponents.map(op=>esc(op.name)).join(', ') : '--'}</td><td>${esc(c.subject || '--')}</td><td>${esc(lastDate)}</td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span></td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td></tr>`;
+        });
+        html += '</tbody><td></div>';
+        div.innerHTML = html;
     }
-    
-    let html = `<div class="table-wrap"><table style="width:100%"><thead><tr style="background:var(--bg);">
-        <th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th>
-        <th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th>
-    </tr></thead><tbody>`;
-    
-    results.forEach(c => {
-        let lastDate = 'لا توجد';
-        if (c.sessions && c.sessions.length) {
-            const sorted = [...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date));
-            lastDate = new Date(sorted[0].date).toLocaleDateString('ar-EG');
-        }
-        html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;">
-            <td><strong>${esc(c.caseNumber)}</strong></td>
-            <td>${esc(c.court || '--')}</td>
-            <td>${c.clients ? c.clients.map(cl=>esc(cl.name)).join(', ') : '--'}</td>
-            <td>${c.opponents ? c.opponents.map(op=>esc(op.name)).join(', ') : '--'}</td>
-            <td>${esc(c.subject || '--')}</td>
-            <td>${esc(lastDate)}</td>
-            <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span></td>
-            <td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td>
-        </tr>`;
-    });
-    html += '</tbody></table></div>';
-    div.innerHTML = html;
+    addNotif(`🔍 تم العثور على ${results.length} نتيجة`, 'info');
+};
+
+window.clearAdvancedSearch = () => {
+    const fields = ['advCaseNumber', 'advCourt', 'advClient', 'advStatus', 'advDateFrom', 'advDateTo'];
+    fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    window.performAdvancedSearch();
+};
+
+function addAdvancedSearchButton() {
+    const searchTypeDiv = document.querySelector('#searchTab .search-type-buttons');
+    if (searchTypeDiv && !document.querySelector('#advSearchBtn')) {
+        const advBtn = document.createElement('button');
+        advBtn.id = 'advSearchBtn';
+        advBtn.className = 'search-type-btn';
+        advBtn.innerHTML = '<i class="fas fa-search-plus"></i> بحث متقدم';
+        advBtn.style.background = 'var(--gold)';
+        advBtn.onclick = showAdvancedSearch;
+        searchTypeDiv.appendChild(advBtn);
+    }
 }
 
-// =============================================
-//  اختصارات لوحة المفاتيح
-// =============================================
 function showKeyboardShortcuts() {
     let modal = document.getElementById('shortcutsModal');
     if (!modal) {
@@ -2272,7 +1289,7 @@ function showKeyboardShortcuts() {
         modal.className = 'shortcuts-modal';
         modal.innerHTML = `
             <h3><i class="fas fa-keyboard"></i> اختصارات لوحة المفاتيح</h3>
-            <table>
+            <table style="width:100%">
                 <tr><td><kbd>Ctrl</kbd> + <kbd>C</kbd></td><td>الانتقال إلى الموكلون</td></tr>
                 <tr><td><kbd>Ctrl</kbd> + <kbd>Q</kbd></td><td>الانتقال إلى القضايا</td></tr>
                 <tr><td><kbd>Ctrl</kbd> + <kbd>M</kbd></td><td>الانتقال إلى المهام</td></tr>
@@ -2290,52 +1307,20 @@ function showKeyboardShortcuts() {
 }
 
 function addKeyboardShortcuts() {
-    // زر اختصارات في الزاوية
     const shortcutsBtn = document.createElement('div');
     shortcutsBtn.className = 'keyboard-shortcuts';
     shortcutsBtn.innerHTML = '<i class="fas fa-keyboard"></i> <kbd>?</kbd>';
     shortcutsBtn.onclick = showKeyboardShortcuts;
     document.body.appendChild(shortcutsBtn);
-    
-    // اختصارات التنقل
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey) {
-            switch(e.key) {
-                case 'c':
-                case 'C':
-                    e.preventDefault();
-                    document.querySelector('.nav-item[data-tab="clients"]')?.click();
-                    addNotif('⌨️ تم الانتقال إلى الموكلون', 'info');
-                    break;
-                case 'q':
-                case 'Q':
-                    e.preventDefault();
-                    document.querySelector('.nav-item[data-tab="cases"]')?.click();
-                    addNotif('⌨️ تم الانتقال إلى القضايا', 'info');
-                    break;
-                case 'm':
-                case 'M':
-                    e.preventDefault();
-                    document.querySelector('.nav-item[data-tab="tasks"]')?.click();
-                    addNotif('⌨️ تم الانتقال إلى المهام', 'info');
-                    break;
-                case 'b':
-                case 'B':
-                    e.preventDefault();
-                    document.querySelector('.nav-item[data-tab="dashboard"]')?.click();
-                    addNotif('⌨️ تم الانتقال إلى لوحة التحكم', 'info');
-                    break;
-                case 's':
-                case 'S':
-                    e.preventDefault();
-                    document.querySelector('.nav-item[data-tab="search"]')?.click();
-                    addNotif('⌨️ تم الانتقال إلى البحث', 'info');
-                    break;
-                case 'd':
-                case 'D':
-                    e.preventDefault();
-                    toggleDarkMode();
-                    break;
+            switch(e.key.toLowerCase()) {
+                case 'c': e.preventDefault(); document.querySelector('.nav-item[data-tab="clients"]')?.click(); addNotif('⌨️ تم الانتقال إلى الموكلون', 'info'); break;
+                case 'q': e.preventDefault(); document.querySelector('.nav-item[data-tab="cases"]')?.click(); addNotif('⌨️ تم الانتقال إلى القضايا', 'info'); break;
+                case 'm': e.preventDefault(); document.querySelector('.nav-item[data-tab="tasks"]')?.click(); addNotif('⌨️ تم الانتقال إلى المهام', 'info'); break;
+                case 'b': e.preventDefault(); document.querySelector('.nav-item[data-tab="dashboard"]')?.click(); addNotif('⌨️ تم الانتقال إلى لوحة التحكم', 'info'); break;
+                case 's': e.preventDefault(); document.querySelector('.nav-item[data-tab="search"]')?.click(); addNotif('⌨️ تم الانتقال إلى البحث', 'info'); break;
+                case 'd': e.preventDefault(); toggleDarkMode(); break;
             }
         }
         if (e.key === 'Escape') {
@@ -2343,29 +1328,37 @@ function addKeyboardShortcuts() {
             document.querySelectorAll('.columns-panel.open').forEach(panel => panel.classList.remove('open'));
             document.getElementById('shortcutsModal')?.classList.remove('open');
         }
-        if (e.key === '?') {
-            e.preventDefault();
-            showKeyboardShortcuts();
-        }
+        if (e.key === '?') { e.preventDefault(); showKeyboardShortcuts(); }
     });
 }
 
-// =============================================
-//  إضافة زر بحث متقدم في صفحة البحث
-// =============================================
-function addAdvancedSearchButton() {
-    const searchCard = document.querySelector('#searchTab .card');
-    if (searchCard && !document.querySelector('#advSearchBtn')) {
-        const btnDiv = document.querySelector('#searchTab .search-type-buttons');
-        if (btnDiv) {
-            const advBtn = document.createElement('button');
-            advBtn.id = 'advSearchBtn';
-            advBtn.className = 'search-type-btn';
-            advBtn.innerHTML = '<i class="fas fa-search-plus"></i> بحث متقدم';
-            advBtn.onclick = showAdvancedSearch;
-            btnDiv.appendChild(advBtn);
-        }
-    }
+function setupUIEnhancements() {
+    loadDarkModePreference();
+    addDarkModeButton();
+    setTimeout(() => {
+        addColumnButtons();
+        loadColumnsPreference('clientsTable');
+        loadColumnsPreference('casesTable');
+        addAdvancedSearchButton();
+        addKeyboardShortcuts();
+    }, 1000);
+}
+
+function setupEvents() {
+    document.getElementById('addClientBtn').onclick = () => showClientModal();
+    document.getElementById('addCaseBtn').onclick = () => showCaseModal();
+    document.getElementById('addTaskBtn').onclick = () => showTaskModal();
+    document.getElementById('searchClientBtn').onclick = searchClient;
+    document.getElementById('searchCourtBtn').onclick = searchCourt;
+    document.getElementById('searchClientInput').addEventListener('keypress', e => { if (e.key==='Enter') searchClient(); });
+    document.getElementById('searchCourtInput').addEventListener('keypress', e => { if (e.key==='Enter') searchCourt(); });
+    document.querySelectorAll('.search-type-btn').forEach(btn => { if (!btn.id || btn.id !== 'advSearchBtn') { btn.onclick = () => { document.querySelectorAll('.search-type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); const type = btn.dataset.type; document.getElementById('searchClientDiv').style.display = type==='client' ? 'block' : 'none'; document.getElementById('searchCourtDiv').style.display = type==='court' ? 'block' : 'none'; document.getElementById('searchResults').innerHTML = ''; }; } });
+    document.querySelectorAll('.filter-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); filterTasksByLawyer(btn.dataset.filter); }; });
+    document.querySelectorAll('.nav-item').forEach(item => { item.onclick = () => { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); item.classList.add('active'); const tab = item.dataset.tab; document.querySelectorAll('.tab-content').forEach(t => t.style.display='none'); document.getElementById(tab+'Tab').style.display = 'block'; const titles = { dashboard:'لوحة التحكم', clients:'الموكلون', cases:'القضايا', tasks:'المهام اليومية', search:'بحث' }; document.getElementById('pageTitle').textContent = titles[tab] || ''; if (tab==='clients') renderClients(); if (tab==='cases') renderCases(); if (tab==='dashboard') renderDashboard(); if (tab==='tasks') renderTasks(); if (tab==='search') document.getElementById('searchResults').innerHTML = ''; if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open'); }; });
+    document.getElementById('menuToggle').onclick = () => document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('notifIcon').onclick = (e) => { e.stopPropagation(); const panel = document.getElementById('notifPanel'); panel.classList.toggle('open'); if (panel.classList.contains('open')) { notifications.forEach(n => n.read = true); document.getElementById('notifCount').textContent = ''; const list = document.getElementById('notifList'); list.innerHTML = notifications.slice(0, 30).map(n => `<div class="notif-item">${esc(n.text)}</div>`).join(''); } };
+    document.addEventListener('click', () => document.getElementById('notifPanel').classList.remove('open'));
+    document.getElementById('notifPanel').addEventListener('click', e => e.stopPropagation());
 }
 </script>
 </body>
