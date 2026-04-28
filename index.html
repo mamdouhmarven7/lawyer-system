@@ -1280,58 +1280,6 @@ function addAdvancedSearchButton() {
         searchTypeDiv.appendChild(advBtn);
     }
 }
-
-function showKeyboardShortcuts() {
-    let modal = document.getElementById('shortcutsModal');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'shortcutsModal';
-        modal.className = 'shortcuts-modal';
-        modal.innerHTML = `
-            <h3><i class="fas fa-keyboard"></i> اختصارات لوحة المفاتيح</h3>
-            <table style="width:100%">
-                <tr><td><kbd>Ctrl</kbd> + <kbd>C</kbd></td><td>الانتقال إلى الموكلون</td></tr>
-                <tr><td><kbd>Ctrl</kbd> + <kbd>Q</kbd></td><td>الانتقال إلى القضايا</td></tr>
-                <tr><td><kbd>Ctrl</kbd> + <kbd>M</kbd></td><td>الانتقال إلى المهام</td></tr>
-                <tr><td><kbd>Ctrl</kbd> + <kbd>B</kbd></td><td>الانتقال إلى لوحة التحكم</td></tr>
-                <tr><td><kbd>Ctrl</kbd> + <kbd>S</kbd></td><td>الانتقال إلى البحث</td></tr>
-                <tr><td><kbd>Ctrl</kbd> + <kbd>D</kbd></td><td>تبديل الوضع الليلي</td></tr>
-                <tr><td><kbd>Esc</kbd></td><td>إغلاق النوافذ المنبثقة</td></tr>
-                <tr><td><kbd>?</kbd></td><td>عرض هذه القائمة</td></tr>
-            </table>
-            <button class="btn btn-sm" style="margin-top:15px;width:100%;" onclick="document.getElementById('shortcutsModal').classList.remove('open')">إغلاق</button>
-        `;
-        document.body.appendChild(modal);
-    }
-    modal.classList.toggle('open');
-}
-
-function addKeyboardShortcuts() {
-    const shortcutsBtn = document.createElement('div');
-    shortcutsBtn.className = 'keyboard-shortcuts';
-    shortcutsBtn.innerHTML = '<i class="fas fa-keyboard"></i> <kbd>?</kbd>';
-    shortcutsBtn.onclick = showKeyboardShortcuts;
-    document.body.appendChild(shortcutsBtn);
-    document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey) {
-            switch(e.key.toLowerCase()) {
-                case 'c': e.preventDefault(); document.querySelector('.nav-item[data-tab="clients"]')?.click(); addNotif('⌨️ تم الانتقال إلى الموكلون', 'info'); break;
-                case 'q': e.preventDefault(); document.querySelector('.nav-item[data-tab="cases"]')?.click(); addNotif('⌨️ تم الانتقال إلى القضايا', 'info'); break;
-                case 'm': e.preventDefault(); document.querySelector('.nav-item[data-tab="tasks"]')?.click(); addNotif('⌨️ تم الانتقال إلى المهام', 'info'); break;
-                case 'b': e.preventDefault(); document.querySelector('.nav-item[data-tab="dashboard"]')?.click(); addNotif('⌨️ تم الانتقال إلى لوحة التحكم', 'info'); break;
-                case 's': e.preventDefault(); document.querySelector('.nav-item[data-tab="search"]')?.click(); addNotif('⌨️ تم الانتقال إلى البحث', 'info'); break;
-                case 'd': e.preventDefault(); toggleDarkMode(); break;
-            }
-        }
-        if (e.key === 'Escape') {
-            document.querySelectorAll('.modal-overlay, .columns-panel.open, .shortcuts-modal.open').forEach(el => el.remove?.());
-            document.querySelectorAll('.columns-panel.open').forEach(panel => panel.classList.remove('open'));
-            document.getElementById('shortcutsModal')?.classList.remove('open');
-        }
-        if (e.key === '?') { e.preventDefault(); showKeyboardShortcuts(); }
-    });
-}
-
 function setupUIEnhancements() {
     loadDarkModePreference();
     addDarkModeButton();
@@ -1340,7 +1288,6 @@ function setupUIEnhancements() {
         loadColumnsPreference('clientsTable');
         loadColumnsPreference('casesTable');
         addAdvancedSearchButton();
-        addKeyboardShortcuts();
     }, 1000);
 }
 
