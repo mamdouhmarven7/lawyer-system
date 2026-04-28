@@ -684,7 +684,7 @@ async function loadClients() {
 }
 
 async function loadCases() {
-   const snap = await getDocs(query(collection(db, 'cases'), orderBy('createdAt', 'asc')));
+   const snap = await getDocs(query(collection(db, 'cases'), orderBy('createdAt', 'desc')));
     casesList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
     casesList.forEach(c => {
@@ -706,7 +706,7 @@ async function loadCases() {
         if (!a.nextSessionDate && !b.nextSessionDate) return 0;
         if (!a.nextSessionDate) return 1;
         if (!b.nextSessionDate) return -1;
-        return new Date(a.nextSessionDate) - new Date(b.nextSessionDate);
+        return new Date(b.nextSessionDate) - new Date(a.nextSessionDate);
     });
 
     renderCases();
