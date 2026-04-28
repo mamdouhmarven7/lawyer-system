@@ -471,14 +471,13 @@ const firebaseConfig = {
 };
 // تحذير: تأكد إن Authorized Domains في Firebase Console مضبوطة بشكل صح
 
-import { initializeApp }           from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
-                                    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy, getStorage }
-                                    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getStorage as fbStorage, ref, uploadBytes, getDownloadURL, deleteObject }
-                                    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-
+    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy }
+    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject }
+    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
