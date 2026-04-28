@@ -741,8 +741,10 @@ async function loadCases() {
     renderDashboard();
 }
 async function loadTasks() {
-    const snap = await getDocs(query(collection(db, 'tasks'), orderBy('date', 'asc')));
+    const snap = await getDocs(collection(db, 'tasks'));
     tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    // ترتيب المهام حسب تاريخ الإنشاء (الأحدث أولاً)
+    tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     renderTasks();
 }
 
@@ -861,7 +863,6 @@ window.toggleTaskStatus = async (id, currentStatus) => {
 };
 
 function renderTaskCard(t, cardClass) {
-    const taskDate = new Date(t.date);
     const statusText = t.status === 'done' ? '✓ تم الإنجاز' : '⏳ قيد التنفيذ';
     const statusClass = t.status === 'done' ? 'status-done' : 'status-pending';
     
@@ -876,11 +877,8 @@ function renderTaskCard(t, cardClass) {
             </button>
         </div>
         <div style="margin-top:6px;font-size:0.88rem;color:var(--slate);">
-            <i class="fas fa-calendar"></i> ${taskDate.toLocaleDateString('ar-EG')}
-            &nbsp;|&nbsp;<i class="fas fa-gavel"></i> ${esc(t.court || 'محكمة غير محددة')}
-        </div>
-        <div style="margin-top:6px;font-size:0.88rem;color:var(--slate);">
-            <i class="fas fa-location-dot"></i> ${esc(t.location)}
+            <i class="fas fa-gavel"></i> ${esc(t.court || 'محكمة غير محددة')}
+            &nbsp;|&nbsp;<i class="fas fa-location-dot"></i> ${esc(t.location)}
         </div>
         <div style="margin-top:8px;padding:8px;background:rgba(0,0,0,0.05);border-radius:8px;">
             <i class="fas fa-pen"></i> <strong>الطلبات/الملاحظات:</strong><br>
@@ -896,26 +894,23 @@ function renderTasks() {
     const container = document.getElementById('tasksList');
     if (!container) return;
     
-    const today = new Date(); today.setHours(0,0,0,0);
-    const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
-    const tenDaysLater = new Date(today); tenDaysLater.setDate(tenDaysLater.getDate() + 10);
-    
     const pendingTasks = tasks.filter(t => t.status !== 'done');
     const doneTasks = tasks.filter(t => t.status === 'done');
     
-    const overdue = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d < today; });
-    const todayT = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d.getTime() === today.getTime(); });
-    const tomorrowT = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d.getTime() === tomorrow.getTime(); });
-    const upcoming = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d > tomorrow && d <= tenDaysLater; });
-    const future = pendingTasks.filter(t => { const d = new Date(t.date); d.setHours(0,0,0,0); return d > tenDaysLater; });
-    
     let html = '';
-    if (overdue.length) { html += '<h3 style="margin:15px 0 10px;color:var(--red);"><i class="fas fa-exclamation-triangle"></i> مهام متأخرة</h3>'; overdue.forEach(t => html += renderTaskCard(t, 'task-overdue')); }
-    if (todayT.length) { html += '<h3 style="margin:15px 0 10px;"><i class="fas fa-sun"></i> مهام اليوم</h3>'; todayT.forEach(t => html += renderTaskCard(t, 'task-today')); }
-    if (tomorrowT.length) { html += '<h3 style="margin:15px 0 10px;"><i class="fas fa-calendar-day"></i> مهام الغد</h3>'; tomorrowT.forEach(t => html += renderTaskCard(t, 'task-tomorrow')); }
-    if (upcoming.length) { html += '<h3 style="margin:15px 0 10px;"><i class="fas fa-calendar-week"></i> المهام القادمة (10 أيام)</h3>'; upcoming.forEach(t => html += renderTaskCard(t, 'task-future')); }
-    if (future.length) { html += '<h3 style="margin:15px 0 10px;color:var(--muted);"><i class="fas fa-calendar"></i> مهام مستقبلية</h3>'; future.forEach(t => html += renderTaskCard(t, 'task-future')); }
-    if (doneTasks.length) { html += '<h3 style="margin:15px 0 10px;color:var(--green);"><i class="fas fa-check-circle"></i> المهام المنجزة</h3>'; doneTasks.slice(0, 20).forEach(t => html += renderTaskCard(t, 'task-done')); }
+    
+    // عرض المهام غير المنجزة أولاً
+    if (pendingTasks.length) {
+        html += '<h3 style="margin:15px 0 10px;"><i class="fas fa-clock"></i> المهام قيد التنفيذ</h3>';
+        pendingTasks.forEach(t => html += renderTaskCard(t, 'task-today'));
+    }
+    
+    // عرض المهام المنجزة في الأسفل
+    if (doneTasks.length) {
+        html += '<h3 style="margin:15px 0 10px;color:var(--green);"><i class="fas fa-check-circle"></i> المهام المنجزة</h3>';
+        doneTasks.slice(0, 20).forEach(t => html += renderTaskCard(t, 'task-done'));
+    }
+    
     if (!html) html = '<p class="loading">لا توجد مهام</p>';
     
     container.innerHTML = html;
@@ -936,8 +931,6 @@ function showTaskModal(task = null) {
         <select id="taskCaseId">${casesOptions}</select>
         <label>📋 نوع المهمة</label>
         <input type="text" id="taskType" value="${esc(task?.taskType || '')}" placeholder="مثال: تقديم مذكرة، حضور جلسة، استلام حكم...">
-        <label>📅 التاريخ</label>
-        <input type="date" id="taskDate" value="${esc(task?.date || '')}">
         <label>📍 المكان / الجهة</label>
         <input type="text" id="taskLocation" value="${esc(task?.location || '')}" placeholder="المحكمة، النيابة، مكتب الشهر العقاري...">
         <label>📝 الطلبات / الملاحظات</label>
@@ -952,28 +945,22 @@ function showTaskModal(task = null) {
     document.getElementById('saveTaskBtn').onclick = async () => {
         const caseId = document.getElementById('taskCaseId').value;
         const taskType = document.getElementById('taskType').value.trim();
-        const date = document.getElementById('taskDate').value;
         const location = document.getElementById('taskLocation').value.trim();
         const notes = document.getElementById('taskNotes').value.trim();
         
-        if (!caseId) { showToast('⚠️ يرجى اختيار القضية', 'warning'); return; }
-        if (!taskType) { showToast('⚠️ يرجى إدخال نوع المهمة', 'warning'); return; }
-        if (!date) { showToast('⚠️ يرجى إدخال التاريخ', 'warning'); return; }
-        if (!location) { showToast('⚠️ يرجى إدخال المكان', 'warning'); return; }
-        
-        // الحصول على بيانات القضية المختارة
-        const selectedCase = casesList.find(c => c.id === caseId);
-        const caseNumber = selectedCase ? selectedCase.caseNumber : '';
+        // الحقول اختيارية - لا يوجد إجبار
+        const selectedCase = caseId ? casesList.find(c => c.id === caseId) : null;
+        const caseNumber = selectedCase ? selectedCase.caseNumber : 'بدون قضية';
         const court = selectedCase ? selectedCase.court : '';
         
         const data = {
-            caseId: caseId,
+            caseId: caseId || '',
             caseNumber: caseNumber,
             court: court,
-            taskType: taskType,
-            date: date,
-            location: location,
-            notes: notes,
+            taskType: taskType || 'مهمة',
+            location: location || 'غير محدد',
+            notes: notes || '',
+            createdAt: task?.createdAt || new Date().toISOString(),
             status: task?.status || 'pending'
         };
         
