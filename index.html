@@ -1359,8 +1359,8 @@ function addAdvancedSearchButton() {
         advBtn.className = 'search-type-btn';
         advBtn.innerHTML = '<i class="fas fa-search-plus"></i> بحث متقدم';
         advBtn.onclick = () => {
-            let panel = document.getElementById('advancedSearchPanel');
-            if (!panel) {
+            let existingPanel = document.getElementById('advancedSearchPanel');
+            if (!existingPanel) {
                 const searchCard = document.querySelector('#searchTab .card');
                 if (searchCard) {
                     const advancedHtml = `
@@ -1378,15 +1378,14 @@ function addAdvancedSearchButton() {
                         </div>
                     `;
                     searchCard.insertAdjacentHTML('afterbegin', advancedHtml);
+                    existingPanel = document.getElementById('advancedSearchPanel');
                 }
             }
-            const panel = document.getElementById('advancedSearchPanel');
-            if (panel) panel.classList.toggle('show');
+            if (existingPanel) existingPanel.classList.toggle('show');
         };
         searchTypeDiv.appendChild(advBtn);
     }
 }
-
 window.performAdvancedSearch = () => {
     const caseNumber = document.getElementById('advCaseNumber')?.value.trim().toLowerCase() || '';
     const court = document.getElementById('advCourt')?.value.trim().toLowerCase() || '';
