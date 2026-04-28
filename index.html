@@ -217,20 +217,13 @@
         }
         .session-card:hover { transform: translateX(-4px); box-shadow: var(--shadow); }
 
-        .tasks-filter { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-        .filter-btn { padding: 7px 16px; border-radius: 30px; cursor: pointer; background: var(--border); border: none; font-family: 'Cairo', sans-serif; font-size: 0.88rem; transition: all 0.2s; }
-        .filter-btn.active { background: var(--gold); font-weight: 700; color: var(--navy); }
         .task-card { border-radius: var(--radius-sm); padding: 15px; margin-bottom: 12px; border-right: 4px solid; cursor: pointer; transition: transform 0.2s; }
         .task-card:hover { transform: translateX(-3px); }
         .task-today    { border-right-color: var(--gold); background: #fef9c3; }
-        .task-tomorrow { border-right-color: var(--orange); background: #fff7ed; }
-        .task-future   { border-right-color: var(--muted); background: var(--bg); }
         .task-done     { border-right-color: var(--green); background: #f0fdf4; opacity: 0.85; }
-        .task-overdue  { border-right-color: var(--red); background: #fef2f2; }
         .task-status-btn { padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; border: none; font-family: 'Cairo', sans-serif; font-weight: 700; }
         .status-pending { background: var(--orange); color: white; }
         .status-done    { background: var(--green); color: white; }
-        .task-type-badge { padding: 2px 9px; border-radius: 20px; font-size: 11px; background: var(--border); }
 
         .search-type-buttons { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
         .search-type-btn { padding: 8px 20px; border-radius: 40px; cursor: pointer; background: var(--border); border: none; font-family: 'Cairo', sans-serif; font-weight: 600; transition: all 0.2s; }
@@ -307,68 +300,66 @@
             font-weight: 800 !important;
         }
 
-      /* ===== DARK MODE ===== */
-body.dark-mode {
-    --bg: #111827;
-    --navy: #f1f5f9;
-    --border: #374151;
-    --white: #1f2937;
-    --slate: #d1d5db;
-    --muted: #9ca3af;
-}
+        body.dark-mode {
+            --bg: #111827;
+            --navy: #f1f5f9;
+            --border: #374151;
+            --white: #1f2937;
+            --slate: #d1d5db;
+            --muted: #9ca3af;
+        }
 
-body.dark-mode .sidebar {
-    background: #000000 !important;
-    background: linear-gradient(180deg, #000000, #0a0a0a) !important;
-}
+        body.dark-mode .sidebar {
+            background: #000000 !important;
+            background: linear-gradient(180deg, #000000, #0a0a0a) !important;
+        }
 
-body.dark-mode .main-content {
-    background: #0f0f0f !important;
-}
+        body.dark-mode .main-content {
+            background: #0f0f0f !important;
+        }
 
-body.dark-mode .card,
-body.dark-mode .top-bar,
-body.dark-mode .stat-card,
-body.dark-mode .modal-container,
-body.dark-mode .confirm-box,
-body.dark-mode .columns-panel {
-    background: #1a1a1a !important;
-    color: #f1f5f9 !important;
-}
+        body.dark-mode .card,
+        body.dark-mode .top-bar,
+        body.dark-mode .stat-card,
+        body.dark-mode .modal-container,
+        body.dark-mode .confirm-box,
+        body.dark-mode .columns-panel {
+            background: #1a1a1a !important;
+            color: #f1f5f9 !important;
+        }
 
-body.dark-mode .main-content::before { opacity: 0; }
+        body.dark-mode .main-content::before { opacity: 0; }
 
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode textarea {
-    background: #0f0f0f;
-    border-color: #334155;
-    color: #f1f5f9;
-}
+        body.dark-mode input,
+        body.dark-mode select,
+        body.dark-mode textarea {
+            background: #0f0f0f;
+            border-color: #334155;
+            color: #f1f5f9;
+        }
 
-body.dark-mode .session-card {
-    background: #1f1f1f !important;
-}
+        body.dark-mode .session-card {
+            background: #1f1f1f !important;
+        }
 
-body.dark-mode .task-today {
-    background: #2d2d2d !important;
-}
+        body.dark-mode .task-today {
+            background: #2d2d2d !important;
+        }
 
-body.dark-mode .task-card {
-    background: #1f1f1f !important;
-}
+        body.dark-mode .task-card {
+            background: #1f1f1f !important;
+        }
 
-body.dark-mode .task-future { background: #1a1a1a; }
-body.dark-mode .task-overdue { background: #2d0a0a; }
-body.dark-mode .session-item { background: #2d2d2d; }
+        body.dark-mode .session-item { background: #2d2d2d; }
 
-body.dark-mode th {
-    background: #111111 !important;
-}
+        body.dark-mode th {
+            background: #111111 !important;
+        }
 
-body.dark-mode td {
-    background: #1a1a1a !important;
-}
+        body.dark-mode td {
+            background: #1a1a1a !important;
+        }
+        
         .columns-panel {
             position: fixed;
             top: 80px;
@@ -409,55 +400,6 @@ body.dark-mode td {
         }
         .advanced-search label { margin-top: 0; font-size: 13px; }
         .advanced-search input, .advanced-search select { margin-top: 5px; }
-
-        .keyboard-shortcuts {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--navy);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 40px;
-            font-size: 12px;
-            cursor: pointer;
-            z-index: 9996;
-            opacity: 0.6;
-            transition: opacity 0.3s;
-        }
-        .keyboard-shortcuts:hover { opacity: 1; }
-        .keyboard-shortcuts kbd {
-            background: var(--gold);
-            color: var(--navy);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-
-        .shortcuts-modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 25px;
-            z-index: 10000;
-            min-width: 350px;
-            display: none;
-        }
-        body.dark-mode .shortcuts-modal { background: #1e293b; }
-        .shortcuts-modal.open { display: block; }
-        .shortcuts-modal h3 { margin-bottom: 15px; text-align: center; }
-        .shortcuts-modal table { width: 100%; }
-        .shortcuts-modal td { padding: 8px; border: none; }
-        .shortcuts-modal kbd {
-            background: var(--gold);
-            color: var(--navy);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-family: monospace;
-        }
     </style>
 </head>
 <body>
@@ -496,7 +438,7 @@ body.dark-mode td {
                 <div class="nav-item active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</div>
                 <div class="nav-item" data-tab="clients"><i class="fas fa-users"></i> الموكلون</div>
                 <div class="nav-item" data-tab="cases"><i class="fas fa-balance-scale"></i> القضايا</div>
-               <div class="nav-item" data-tab="tasks"><i class="fas fa-tasks"></i> المهام الإدارية</div>
+                <div class="nav-item" data-tab="tasks"><i class="fas fa-tasks"></i> المهام الإدارية</div>
                 <div class="nav-item" data-tab="search"><i class="fas fa-search"></i> بحث</div>
             </div>
         </div>
@@ -535,7 +477,8 @@ body.dark-mode td {
                             <thead>
                                 <tr><th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>التوكيل</th><th>القضايا</th><th></th></tr>
                             </thead>
-                            <tbody><tr><td colspan="7" class="loading">جاري التحميل...</td></tr></tbody>
+                            <tbody><tr><td colspan="7" class="loading">جاري التحميل...</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -552,21 +495,23 @@ body.dark-mode td {
                     <div class="table-wrap">
                         <table id="casesTable">
                             <thead><tr><th style="width:30px"></th><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th></tr></thead>
-                            <tbody><tr><td colspan="8" class="loading">جاري التحميل...</td></tr></tbody>
+                            <tbody><tr><td colspan="8" class="loading">جاري التحميل...</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-           <div id="tasksTab" class="tab-content" style="display:none;">
-    <div class="card">
-        <div class="card-header">
-            <h3>📋 المهام الإدارية</h3>
-            <button class="btn" id="addTaskBtn"><i class="fas fa-plus"></i> إضافة مهمة</button>
-        </div>
-        <div id="tasksList"></div>
-    </div>
-</div>
+            <div id="tasksTab" class="tab-content" style="display:none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 المهام الإدارية</h3>
+                        <button class="btn" id="addTaskBtn"><i class="fas fa-plus"></i> إضافة مهمة</button>
+                    </div>
+                    <div id="tasksList"></div>
+                </div>
+            </div>
+            
             <div id="searchTab" class="tab-content" style="display:none;">
                 <div class="card">
                     <div class="search-type-buttons">
@@ -615,7 +560,6 @@ let casesList = [];
 let notifications = [];
 let tasks = [];
 let expandedCaseId = null;
-let currentLawyerFilter = 'all';
 let tempClients = [];
 let tempOpponents = [];
 
@@ -730,20 +674,19 @@ async function loadCases() {
         }
     });
     
-    // ترتيب القضايا حسب تاريخ آخر جلسة (من الأقدم إلى الأحدث)
     casesList.sort((a, b) => {
         const dateA = a.lastSessionTimestamp || 0;
         const dateB = b.lastSessionTimestamp || 0;
-        return dateA - dateB; // الأقدم أولاً
+        return dateA - dateB;
     });
     
     renderCases();
     renderDashboard();
 }
+
 async function loadTasks() {
     const snap = await getDocs(collection(db, 'tasks'));
     tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    // ترتيب المهام حسب تاريخ الإنشاء (الأحدث أولاً)
     tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     renderTasks();
 }
@@ -855,26 +798,45 @@ window.deleteTask = async (id) => {
     await loadTasks();
 };
 
-window.toggleTaskStatus = async (id, currentStatus) => {
-    const newStatus = currentStatus === 'pending' ? 'done' : 'pending';
-    await updateDoc(doc(db, 'tasks', id), { status: newStatus });
-    addNotif(newStatus === 'done' ? '✅ تم إنجاز المهمة' : '🔄 تم إعادة المهمة للتنفيذ', 'success');
+window.toggleTaskItemCompleted = async (taskId, itemIndex, isChecked) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+    
+    const taskItems = [...(task.taskItems || [])];
+    if (taskItems[itemIndex]) {
+        taskItems[itemIndex].completed = isChecked;
+        const allCompleted = taskItems.every(item => item.completed === true);
+        const newStatus = allCompleted ? 'done' : 'pending';
+        await updateDoc(doc(db, 'tasks', taskId), { taskItems: taskItems, status: newStatus });
+        addNotif(isChecked ? '✅ تم إنجاز مهمة' : '🔄 تم إعادة فتح المهمة', 'success');
+        await loadTasks();
+    }
+};
+
+window.deleteTaskItem = async (taskId, itemIndex) => {
+    const ok = await confirmDialog('حذف مهمة', 'هل تريد حذف هذه المهمة من القائمة؟');
+    if (!ok) return;
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+    const taskItems = [...(task.taskItems || [])];
+    taskItems.splice(itemIndex, 1);
+    const allCompleted = taskItems.length > 0 ? taskItems.every(item => item.completed === true) : false;
+    const newStatus = allCompleted ? 'done' : (taskItems.length === 0 ? 'pending' : 'pending');
+    await updateDoc(doc(db, 'tasks', taskId), { taskItems: taskItems, status: newStatus });
+    addNotif('🗑️ تم حذف المهمة من القائمة', 'warning');
     await loadTasks();
 };
 
 function renderTaskCard(t, cardClass) {
-    // حساب عدد المهام المنجزة
     const taskItems = t.taskItems || [];
     const completedCount = taskItems.filter(item => item.completed === true).length;
     const totalCount = taskItems.length;
     const allCompleted = completedCount === totalCount && totalCount > 0;
     
-    // حالة المهمة الأم
     const overallStatus = allCompleted ? 'done' : (t.status || 'pending');
     const statusText = overallStatus === 'done' ? '✓ جميع المهام منجزة' : `⏳ ${completedCount}/${totalCount} مهمة منجزة`;
     const statusClass = overallStatus === 'done' ? 'status-done' : 'status-pending';
     
-    // عرض المهام مع مربعات اختيار
     let tasksHtml = '';
     if (taskItems.length > 0) {
         tasksHtml = '<div style="margin-top:10px;margin-bottom:10px;"><strong><i class="fas fa-list-check"></i> قائمة المهام:</strong><div style="margin-top:8px;">';
@@ -904,7 +866,6 @@ function renderTaskCard(t, cardClass) {
         tasksHtml = '<div style="margin:10px 0;color:var(--muted);"><i class="fas fa-info-circle"></i> لا توجد مهام محددة</div>';
     }
     
-    // عرض شريط التقدم
     const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
     const progressBar = totalCount > 0 ? `
         <div style="margin-top:8px;">
@@ -930,14 +891,11 @@ function renderTaskCard(t, cardClass) {
                 </button>
             </div>
         </div>
-        
         <div style="margin-top:6px;font-size:0.88rem;color:var(--slate);">
-            <i class="fas fa-location-dot"></i> ${esc(t.location)}
+            <i class="fas fa-location-dot"></i> ${esc(t.location || 'غير محدد')}
         </div>
-        
         ${progressBar}
         ${tasksHtml}
-        
         <div class="flex-between" style="margin-top:8px;">
             <span style="font-size:0.85rem;color:var(--muted);"><i class="fas fa-clock"></i> تم الإنشاء: ${new Date(t.createdAt).toLocaleDateString('ar-EG')}</span>
             <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); window.deleteTask('${esc(t.id)}')">
@@ -946,14 +904,15 @@ function renderTaskCard(t, cardClass) {
         </div>
     </div>`;
 }
+
 function renderTasks() {
     const container = document.getElementById('tasksList');
     if (!container) return;
     
-    // فصل المهام حسب الحالة العامة
     const pendingTasks = tasks.filter(t => {
         const taskItems = t.taskItems || [];
-        const allCompleted = taskItems.length > 0 && taskItems.every(item => item.completed === true);
+        if (taskItems.length === 0) return false;
+        const allCompleted = taskItems.every(item => item.completed === true);
         return !allCompleted;
     });
     
@@ -980,38 +939,33 @@ function renderTasks() {
     
     container.innerHTML = html;
 }
-function filterTasksByLawyer(lawyer) { currentLawyerFilter = lawyer; renderTasks(); }
 
 let tempTaskTypes = [];
 
 function showTaskModal(task = null) {
     const isEdit = task !== null;
     
-    // تحميل أنواع المهام الموجودة
     if (isEdit && task.taskItems && Array.isArray(task.taskItems)) {
-        tempTaskTypes = [...task.taskItems];
+        tempTaskTypes = [...task.taskItems.map(item => item.name)];
     } else {
         tempTaskTypes = [];
     }
     
-    // إنشاء قائمة القضايا للاختيار منها
     let casesOptions = '<option value="">-- اختر القضية --</option>';
     casesList.forEach(c => {
         casesOptions += `<option value="${esc(c.id)}" ${task?.caseId === c.id ? 'selected' : ''}>${esc(c.caseNumber)} - ${esc(c.court || 'محكمة غير محددة')}</option>`;
     });
     
-    // خيارات مقترحة لأنواع المهام
     const suggestedTypes = ['تقديم مذكرة', 'حضور جلسة', 'استلام حكم', 'معاينة', 'إيداع صحيفة', 'مقابلة موكل', 'تقديم مستندات', 'تسوية', 'استئناف', 'طعن بالنقض'];
     let suggestionsHtml = '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;">';
     suggestedTypes.forEach(type => {
-        suggestionsHtml += `<span style="background:var(--border);padding:3px 10px;border-radius:20px;font-size:12px;cursor:pointer;" onclick="window.addSuggestedTypeInternal('${esc(type)}')">+ ${type}</span>`;
+        suggestionsHtml += `<span style="background:var(--border);padding:3px 10px;border-radius:20px;font-size:12px;cursor:pointer;" onclick="addSuggestedTypeInternal('${esc(type)}')">+ ${type}</span>`;
     });
     suggestionsHtml += '</div>';
     
     const modalHtml = `<div id="taskModal" class="modal-overlay"><div class="modal-container"><h3>${isEdit ? '✏️ تعديل المهمة' : '➕ إضافة مهمة جديدة'}</h3>
         <label>⚖️ القضية المرتبطة</label>
         <select id="taskCaseId">${casesOptions}</select>
-        
         <label style="margin-top:15px;">📋 المهام (يمكن إضافة عدة مهام)</label>
         <div id="taskTypesContainer"></div>
         <div class="flex-between" style="margin-top:8px;gap:6px;">
@@ -1019,10 +973,8 @@ function showTaskModal(task = null) {
             <button class="btn btn-sm" id="addTaskTypeBtn" style="background:var(--green);color:white;">+ إضافة مهمة</button>
         </div>
         ${suggestionsHtml}
-        
         <label style="margin-top:15px;">📍 المكان / الجهة</label>
         <input type="text" id="taskLocation" value="${esc(task?.location || '')}" placeholder="المحكمة، النيابة، مكتب الشهر العقاري...">
-        
         <div class="modal-buttons">
             <button id="saveTaskBtn" style="background:var(--${isEdit ? 'gold' : 'green'});color:${isEdit ? 'var(--navy)' : 'white'};">${isEdit ? '💾 حفظ التعديلات' : '✅ إضافة'}</button>
             <button id="closeTaskBtn" style="background:var(--border);">إلغاء</button>
@@ -1030,23 +982,20 @@ function showTaskModal(task = null) {
     </div></div>`;
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     
-    // دوال إدارة المهام
     const renderTaskTypes = () => {
         const container = document.getElementById('taskTypesContainer');
         if (!container) return;
-        
         if (tempTaskTypes.length === 0) {
             container.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;margin:5px 0;">لا توجد مهام مضافة</p>';
             return;
         }
-        
         container.innerHTML = tempTaskTypes.map((item, i) => `
             <div class="party-item" style="background:var(--bg);margin-bottom:8px;justify-content:space-between;">
                 <span style="display:flex;align-items:center;gap:8px;">
                     <i class="fas fa-tasks" style="color:var(--gold);"></i>
-                    ${esc(typeof item === 'string' ? item : item.name)}
+                    ${esc(item)}
                 </span>
-                <button class="remove-party" onclick="window.removeTaskTypeInternal(${i})">✖</button>
+                <button class="remove-party" onclick="removeTaskTypeInternal(${i})">✖</button>
             </div>
         `).join('');
     };
@@ -1097,7 +1046,6 @@ function showTaskModal(task = null) {
         const caseNumber = selectedCase ? selectedCase.caseNumber : 'بدون قضية';
         const court = selectedCase ? selectedCase.court : '';
         
-        // تحويل المهام إلى كائنات مع حالة التنفيذ
         const taskItems = tempTaskTypes.map(name => ({
             id: Date.now() + Math.random(),
             name: name,
@@ -1111,7 +1059,7 @@ function showTaskModal(task = null) {
             taskItems: taskItems,
             location: location || 'غير محدد',
             createdAt: task?.createdAt || new Date().toISOString(),
-            status: 'pending' // المهمة الأم تعتبر pending إذا كان فيها أي مهمة غير منجزة
+            status: 'pending'
         };
         
         if (isEdit) await window.updateTask(task.id, data);
@@ -1120,10 +1068,16 @@ function showTaskModal(task = null) {
     };
     document.getElementById('closeTaskBtn').onclick = () => document.getElementById('taskModal').remove();
 }
+
+window.editTask = (taskId) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (task) showTaskModal(task);
+};
+
 function renderClients() {
     const tbody = document.querySelector('#clientsTable tbody');
     if (!tbody) return;
-    if (clients.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="loading">لا يوجد موكلون</td></tr>'; return; }
+    if (clients.length === 0) { tbody.innerHTML = '<td><td colspan="7" class="loading">لا يوجد موكلون</td></tr>'; return; }
     tbody.innerHTML = clients.map(c => { const caseCount = casesList.filter(cas => cas.clients?.some(cl => cl.id === c.id)).length;
         return `<tr>
             <td>${esc(c.name)}</td>
@@ -1140,16 +1094,15 @@ function renderClients() {
 
 function renderDashboard() {
     const today = new Date(); today.setHours(0,0,0,0);
-    const overdueTasks = tasks.filter(t => { if (t.status === 'done') return false; const d = new Date(t.date); d.setHours(0,0,0,0); return d < today; });
     document.getElementById('statsGrid').innerHTML = `<div class="stat-card"><h3>الموكلين</h3><div class="stat-number">${clients.length}</div></div>
         <div class="stat-card"><h3>القضايا</h3><div class="stat-number">${casesList.length}</div></div>
-        <div class="stat-card" style="border-right-color:${overdueTasks.length > 0 ? 'var(--red)' : 'var(--green)'};"><h3>مهام متأخرة</h3><div class="stat-number" style="color:${overdueTasks.length > 0 ? 'var(--red)' : 'var(--green)'};">${overdueTasks.length}</div></div>`;
+        <div class="stat-card"><h3>المهام</h3><div class="stat-number">${tasks.length}</div></div>`;
     let upcomingSessions = [];
-    casesList.forEach(c => { if (c.sessions && c.sessions.length > 0) { c.sessions.forEach(s => { const sessionDate = new Date(s.date); sessionDate.setHours(0,0,0,0); if (sessionDate >= today) { const sorted = [...(c.sessions || [])].sort((a,b) => new Date(b.date)-new Date(a.date)); const prev = sorted.find(x => new Date(x.date) < new Date(s.date)); upcomingSessions.push({ caseNumber: c.caseNumber, caseId: c.id, clientNames: c.clients ? c.clients.map(cl => cl.name).join(', ') : 'غير معروف', subject: c.subject || 'لا يوجد موضوع', date: s.date, notes: s.notes, lastSession: prev ? new Date(prev.date).toLocaleDateString('ar-EG') : 'لا توجد' }); } }); } });
+    casesList.forEach(c => { if (c.sessions && c.sessions.length > 0) { c.sessions.forEach(s => { const sessionDate = new Date(s.date); sessionDate.setHours(0,0,0,0); if (sessionDate >= today) { upcomingSessions.push({ caseNumber: c.caseNumber, caseId: c.id, clientNames: c.clients ? c.clients.map(cl => cl.name).join(', ') : 'غير معروف', date: s.date, notes: s.notes }); } }); } });
     upcomingSessions.sort((a,b) => new Date(a.date)-new Date(b.date));
     let html = '<div style="display:flex;flex-direction:column;gap:12px;">';
     if (upcomingSessions.length === 0) { html += '<p class="loading" style="font-size:16px;">لا توجد جلسات قادمة</p>'; }
-    else { upcomingSessions.forEach(s => { const sessionDate = new Date(s.date); sessionDate.setHours(0,0,0,0); const diff = Math.round((sessionDate - today) / 864e5); let dayLabel = diff === 0 ? '🔴 اليوم' : diff === 1 ? '🟡 غداً' : `🟢 بعد ${diff} أيام`; html += `<div class="session-card" onclick="window.goToCase('${esc(s.caseId)}')" style="padding:15px;"><div class="flex-between" style="margin-bottom:10px;"><div style="font-size:17px;font-weight:700;"><strong>⚖️ ${esc(s.caseNumber)}</strong> — <span style="font-weight:600;">${esc(s.clientNames)}</span></div><span class="badge" style="font-size:13px;padding:6px 12px;font-weight:bold;">${dayLabel}</span></div><div style="margin-top:8px;margin-bottom:8px;font-size:15px;font-weight:600;color:var(--slate);"><i class="fas fa-tag"></i> الموضوع: ${esc(s.subject)}</div><div style="margin-top:6px;margin-bottom:6px;font-size:14px;font-weight:600;"><i class="fas fa-calendar-alt"></i> الجلسة القادمة: <span style="font-weight:700;">${new Date(s.date).toLocaleDateString('ar-EG')}</span>&nbsp;|&nbsp;<i class="fas fa-history"></i> آخر جلسة: <span style="font-weight:700;">${esc(s.lastSession)}</span></div>${s.notes ? `<div style="margin-top:10px;font-size:20px;color:var(--orange);font-weight:600;background:#fef3c7;padding:8px 12px;border-radius:10px;"><i class="fas fa-pen"></i> ملاحظات: ${esc(s.notes)}</div>` : ''}</div>`; }); }
+    else { upcomingSessions.forEach(s => { const sessionDate = new Date(s.date); sessionDate.setHours(0,0,0,0); const diff = Math.round((sessionDate - today) / 864e5); let dayLabel = diff === 0 ? '🔴 اليوم' : diff === 1 ? '🟡 غداً' : `🟢 بعد ${diff} أيام`; html += `<div class="session-card" onclick="window.goToCase('${esc(s.caseId)}')"><div class="flex-between"><div><strong>⚖️ ${esc(s.caseNumber)}</strong> — ${esc(s.clientNames)}</div><span class="badge">${dayLabel}</span></div><div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}</div>${s.notes ? `<div>📝 ${esc(s.notes)}</div>` : ''}</div>`; }); }
     html += '</div>';
     document.getElementById('upcomingSessions').innerHTML = html;
 }
@@ -1174,20 +1127,20 @@ function renderCases() {
         const lastSession = sortedSess[0] ? new Date(sortedSess[0].date).toLocaleDateString('ar-EG') : null;
         const clientsHtml = c.clients ? c.clients.map(cl => esc(cl.name) + (cl.title ? ` (${esc(cl.title)})` : '')).join('<br>') : '--';
         const opponentsHtml = c.opponents ? c.opponents.map(op => esc(op.name) + (op.title ? ` (${esc(op.title)})` : '')).join('<br>') : '--';
-        html += `<tr class="case-row" data-id="${esc(c.id)}" onclick="window.toggleCaseDetails('${esc(c.id)}')"><td style="width:30px"><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i></td>
+        html += `<tr class="case-row" data-id="${esc(c.id)}" onclick="window.toggleCaseDetails('${esc(c.id)}')"><td><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i></td>
             <td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.court || '--')}${c.circuit ? ' — ' + esc(c.circuit) : ''}</td>
             <td>${clientsHtml}</td><td>${opponentsHtml}</td>
-            <td>${esc(c.subject || '--')}${lastSession ? `<div><span class="badge" style="font-size:11px;">آخر جلسة: ${lastSession}</span></div>` : ''}</td>
+            <td>${esc(c.subject || '--')}${lastSession ? `<div><span class="badge">آخر جلسة: ${lastSession}</span></div>` : ''}</td>
             <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span></td>
             <td class="action-buttons"><button class="btn btn-sm" style="background:var(--gold);" onclick="event.stopPropagation();window.editCase('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button>
             <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteCase('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button></td>
         </tr>`;
         if (isExpanded) {
-            html += `<tr class="expanded-row"><td colspan="8"><div class="expanded-content"><h4>📄 تفاصيل الموضوع</h4><div style="background:white;padding:12px;border-radius:10px;margin-bottom:8px;">${esc(c.subjectDetails || 'لا توجد تفاصيل')}</div>
+            html += `<tr><td colspan="8"><div class="expanded-content"><h4>📄 تفاصيل الموضوع</h4><div>${esc(c.subjectDetails || 'لا توجد تفاصيل')}</div>
                 <button class="btn btn-sm" onclick="event.stopPropagation();window.editSubjectDetails('${esc(c.id)}')">تعديل التفاصيل</button>
                 <h4>📅 الجلسات</h4><button class="btn btn-sm btn-success" onclick="event.stopPropagation();window.showAddSession('${esc(c.id)}')">+ إضافة جلسة</button>`;
-            if (sessions.length === 0) { html += '<p style="margin-top:8px;color:var(--muted);">لا توجد جلسات</p>'; }
-            else { const sorted = [...sessions].sort((a,b) => new Date(a.date)-new Date(b.date)); sorted.forEach(s => { html += `<div class="session-item" style="margin-top:8px;"><div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}${s.notes ? ' — ' + esc(s.notes) : ''}</div><div style="display:flex;gap:6px;"><button class="btn btn-sm" onclick="event.stopPropagation();window.editSessionModal('${esc(c.id)}',${s.id})">تعديل</button><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteSession('${esc(c.id)}',${s.id})">حذف</button></div></div>`; }); }
+            if (sessions.length === 0) { html += '<p>لا توجد جلسات</p>'; }
+            else { const sorted = [...sessions].sort((a,b) => new Date(a.date)-new Date(b.date)); sorted.forEach(s => { html += `<div class="session-item"><div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}${s.notes ? ' — ' + esc(s.notes) : ''}</div><div><button class="btn btn-sm" onclick="event.stopPropagation();window.editSessionModal('${esc(c.id)}',${s.id})">تعديل</button><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteSession('${esc(c.id)}',${s.id})">حذف</button></div></div>`; }); }
             html += `</div></td></tr>`;
         }
     }
@@ -1195,11 +1148,11 @@ function renderCases() {
 }
 
 window.toggleCaseDetails = (caseId) => { expandedCaseId = expandedCaseId === caseId ? null : caseId; renderCases(); };
-window.goToCase = (caseId) => { document.querySelector('.nav-item[data-tab="cases"]')?.click(); setTimeout(() => { expandedCaseId = caseId; renderCases(); setTimeout(() => { const row = document.querySelector(`.case-row[data-id="${caseId}"]`); if (row) { row.scrollIntoView({ behavior: 'smooth', block: 'center' }); row.querySelectorAll('td').forEach(td => td.style.background = '#fef9c3'); setTimeout(() => row.querySelectorAll('td').forEach(td => td.style.background = ''), 2000); } }, 300); }, 300); };
+window.goToCase = (caseId) => { document.querySelector('.nav-item[data-tab="cases"]')?.click(); setTimeout(() => { expandedCaseId = caseId; renderCases(); setTimeout(() => { const row = document.querySelector(`.case-row[data-id="${caseId}"]`); if (row) { row.scrollIntoView({ behavior: 'smooth', block: 'center' }); row.style.background = '#fef9c3'; setTimeout(() => row.style.background = '', 2000); } }, 300); }, 300); };
 
-function searchClient() { const term = document.getElementById('searchClientInput').value.trim().toLowerCase(); const div = document.getElementById('searchResults'); if (!term) { div.innerHTML = '<p class="loading">أدخل اسم موكل للبحث</p>'; return; } const found = clients.filter(c => (c.name||'').toLowerCase().includes(term)); if (!found.length) { div.innerHTML = '<p class="loading">❌ لا توجد نتائج</p>'; return; } let html = ''; found.forEach(client => { const clientCases = casesList.filter(c => c.clients?.some(cl => cl.id === client.id)); html += `<div style="background:var(--bg);border-radius:var(--radius-md);padding:20px;margin-bottom:20px;border-right:4px solid var(--gold);"><div style="background:var(--gold);padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:14px;"><div class="flex-between"><h3><i class="fas fa-user"></i> ${esc(client.name)}</h3><span class="badge">${client.type === 'company' ? 'شركة' : 'فرد'}</span></div><div style="font-size:0.88rem;margin-top:4px;">${client.phone ? '📞 ' + esc(client.phone) : ''}${client.delegationNumber ? ' &nbsp;|&nbsp; 📜 توكيل: ' + esc(client.delegationNumber) : ''}</div></div><h4 style="margin-bottom:10px;">قضايا الموكل (${clientCases.length})</h4>`; if (clientCases.length === 0) { html += '<p style="color:var(--muted);">لا توجد قضايا</p>'; } else { html += `<div class="table-wrap"><table style="width:100%"><thead><tr style="background:var(--bg);"><th>رقم القضية</th><th>المحكمة</th><th>الخصوم</th><th>الموضوع</th><th>آخر جلسة</th><th>ملاحظات</th><th>الحالة</th><th></th></tr></thead><tbody>`; clientCases.forEach(c => { let lastDate = 'لا توجد', lastNotes = ''; if (c.sessions && c.sessions.length) { const sorted = [...c.sessions].sort((a,b)=>new Date(b.date)-new Date(a.date)); lastDate = new Date(sorted[0].date).toLocaleDateString('ar-EG'); lastNotes = sorted[0].notes || ''; } html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.court||'--')}</td><td>${c.opponents ? c.opponents.map(o=>esc(o.name)).join(', ') : '--'}</td><td>${esc(c.subject||'--')}</td><td>${esc(lastDate)}</td><td style="max-width:180px;word-break:break-word;">${esc(lastNotes||'--')}</td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span></td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td></tr>`; }); html += '</tbody></table></div>'; } html += '</div>'; }); div.innerHTML = html; }
+function searchClient() { const term = document.getElementById('searchClientInput').value.trim().toLowerCase(); const div = document.getElementById('searchResults'); if (!term) { div.innerHTML = '<p class="loading">أدخل اسم موكل للبحث</p>'; return; } const found = clients.filter(c => (c.name||'').toLowerCase().includes(term)); if (!found.length) { div.innerHTML = '<p class="loading">❌ لا توجد نتائج</p>'; return; } let html = ''; found.forEach(client => { const clientCases = casesList.filter(c => c.clients?.some(cl => cl.id === client.id)); html += `<div style="background:var(--bg);border-radius:var(--radius-md);padding:20px;margin-bottom:20px;border-right:4px solid var(--gold);"><div style="background:var(--gold);padding:12px;border-radius:var(--radius-sm);margin-bottom:14px;"><h3>${esc(client.name)}</h3><div>${client.phone ? '📞 ' + esc(client.phone) : ''}</div></div><h4>قضايا الموكل (${clientCases.length})</h4>`; if (clientCases.length === 0) { html += '<p>لا توجد قضايا</p>'; } else { html += `<table><thead><tr><th>رقم القضية</th><th>المحكمة</th><th>الخصوم</th><th>الحالة</th><th></th></tr></thead><tbody>`; clientCases.forEach(c => { html += `<tr onclick="window.goToCase('${esc(c.id)}')"><td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.court||'--')}</td><td>${c.opponents ? c.opponents.map(o=>esc(o.name)).join(', ') : '--'}</td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span></td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td></tr>`; }); html += '</tbody></table>'; } html += '</div>'; }); div.innerHTML = html; }
 
-function searchCourt() { const term = document.getElementById('searchCourtInput').value.trim().toLowerCase(); const div = document.getElementById('searchResults'); if (!term) { div.innerHTML = '<p class="loading">أدخل اسم محكمة للبحث</p>'; return; } const found = casesList.filter(c => c.court && c.court.toLowerCase().includes(term)); if (!found.length) { div.innerHTML = '<p class="loading">❌ لا توجد قضايا</p>'; return; } let html = `<div style="background:var(--bg);border-radius:var(--radius-md);padding:20px;"><div style="background:var(--gold);padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:14px;"><h3>قضايا المحكمة (${esc(term)})</h3><div>عدد القضايا: ${found.length}</div></div><div class="table-wrap"><table style="width:100%"><thead><tr style="background:var(--bg);"><th>رقم القضية</th><th>الدائرة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>آخر جلسة</th><th>ملاحظات</th><th>الحالة</th><th></th></tr></thead><tbody>`; found.forEach(c => { let lastDate = 'لا توجد', lastNotes = ''; if (c.sessions && c.sessions.length) { const sorted = [...c.sessions].sort((a,b)=>new Date(b.date)-new Date(a.date)); lastDate = new Date(sorted[0].date).toLocaleDateString('ar-EG'); lastNotes = sorted[0].notes || ''; } html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.circuit||'--')}</td><td>${c.clients ? c.clients.map(cl=>esc(cl.name)).join(', ') : '--'}</td><td>${c.opponents ? c.opponents.map(op=>esc(op.name)).join(', ') : '--'}</td><td>${esc(c.subject||'--')}</td><td>${esc(lastDate)}</td><td style="max-width:180px;word-break:break-word;">${esc(lastNotes||'--')}</td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span></td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td></tr>`; }); html += '</tbody></table></div></div>'; div.innerHTML = html; }
+function searchCourt() { const term = document.getElementById('searchCourtInput').value.trim().toLowerCase(); const div = document.getElementById('searchResults'); if (!term) { div.innerHTML = '<p class="loading">أدخل اسم محكمة للبحث</p>'; return; } const found = casesList.filter(c => c.court && c.court.toLowerCase().includes(term)); if (!found.length) { div.innerHTML = '<p class="loading">❌ لا توجد قضايا</p>'; return; } let html = `<div><h3>قضايا المحكمة (${esc(term)})</h3><p>عدد القضايا: ${found.length}</p><table><thead><tr><th>رقم القضية</th><th>الموكلون</th><th>الخصوم</th><th>الحالة</th><th></th></tr></thead><tbody>`; found.forEach(c => { html += `<tr onclick="window.goToCase('${esc(c.id)}')"><td><strong>${esc(c.caseNumber)}</strong></td><td>${c.clients ? c.clients.map(cl=>esc(cl.name)).join(', ') : '--'}</td><td>${c.opponents ? c.opponents.map(op=>esc(op.name)).join(', ') : '--'}</td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span></td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td></tr>`; }); html += '</tbody></table></div>'; div.innerHTML = html; }
 
 window.searchClient = searchClient;
 window.searchCourt = searchCourt;
@@ -1216,15 +1169,15 @@ function showCaseModal(caseData = null) {
         <label>الدائرة</label><input type="text" id="circuit" value="${esc(caseData?.circuit||'')}">
         <label>الموضوع</label><input type="text" id="subject" value="${esc(caseData?.subject||'')}">
         <label>الحالة</label><select id="caseStatus">${statusOptions.map(s => `<option ${(caseData?.caseStatus||'متداولة')===s?'selected':''}>${s}</option>`).join('')}</select>
-        <h4 style="margin-top:16px;">الموكلون</h4><div id="clientsCont"></div><div class="flex-between" style="margin-top:8px;"><select id="selectClient" style="flex:1;margin:0;">${clients.map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select><button class="btn btn-sm" id="addClientBtn2">+ إضافة</button></div>
-        <h4 style="margin-top:16px;">الخصوم</h4><div id="opponentsCont"></div><div class="flex-between" style="margin-top:8px;gap:6px;"><input type="text" id="newOppName" placeholder="اسم الخصم" style="flex:2;margin:0;"><input type="text" id="newOppTitle" placeholder="الصفة" style="flex:1;margin:0;"><button class="btn btn-sm" id="addOppBtn2">+ إضافة</button></div>
-        <div class="modal-buttons"><button id="saveCaseBtn" style="background:var(--gold);">${isEdit ? '💾 حفظ' : '✅ إضافة'}</button><button id="closeCaseBtn" style="background:var(--border);">إلغاء</button></div></div></div>`;
+        <h4>الموكلون</h4><div id="clientsCont"></div><div class="flex-between"><select id="selectClient">${clients.map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select><button class="btn btn-sm" id="addClientBtn2">+ إضافة</button></div>
+        <h4>الخصوم</h4><div id="opponentsCont"></div><div class="flex-between"><input type="text" id="newOppName" placeholder="اسم الخصم"><input type="text" id="newOppTitle" placeholder="الصفة"><button class="btn btn-sm" id="addOppBtn2">+ إضافة</button></div>
+        <div class="modal-buttons"><button id="saveCaseBtn" style="background:var(--gold);">${isEdit ? '💾 حفظ' : '✅ إضافة'}</button><button id="closeCaseBtn">إلغاء</button></div></div></div>`;
     document.body.insertAdjacentHTML('beforeend', modal);
-    const renderC = () => { document.getElementById('clientsCont').innerHTML = tempClients.length ? tempClients.map((cl,i) => `<div class="party-item"><span>${esc(cl.name)}${cl.title ? ' ('+esc(cl.title)+')' : ''}</span><button class="remove-party" onclick="window.removeTC(${i})">✖</button></div>`).join('') : '<p style="color:var(--muted);font-size:0.88rem;margin:6px 0;">لا يوجد موكلون</p>'; };
-    const renderO = () => { document.getElementById('opponentsCont').innerHTML = tempOpponents.length ? tempOpponents.map((op,i) => `<div class="party-item"><span>${esc(op.name)}${op.title ? ' ('+esc(op.title)+')' : ''}</span><button class="remove-party" onclick="window.removeTO(${i})">✖</button></div>`).join('') : '<p style="color:var(--muted);font-size:0.88rem;margin:6px 0;">لا يوجد خصوم</p>'; };
+    const renderC = () => { document.getElementById('clientsCont').innerHTML = tempClients.length ? tempClients.map((cl,i) => `<div class="party-item"><span>${esc(cl.name)}${cl.title ? ' ('+esc(cl.title)+')' : ''}</span><button class="remove-party" onclick="removeTC(${i})">✖</button></div>`).join('') : '<p>لا يوجد موكلون</p>'; };
+    const renderO = () => { document.getElementById('opponentsCont').innerHTML = tempOpponents.length ? tempOpponents.map((op,i) => `<div class="party-item"><span>${esc(op.name)}${op.title ? ' ('+esc(op.title)+')' : ''}</span><button class="remove-party" onclick="removeTO(${i})">✖</button></div>`).join('') : '<p>لا يوجد خصوم</p>'; };
     window.removeTC = (i) => { tempClients.splice(i,1); renderC(); };
     window.removeTO = (i) => { tempOpponents.splice(i,1); renderO(); };
-    document.getElementById('addClientBtn2').onclick = () => { const id = document.getElementById('selectClient').value; const c = clients.find(x => x.id === id); if (c && !tempClients.some(x => x.id === c.id)) { const title = window.prompt('صفة الموكل (اختياري):'); tempClients.push({ id: c.id, name: c.name, title: title || '' }); renderC(); } };
+    document.getElementById('addClientBtn2').onclick = () => { const id = document.getElementById('selectClient').value; const c = clients.find(x => x.id === id); if (c && !tempClients.some(x => x.id === c.id)) { const title = prompt('صفة الموكل (اختياري):'); tempClients.push({ id: c.id, name: c.name, title: title || '' }); renderC(); } };
     document.getElementById('addOppBtn2').onclick = () => { const name = document.getElementById('newOppName').value.trim(); if (!name) return; tempOpponents.push({ name, title: document.getElementById('newOppTitle').value.trim() }); document.getElementById('newOppName').value = ''; document.getElementById('newOppTitle').value = ''; renderO(); };
     renderC(); renderO();
     document.getElementById('saveCaseBtn').onclick = async () => { const cn = document.getElementById('caseNumber').value.trim(); if (!cn) { showToast('⚠️ رقم القضية مطلوب', 'warning'); return; } if (tempClients.length === 0) { showToast('⚠️ أضف موكلاً واحداً على الأقل', 'warning'); return; } const data = { caseNumber: cn, court: document.getElementById('court').value, circuit: document.getElementById('circuit').value, clients: tempClients, opponents: tempOpponents, subject: document.getElementById('subject').value, caseStatus: document.getElementById('caseStatus').value, subjectDetails: caseData?.subjectDetails || '' }; if (isEdit) await window.updateCase(caseData.id, data); else await window.addCase(data); document.getElementById('caseModal').remove(); };
@@ -1234,7 +1187,7 @@ function showCaseModal(caseData = null) {
 window.editCase = (id) => { const c = casesList.find(x => x.id === id); if (c) showCaseModal(c); };
 
 function showAddSession(caseId) {
-    const modal = `<div id="sessModal" class="modal-overlay"><div class="modal-container"><h3>➕ إضافة جلسة</h3><label>التاريخ</label><input type="date" id="sDate" required><label>ملاحظات (اختياري)</label><textarea id="sNotes" rows="3"></textarea><div class="modal-buttons"><button id="saveSessBtn" style="background:var(--green);color:white;">✅ إضافة</button><button id="closeSessBtn" style="background:var(--border);">إلغاء</button></div></div></div>`;
+    const modal = `<div id="sessModal" class="modal-overlay"><div class="modal-container"><h3>➕ إضافة جلسة</h3><label>التاريخ</label><input type="date" id="sDate" required><label>ملاحظات</label><textarea id="sNotes" rows="3"></textarea><div class="modal-buttons"><button id="saveSessBtn" style="background:var(--green);color:white;">✅ إضافة</button><button id="closeSessBtn">إلغاء</button></div></div></div>`;
     document.body.insertAdjacentHTML('beforeend', modal);
     document.getElementById('saveSessBtn').onclick = async () => { const d = document.getElementById('sDate').value; if (!d) { showToast('⚠️ أدخل التاريخ', 'warning'); return; } const notes = document.getElementById('sNotes').value; await window.addSession(caseId, { date: d, notes }); document.getElementById('sessModal').remove(); };
     document.getElementById('closeSessBtn').onclick = () => document.getElementById('sessModal').remove();
@@ -1244,7 +1197,7 @@ function editSessionModal(caseId, sessionId) {
     const c = casesList.find(x => x.id === caseId);
     const session = c?.sessions?.find(s => s.id === sessionId);
     if (!session) return;
-    const modal = `<div id="sessModal" class="modal-overlay"><div class="modal-container"><h3>✏️ تعديل الجلسة</h3><label>التاريخ</label><input type="date" id="sDate" value="${esc(session.date)}" required><label>ملاحظات (اختياري)</label><textarea id="sNotes" rows="3">${esc(session.notes || '')}</textarea><div class="modal-buttons"><button id="saveSessBtn" style="background:var(--gold);">💾 حفظ</button><button id="closeSessBtn" style="background:var(--border);">إلغاء</button></div></div></div>`;
+    const modal = `<div id="sessModal" class="modal-overlay"><div class="modal-container"><h3>✏️ تعديل الجلسة</h3><label>التاريخ</label><input type="date" id="sDate" value="${esc(session.date)}" required><label>ملاحظات</label><textarea id="sNotes" rows="3">${esc(session.notes || '')}</textarea><div class="modal-buttons"><button id="saveSessBtn" style="background:var(--gold);">💾 حفظ</button><button id="closeSessBtn">إلغاء</button></div></div></div>`;
     document.body.insertAdjacentHTML('beforeend', modal);
     document.getElementById('saveSessBtn').onclick = async () => { const d = document.getElementById('sDate').value; if (!d) { showToast('⚠️ أدخل التاريخ', 'warning'); return; } const notes = document.getElementById('sNotes').value; await window.editSession(caseId, sessionId, { date: d, notes }); document.getElementById('sessModal').remove(); };
     document.getElementById('closeSessBtn').onclick = () => document.getElementById('sessModal').remove();
@@ -1260,7 +1213,7 @@ function showClientModal(client = null) {
         <label>النوع</label><select id="clType"><option value="individual" ${(!client||client.type==='individual')?'selected':''}>فرد</option><option value="company" ${client?.type==='company'?'selected':''}>شركة</option></select>
         <label>الهاتف</label><input type="text" id="clPhone" value="${esc(client?.phone||'')}">
         <label>الرقم الوطني</label><input type="text" id="clIdNum" value="${esc(client?.idNumber||'')}">
-        <div class="modal-buttons"><button id="saveClientBtn" style="background:var(--${isEdit?'gold':'green'});color:${isEdit?'var(--navy)':'white'};">${isEdit ? '💾 حفظ' : '✅ إضافة'}</button><button id="closeClientBtn" style="background:var(--border);">إلغاء</button></div></div></div>`;
+        <div class="modal-buttons"><button id="saveClientBtn" style="background:var(--${isEdit?'gold':'green'});color:${isEdit?'var(--navy)':'white'};">${isEdit ? '💾 حفظ' : '✅ إضافة'}</button><button id="closeClientBtn">إلغاء</button></div></div></div>`;
     document.body.insertAdjacentHTML('beforeend', modal);
     document.getElementById('saveClientBtn').onclick = async () => { const name = document.getElementById('clName').value.trim(); if (!name) { showToast('⚠️ الاسم مطلوب', 'warning'); return; } const data = { name, type: document.getElementById('clType').value, phone: document.getElementById('clPhone').value, idNumber: document.getElementById('clIdNum').value }; if (isEdit) await window.updateClient(client.id, { ...client, ...data }); else await window.addClient(data); document.getElementById('clientModal').remove(); };
     document.getElementById('closeClientBtn').onclick = () => document.getElementById('clientModal').remove();
@@ -1268,18 +1221,24 @@ function showClientModal(client = null) {
 
 window.editClient = (id) => { const c = clients.find(x => x.id === id); if (c) showClientModal(c); };
 
-window.editDelegation = (id) => { const c = clients.find(x => x.id === id); if (!c) return; const modal = `<div id="delModal" class="modal-overlay"><div class="modal-container"><h3>📜 بيانات التوكيل — ${esc(c.name)}</h3><label>رقم التوكيل</label><input type="text" id="delNum" value="${esc(c.delegationNumber||'')}"><label>تاريخ التوكيل</label><input type="date" id="delDate" value="${esc(c.delegationDate||'')}"><label>جهة التوثيق</label><input type="text" id="delAuth" value="${esc(c.delegationAuthority||'')}"><div class="modal-buttons"><button id="saveDelBtn" class="btn btn-success">💾 حفظ</button><button id="closeDelBtn" style="background:var(--border);">إلغاء</button></div></div></div>`; document.body.insertAdjacentHTML('beforeend', modal); document.getElementById('saveDelBtn').onclick = () => { window.updateClient(id, { ...c, delegationNumber: document.getElementById('delNum').value, delegationDate: document.getElementById('delDate').value, delegationAuthority: document.getElementById('delAuth').value }); document.getElementById('delModal').remove(); }; document.getElementById('closeDelBtn').onclick = () => document.getElementById('delModal').remove(); };
+window.editDelegation = (id) => { const c = clients.find(x => x.id === id); if (!c) return; const modal = `<div id="delModal" class="modal-overlay"><div class="modal-container"><h3>📜 بيانات التوكيل — ${esc(c.name)}</h3><label>رقم التوكيل</label><input type="text" id="delNum" value="${esc(c.delegationNumber||'')}"><label>تاريخ التوكيل</label><input type="date" id="delDate" value="${esc(c.delegationDate||'')}"><label>جهة التوثيق</label><input type="text" id="delAuth" value="${esc(c.delegationAuthority||'')}"><div class="modal-buttons"><button id="saveDelBtn" class="btn btn-success">💾 حفظ</button><button id="closeDelBtn">إلغاء</button></div></div></div>`; document.body.insertAdjacentHTML('beforeend', modal); document.getElementById('saveDelBtn').onclick = () => { window.updateClient(id, { ...c, delegationNumber: document.getElementById('delNum').value, delegationDate: document.getElementById('delDate').value, delegationAuthority: document.getElementById('delAuth').value }); document.getElementById('delModal').remove(); }; document.getElementById('closeDelBtn').onclick = () => document.getElementById('delModal').remove(); };
 
-window.editSubjectDetails = (id) => { const c = casesList.find(x => x.id === id); if (!c) return; const modal = `<div id="subModal" class="modal-overlay"><div class="modal-container"><h3>📝 تفاصيل الموضوع</h3><textarea id="details" rows="6">${esc(c.subjectDetails||'')}</textarea><div class="modal-buttons"><button id="saveSubBtn" class="btn btn-success">💾 حفظ</button><button id="closeSubBtn" style="background:var(--border);">إلغاء</button></div></div></div>`; document.body.insertAdjacentHTML('beforeend', modal); document.getElementById('saveSubBtn').onclick = () => { window.updateCase(id, { ...c, subjectDetails: document.getElementById('details').value }); document.getElementById('subModal').remove(); }; document.getElementById('closeSubBtn').onclick = () => document.getElementById('subModal').remove(); };
+window.editSubjectDetails = (id) => { const c = casesList.find(x => x.id === id); if (!c) return; const modal = `<div id="subModal" class="modal-overlay"><div class="modal-container"><h3>📝 تفاصيل الموضوع</h3><textarea id="details" rows="6">${esc(c.subjectDetails||'')}</textarea><div class="modal-buttons"><button id="saveSubBtn" class="btn btn-success">💾 حفظ</button><button id="closeSubBtn">إلغاء</button></div></div></div>`; document.body.insertAdjacentHTML('beforeend', modal); document.getElementById('saveSubBtn').onclick = () => { window.updateCase(id, { ...c, subjectDetails: document.getElementById('details').value }); document.getElementById('subModal').remove(); }; document.getElementById('closeSubBtn').onclick = () => document.getElementById('subModal').remove(); };
 
 const shownReminders = new Set();
-function checkReminders() { const today = new Date(); today.setHours(0,0,0,0); tasks.forEach(t => { if (t.status === 'done' || !t.date) return; const taskDate = new Date(t.date); taskDate.setHours(0,0,0,0); const diff = Math.round((taskDate - today) / 864e5); if (diff === 0 || diff === 1) { const key = `${t.id}_${diff}`; if (!shownReminders.has(key)) { shownReminders.add(key); const when = diff === 0 ? '🚨 اليوم' : '⚠️ غداً'; addNotif(`📋 مهمة ${when} — ${t.lawyer}: ${t.description}`, 'warning'); } } }); }
+function checkReminders() { 
+    const today = new Date(); today.setHours(0,0,0,0); 
+    tasks.forEach(t => { 
+        if (t.status === 'done') return;
+        const taskItems = t.taskItems || [];
+        const hasUncompleted = taskItems.some(item => !item.completed);
+        if (hasUncompleted) {
+            addNotif(`📋 مهمة: ${t.caseNumber || 'بدون قضية'} - ${taskItems.length} مهمة`, 'info');
+        }
+    }); 
+}
 setInterval(checkReminders, 3600000);
 setTimeout(checkReminders, 2000);
-
-// =============================================
-//  UI ENHANCEMENTS (تحسينات الواجهة)
-// =============================================
 
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
@@ -1294,7 +1253,7 @@ function addDarkModeButton() {
         darkBtn.className = 'dark-mode-toggle';
         darkBtn.innerHTML = '<i class="fas fa-moon"></i>';
         darkBtn.onclick = toggleDarkMode;
-        darkBtn.title = 'تبديل الوضع الليلي (Ctrl + D)';
+        darkBtn.title = 'تبديل الوضع الليلي';
         topActions.insertBefore(darkBtn, topActions.firstChild);
     }
 }
@@ -1392,30 +1351,40 @@ function addColumnButtons() {
     }
 }
 
-function showAdvancedSearch() {
-    let panel = document.getElementById('advancedSearchPanel');
-    if (!panel) {
-        const searchCard = document.querySelector('#searchTab .card');
-        if (searchCard) {
-            const advancedHtml = `
-                <div id="advancedSearchPanel" class="advanced-search">
-                    <h4><i class="fas fa-filter"></i> بحث متقدم</h4>
-                    <div class="advanced-search-grid">
-                        <div><label>رقم القضية</label><input type="text" id="advCaseNumber" placeholder="رقم القضية..."></div>
-                        <div><label>المحكمة</label><input type="text" id="advCourt" placeholder="المحكمة..."></div>
-                        <div><label>الموكل</label><input type="text" id="advClient" placeholder="اسم الموكل..."></div>
-                        <div><label>الحالة</label><select id="advStatus"><option value="">الكل</option><option value="متداولة">متداولة</option><option value="حكم نهائي">حكم نهائي</option><option value="مستأنفة">مستأنفة</option><option value="نقض">نقض</option></select></div>
-                        <div><label>من تاريخ</label><input type="date" id="advDateFrom"></div>
-                        <div><label>إلى تاريخ</label><input type="date" id="advDateTo"></div>
-                    </div>
-                    <div class="flex-between"><button class="btn" onclick="performAdvancedSearch()"><i class="fas fa-search"></i> بحث</button><button class="btn btn-outline" onclick="clearAdvancedSearch()"><i class="fas fa-eraser"></i> مسح</button></div>
-                </div>
-            `;
-            searchCard.insertAdjacentHTML('afterbegin', advancedHtml);
-            panel = document.getElementById('advancedSearchPanel');
-        }
+function addAdvancedSearchButton() {
+    const searchTypeDiv = document.querySelector('#searchTab .search-type-buttons');
+    if (searchTypeDiv && !document.querySelector('#advSearchBtn')) {
+        const advBtn = document.createElement('button');
+        advBtn.id = 'advSearchBtn';
+        advBtn.className = 'search-type-btn';
+        advBtn.innerHTML = '<i class="fas fa-search-plus"></i> بحث متقدم';
+        advBtn.onclick = () => {
+            let panel = document.getElementById('advancedSearchPanel');
+            if (!panel) {
+                const searchCard = document.querySelector('#searchTab .card');
+                if (searchCard) {
+                    const advancedHtml = `
+                        <div id="advancedSearchPanel" class="advanced-search">
+                            <h4><i class="fas fa-filter"></i> بحث متقدم</h4>
+                            <div class="advanced-search-grid">
+                                <div><label>رقم القضية</label><input type="text" id="advCaseNumber" placeholder="رقم القضية..."></div>
+                                <div><label>المحكمة</label><input type="text" id="advCourt" placeholder="المحكمة..."></div>
+                                <div><label>الموكل</label><input type="text" id="advClient" placeholder="اسم الموكل..."></div>
+                                <div><label>الحالة</label><select id="advStatus"><option value="">الكل</option><option value="متداولة">متداولة</option><option value="حكم نهائي">حكم نهائي</option><option value="مستأنفة">مستأنفة</option><option value="نقض">نقض</option></select></div>
+                                <div><label>من تاريخ</label><input type="date" id="advDateFrom"></div>
+                                <div><label>إلى تاريخ</label><input type="date" id="advDateTo"></div>
+                            </div>
+                            <div class="flex-between"><button class="btn" onclick="performAdvancedSearch()"><i class="fas fa-search"></i> بحث</button><button class="btn btn-outline" onclick="clearAdvancedSearch()"><i class="fas fa-eraser"></i> مسح</button></div>
+                        </div>
+                    `;
+                    searchCard.insertAdjacentHTML('afterbegin', advancedHtml);
+                }
+            }
+            const panel = document.getElementById('advancedSearchPanel');
+            if (panel) panel.classList.toggle('show');
+        };
+        searchTypeDiv.appendChild(advBtn);
     }
-    if (panel) panel.classList.toggle('show');
 }
 
 window.performAdvancedSearch = () => {
@@ -1437,13 +1406,11 @@ window.performAdvancedSearch = () => {
     const div = document.getElementById('searchResults');
     if (results.length === 0) { div.innerHTML = '<p class="loading">❌ لا توجد نتائج مطابقة</p>'; }
     else {
-        let html = `<div class="table-wrap"><table style="width:100%"><thead><tr style="background:var(--bg);"><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th></tr></thead><tbody>`;
+        let html = `<table style="width:100%"><thead><tr><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th></tr></thead><tbody>`;
         results.forEach(c => {
-            let lastDate = 'لا توجد';
-            if (c.sessions && c.sessions.length) { const sorted = [...c.sessions].sort((a,b) => new Date(b.date)-new Date(a.date)); lastDate = new Date(sorted[0].date).toLocaleDateString('ar-EG'); }
-            html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.court || '--')}</td><td>${c.clients ? c.clients.map(cl=>esc(cl.name)).join(', ') : '--'}</td><td>${c.opponents ? c.opponents.map(op=>esc(op.name)).join(', ') : '--'}</td><td>${esc(c.subject || '--')}</td><td>${esc(lastDate)}</td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span></td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td></tr>`;
+            html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.court || '--')}</td><td>${c.clients ? c.clients.map(cl=>esc(cl.name)).join(', ') : '--'}</td><td>${c.opponents ? c.opponents.map(op=>esc(op.name)).join(', ') : '--'}</td><td>${esc(c.subject || '--')}</td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span></td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td></tr>`;
         });
-        html += '</tbody><td></div>';
+        html += '</tbody></table>';
         div.innerHTML = html;
     }
     addNotif(`🔍 تم العثور على ${results.length} نتيجة`, 'info');
@@ -1455,18 +1422,6 @@ window.clearAdvancedSearch = () => {
     window.performAdvancedSearch();
 };
 
-function addAdvancedSearchButton() {
-    const searchTypeDiv = document.querySelector('#searchTab .search-type-buttons');
-    if (searchTypeDiv && !document.querySelector('#advSearchBtn')) {
-        const advBtn = document.createElement('button');
-        advBtn.id = 'advSearchBtn';
-        advBtn.className = 'search-type-btn';
-        advBtn.innerHTML = '<i class="fas fa-search-plus"></i> بحث متقدم';
-        advBtn.style.background = 'var(--gold)';
-        advBtn.onclick = showAdvancedSearch;
-        searchTypeDiv.appendChild(advBtn);
-    }
-}
 function setupUIEnhancements() {
     loadDarkModePreference();
     addDarkModeButton();
@@ -1488,107 +1443,11 @@ function setupEvents() {
     document.getElementById('searchCourtInput').addEventListener('keypress', e => { if (e.key==='Enter') searchCourt(); });
     document.querySelectorAll('.search-type-btn').forEach(btn => { if (!btn.id || btn.id !== 'advSearchBtn') { btn.onclick = () => { document.querySelectorAll('.search-type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); const type = btn.dataset.type; document.getElementById('searchClientDiv').style.display = type==='client' ? 'block' : 'none'; document.getElementById('searchCourtDiv').style.display = type==='court' ? 'block' : 'none'; document.getElementById('searchResults').innerHTML = ''; }; } });
     
-document.querySelectorAll('.nav-item').forEach(item => { item.onclick = () => { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); item.classList.add('active'); const tab = item.dataset.tab; document.querySelectorAll('.tab-content').forEach(t => t.style.display='none'); document.getElementById(tab+'Tab').style.display = 'block'; const titles = { dashboard:'لوحة التحكم', clients:'الموكلون', cases:'القضايا', tasks:'المهام اليومية', search:'بحث' }; document.getElementById('pageTitle').textContent = titles[tab] || ''; if (tab==='clients') renderClients(); if (tab==='cases') renderCases(); if (tab==='dashboard') renderDashboard(); if (tab==='tasks') renderTasks(); if (tab==='search') document.getElementById('searchResults').innerHTML = ''; if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open'); }; });
+    document.querySelectorAll('.nav-item').forEach(item => { item.onclick = () => { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); item.classList.add('active'); const tab = item.dataset.tab; document.querySelectorAll('.tab-content').forEach(t => t.style.display='none'); document.getElementById(tab+'Tab').style.display = 'block'; const titles = { dashboard:'لوحة التحكم', clients:'الموكلون', cases:'القضايا', tasks:'المهام الإدارية', search:'بحث' }; document.getElementById('pageTitle').textContent = titles[tab] || ''; if (tab==='clients') renderClients(); if (tab==='cases') renderCases(); if (tab==='dashboard') renderDashboard(); if (tab==='tasks') renderTasks(); if (tab==='search') document.getElementById('searchResults').innerHTML = ''; if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open'); }; });
     document.getElementById('menuToggle').onclick = () => document.getElementById('sidebar').classList.toggle('open');
     document.getElementById('notifIcon').onclick = (e) => { e.stopPropagation(); const panel = document.getElementById('notifPanel'); panel.classList.toggle('open'); if (panel.classList.contains('open')) { notifications.forEach(n => n.read = true); document.getElementById('notifCount').textContent = ''; const list = document.getElementById('notifList'); list.innerHTML = notifications.slice(0, 30).map(n => `<div class="notif-item">${esc(n.text)}</div>`).join(''); } };
     document.addEventListener('click', () => document.getElementById('notifPanel').classList.remove('open'));
     document.getElementById('notifPanel').addEventListener('click', e => e.stopPropagation());
-}
-    // دوال عامة للنوافذ المنبثقة
-window.removeTaskType = (i) => {
-    if (typeof removeTaskType === 'function') {
-        removeTaskType(i);
-    }
-};
-
-window.addSuggestedType = (type) => {
-    if (typeof addSuggestedType === 'function') {
-        addSuggestedType(type);
-    }
-};
-    function renderTaskCard(t, cardClass) {
-    // حساب عدد المهام المنجزة
-    const taskItems = t.taskItems || [];
-    const completedCount = taskItems.filter(item => item.completed === true).length;
-    const totalCount = taskItems.length;
-    const allCompleted = completedCount === totalCount && totalCount > 0;
-    
-    // حالة المهمة الأم
-    const overallStatus = allCompleted ? 'done' : (t.status || 'pending');
-    const statusText = overallStatus === 'done' ? '✓ جميع المهام منجزة' : `⏳ ${completedCount}/${totalCount} مهمة منجزة`;
-    const statusClass = overallStatus === 'done' ? 'status-done' : 'status-pending';
-    
-    // عرض المهام مع مربعات اختيار
-    let tasksHtml = '';
-    if (taskItems.length > 0) {
-        tasksHtml = '<div style="margin-top:10px;margin-bottom:10px;"><strong><i class="fas fa-list-check"></i> قائمة المهام:</strong><div style="margin-top:8px;">';
-        taskItems.forEach((item, idx) => {
-            const isCompleted = item.completed === true;
-            tasksHtml += `
-                <div style="display:flex;align-items:center;gap:10px;padding:8px;margin-bottom:5px;background:${isCompleted ? 'rgba(34,197,94,0.1)' : 'rgba(0,0,0,0.03)'};border-radius:8px;border-right:3px solid ${isCompleted ? 'var(--green)' : 'var(--gold)'};">
-                    <input type="checkbox" 
-                           class="task-checkbox" 
-                           data-task-id="${esc(t.id)}" 
-                           data-item-idx="${idx}"
-                           ${isCompleted ? 'checked' : ''}
-                           style="width:20px;height:20px;cursor:pointer;"
-                           onchange="window.toggleTaskItemCompleted('${esc(t.id)}', ${idx}, this.checked)">
-                    <span style="flex:1;${isCompleted ? 'text-decoration:line-through;color:var(--muted);' : ''}">
-                        <i class="fas fa-check-circle" style="color:${isCompleted ? 'var(--green)' : 'var(--muted)'};font-size:12px;"></i>
-                        ${esc(item.name)}
-                    </span>
-                    <button class="btn btn-sm btn-danger" style="padding:2px 8px;font-size:12px;" onclick="event.stopPropagation(); window.deleteTaskItem('${esc(t.id)}', ${idx})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
-        });
-        tasksHtml += '</div></div>';
-    } else {
-        tasksHtml = '<div style="margin:10px 0;color:var(--muted);"><i class="fas fa-info-circle"></i> لا توجد مهام محددة</div>';
-    }
-    
-    // عرض شريط التقدم
-    const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
-    const progressBar = totalCount > 0 ? `
-        <div style="margin-top:8px;">
-            <div style="background:var(--border);border-radius:10px;height:6px;overflow:hidden;">
-                <div style="background:var(--green);width:${progressPercent}%;height:6px;transition:width 0.3s;"></div>
-            </div>
-            <div style="font-size:12px;color:var(--muted);margin-top:4px;">التقدم: ${completedCount}/${totalCount}</div>
-        </div>
-    ` : '';
-    
-    return `<div class="task-card ${cardClass}" onclick="event.stopPropagation();">
-        <div class="flex-between">
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <strong>⚖️ ${esc(t.caseNumber || 'بدون قضية')}</strong>
-                <span class="badge" style="font-size:11px;">${esc(t.court || 'محكمة غير محددة')}</span>
-            </div>
-            <div style="display:flex;gap:8px;">
-                <button class="btn btn-sm" style="background:var(--gold);" onclick="event.stopPropagation(); window.editTask('${esc(t.id)}')">
-                    <i class="fas fa-edit"></i> تعديل
-                </button>
-                <button class="task-status-btn ${statusClass}" onclick="event.stopPropagation();">
-                    ${statusText}
-                </button>
-            </div>
-        </div>
-        
-        <div style="margin-top:6px;font-size:0.88rem;color:var(--slate);">
-            <i class="fas fa-location-dot"></i> ${esc(t.location)}
-        </div>
-        
-        ${progressBar}
-        ${tasksHtml}
-        
-        <div class="flex-between" style="margin-top:8px;">
-            <span style="font-size:0.85rem;color:var(--muted);"><i class="fas fa-clock"></i> تم الإنشاء: ${new Date(t.createdAt).toLocaleDateString('ar-EG')}</span>
-            <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); window.deleteTask('${esc(t.id)}')">
-                <i class="fas fa-trash"></i> حذف المهمة
-            </button>
-        </div>
-    </div>`;
 }
 </script>
 </body>
