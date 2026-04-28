@@ -352,6 +352,213 @@
     #dashboardTab .session-card div[style*="margin-top:10px"] {
         font-size: 17px !important;
     }
+      /* ===== DARK MODE (وضع الليل) ===== */
+body.dark-mode {
+    --bg: #0f172a;
+    --navy: #f1f5f9;
+    --navy-mid: #1e293b;
+    --border: #334155;
+    --white: #1e293b;
+    --slate: #cbd5e1;
+    --muted: #94a3b8;
+    background: #0f172a;
+}
+
+body.dark-mode .card,
+body.dark-mode .top-bar,
+body.dark-mode .stat-card,
+body.dark-mode .modal-container,
+body.dark-mode .confirm-box {
+    background: #1e293b;
+    color: #f1f5f9;
+}
+
+body.dark-mode .main-content::before {
+    opacity: 0.02;
+}
+
+body.dark-mode .toast {
+    background: #1e293b;
+    color: #f1f5f9;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+
+body.dark-mode .session-card,
+body.dark-mode .session-item,
+body.dark-mode .task-today,
+body.dark-mode .task-card {
+    background: #334155;
+}
+
+body.dark-mode .task-future {
+    background: #1e293b;
+}
+
+body.dark-mode .task-overdue {
+    background: #450a0a;
+}
+
+/* ===== زر وضع الليل ===== */
+.dark-mode-toggle {
+    background: var(--navy);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 40px;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    transition: all 0.3s;
+    margin-left: 10px;
+}
+
+.dark-mode-toggle:hover {
+    transform: scale(1.05);
+}
+
+/* ===== تخصيص الأعمدة ===== */
+.columns-panel {
+    position: fixed;
+    top: 80px;
+    left: 20px;
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 9997;
+    display: none;
+    padding: 15px;
+    min-width: 200px;
+}
+
+body.dark-mode .columns-panel {
+    background: #1e293b;
+    border: 1px solid #334155;
+}
+
+.columns-panel.open {
+    display: block;
+}
+
+.columns-panel h4 {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.columns-panel label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.columns-panel input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* ===== بحث متقدم ===== */
+.advanced-search {
+    background: var(--bg);
+    padding: 15px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    display: none;
+}
+
+.advanced-search.show {
+    display: block;
+}
+
+.advanced-search-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.advanced-search label {
+    margin-top: 0;
+    font-size: 13px;
+}
+
+.advanced-search input,
+.advanced-search select {
+    margin-top: 5px;
+}
+
+/* ===== اختصارات لوحة المفاتيح ===== */
+.keyboard-shortcuts {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--navy);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 40px;
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 9996;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}
+
+.keyboard-shortcuts:hover {
+    opacity: 1;
+}
+
+.shortcuts-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 25px;
+    z-index: 10000;
+    min-width: 300px;
+    display: none;
+}
+
+body.dark-mode .shortcuts-modal {
+    background: #1e293b;
+}
+
+.shortcuts-modal.open {
+    display: block;
+}
+
+.shortcuts-modal h3 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.shortcuts-modal table {
+    width: 100%;
+}
+
+.shortcuts-modal td {
+    padding: 8px;
+    border: none;
+}
+
+.shortcuts-modal kbd {
+    background: #facc15;
+    color: #0f172a;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-family: monospace;
+}
 </style>
 </head>
 <body>
@@ -1777,6 +1984,388 @@ function setupEvents() {
     };
     document.addEventListener('click', () => document.getElementById('notifPanel').classList.remove('open'));
     document.getElementById('notifPanel').addEventListener('click', e => e.stopPropagation());
+}
+    // إضافة تحسينات الواجهة
+loadDarkModePreference();
+addDarkModeButton();
+addColumnButtons();
+addKeyboardShortcuts();
+addAdvancedSearchButton();
+
+// تحميل تفضيلات الأعمدة بعد تحميل الجداول
+setTimeout(() => {
+    loadColumnsPreference('clientsTable');
+    loadColumnsPreference('casesTable');
+}, 500);
+      // =============================================
+//  DARK MODE (وضع الليل)
+// =============================================
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    addNotif(document.body.classList.contains('dark-mode') ? '🌙 تم تفعيل الوضع الليلي' : '☀️ تم تفعيل الوضع النهاري', 'info');
+}
+
+function loadDarkModePreference() {
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (savedDarkMode) {
+        document.body.classList.add('dark-mode');
+    }
+}
+
+// =============================================
+//  إضافة زر وضع الليل في شريط الأعلى
+// =============================================
+function addDarkModeButton() {
+    const topActions = document.querySelector('.top-actions');
+    if (topActions && !document.querySelector('.dark-mode-toggle')) {
+        const darkBtn = document.createElement('button');
+        darkBtn.className = 'dark-mode-toggle';
+        darkBtn.innerHTML = '<i class="fas fa-moon"></i>';
+        darkBtn.onclick = toggleDarkMode;
+        darkBtn.title = 'تبديل الوضع الليلي (Ctrl + D)';
+        topActions.insertBefore(darkBtn, topActions.firstChild);
+    }
+}
+
+// =============================================
+//  تخصيص الأعمدة
+// =============================================
+function showColumnsPanel(tableId, panelId) {
+    let panel = document.getElementById(panelId);
+    if (!panel) {
+        panel = document.createElement('div');
+        panel.id = panelId;
+        panel.className = 'columns-panel';
+        document.body.appendChild(panel);
+    }
+    
+    const table = document.getElementById(tableId);
+    if (!table) return;
+    
+    const headers = table.querySelectorAll('thead th');
+    const savedColumns = JSON.parse(localStorage.getItem(`${tableId}_columns`) || '[]');
+    
+    let html = `<h4><i class="fas fa-eye"></i> إظهار/إخفاء الأعمدة</h4>`;
+    headers.forEach((th, index) => {
+        const colName = th.innerText.trim() || `عمود ${index + 1}`;
+        const isChecked = savedColumns.length === 0 || savedColumns.includes(index);
+        html += `<label><input type="checkbox" data-col="${index}" ${isChecked ? 'checked' : ''}> ${colName}</label>`;
+    });
+    html += `<button class="btn btn-sm" style="margin-top:10px;width:100%;" onclick="applyColumnsVisibility('${tableId}', '${panelId}')">تطبيق</button>`;
+    panel.innerHTML = html;
+    panel.classList.toggle('open');
+}
+
+function applyColumnsVisibility(tableId, panelId) {
+    const table = document.getElementById(tableId);
+    const panel = document.getElementById(panelId);
+    const checkboxes = panel.querySelectorAll('input[type="checkbox"]');
+    const visibleColumns = [];
+    
+    checkboxes.forEach((cb, idx) => {
+        if (cb.checked) {
+            visibleColumns.push(idx);
+        }
+    });
+    
+    localStorage.setItem(`${tableId}_columns`, JSON.stringify(visibleColumns));
+    
+    const rows = table.querySelectorAll('tr');
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('th, td');
+        cells.forEach((cell, idx) => {
+            if (visibleColumns.includes(idx)) {
+                cell.style.display = '';
+            } else {
+                cell.style.display = 'none';
+            }
+        });
+    });
+    
+    panel.classList.remove('open');
+    addNotif('✅ تم تحديث عرض الأعمدة', 'success');
+}
+
+function loadColumnsPreference(tableId) {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+    const savedColumns = JSON.parse(localStorage.getItem(`${tableId}_columns`) || '[]');
+    if (savedColumns.length === 0) return;
+    
+    const rows = table.querySelectorAll('tr');
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('th, td');
+        cells.forEach((cell, idx) => {
+            if (savedColumns.includes(idx)) {
+                cell.style.display = '';
+            } else {
+                cell.style.display = 'none';
+            }
+        });
+    });
+}
+
+// إضافة زر تخصيص الأعمدة في الجداول
+function addColumnButtons() {
+    const clientsCard = document.querySelector('#clientsTab .card-header');
+    const casesCard = document.querySelector('#casesTab .card-header');
+    
+    if (clientsCard && !document.querySelector('#clientsColumnBtn')) {
+        const btn = document.createElement('button');
+        btn.id = 'clientsColumnBtn';
+        btn.className = 'btn btn-outline btn-sm';
+        btn.innerHTML = '<i class="fas fa-columns"></i> تخصيص الأعمدة';
+        btn.onclick = () => showColumnsPanel('clientsTable', 'clientsColumnsPanel');
+        clientsCard.appendChild(btn);
+    }
+    
+    if (casesCard && !document.querySelector('#casesColumnBtn')) {
+        const btn = document.createElement('button');
+        btn.id = 'casesColumnBtn';
+        btn.className = 'btn btn-outline btn-sm';
+        btn.innerHTML = '<i class="fas fa-columns"></i> تخصيص الأعمدة';
+        btn.onclick = () => showColumnsPanel('casesTable', 'casesColumnsPanel');
+        casesCard.appendChild(btn);
+    }
+}
+
+// =============================================
+//  بحث متقدم
+// =============================================
+function showAdvancedSearch() {
+    const searchDiv = document.getElementById('advancedSearchPanel');
+    if (!searchDiv) {
+        const parentCard = document.querySelector('#searchTab .card');
+        if (parentCard) {
+            const advancedHtml = `
+                <div id="advancedSearchPanel" class="advanced-search">
+                    <h4><i class="fas fa-filter"></i> بحث متقدم</h4>
+                    <div class="advanced-search-grid">
+                        <div>
+                            <label>رقم القضية</label>
+                            <input type="text" id="advCaseNumber" placeholder="رقم القضية...">
+                        </div>
+                        <div>
+                            <label>المحكمة</label>
+                            <input type="text" id="advCourt" placeholder="المحكمة...">
+                        </div>
+                        <div>
+                            <label>الموكل</label>
+                            <input type="text" id="advClient" placeholder="اسم الموكل...">
+                        </div>
+                        <div>
+                            <label>الحالة</label>
+                            <select id="advStatus">
+                                <option value="">الكل</option>
+                                <option value="متداولة">متداولة</option>
+                                <option value="حكم نهائي">حكم نهائي</option>
+                                <option value="مستأنفة">مستأنفة</option>
+                                <option value="نقض">نقض</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>من تاريخ</label>
+                            <input type="date" id="advDateFrom">
+                        </div>
+                        <div>
+                            <label>إلى تاريخ</label>
+                            <input type="date" id="advDateTo">
+                        </div>
+                    </div>
+                    <div class="flex-between">
+                        <button class="btn" onclick="performAdvancedSearch()"><i class="fas fa-search"></i> بحث</button>
+                        <button class="btn btn-outline" onclick="clearAdvancedSearch()"><i class="fas fa-eraser"></i> مسح</button>
+                    </div>
+                </div>
+            `;
+            parentCard.insertAdjacentHTML('afterbegin', advancedHtml);
+        }
+    }
+    const panel = document.getElementById('advancedSearchPanel');
+    panel.classList.toggle('show');
+}
+
+function performAdvancedSearch() {
+    const caseNumber = document.getElementById('advCaseNumber')?.value.trim().toLowerCase() || '';
+    const court = document.getElementById('advCourt')?.value.trim().toLowerCase() || '';
+    const client = document.getElementById('advClient')?.value.trim().toLowerCase() || '';
+    const status = document.getElementById('advStatus')?.value || '';
+    const dateFrom = document.getElementById('advDateFrom')?.value;
+    const dateTo = document.getElementById('advDateTo')?.value;
+    
+    const results = casesList.filter(c => {
+        if (caseNumber && !(c.caseNumber || '').toLowerCase().includes(caseNumber)) return false;
+        if (court && !(c.court || '').toLowerCase().includes(court)) return false;
+        if (status && c.caseStatus !== status) return false;
+        if (client) {
+            const clientMatch = (c.clients || []).some(cl => (cl.name || '').toLowerCase().includes(client));
+            if (!clientMatch) return false;
+        }
+        if (dateFrom && c.createdAt) {
+            const caseDate = new Date(c.createdAt).toISOString().split('T')[0];
+            if (caseDate < dateFrom) return false;
+        }
+        if (dateTo && c.createdAt) {
+            const caseDate = new Date(c.createdAt).toISOString().split('T')[0];
+            if (caseDate > dateTo) return false;
+        }
+        return true;
+    });
+    
+    displaySearchResults(results);
+    addNotif(`🔍 تم العثور على ${results.length} نتيجة`, 'info');
+}
+
+function clearAdvancedSearch() {
+    const fields = ['advCaseNumber', 'advCourt', 'advClient', 'advStatus', 'advDateFrom', 'advDateTo'];
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    performAdvancedSearch();
+}
+
+function displaySearchResults(results) {
+    const div = document.getElementById('searchResults');
+    if (!div) return;
+    
+    if (results.length === 0) {
+        div.innerHTML = '<p class="loading">❌ لا توجد نتائج مطابقة</p>';
+        return;
+    }
+    
+    let html = `<div class="table-wrap"><table style="width:100%"><thead><tr style="background:var(--bg);">
+        <th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th>
+        <th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th>
+    </tr></thead><tbody>`;
+    
+    results.forEach(c => {
+        let lastDate = 'لا توجد';
+        if (c.sessions && c.sessions.length) {
+            const sorted = [...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date));
+            lastDate = new Date(sorted[0].date).toLocaleDateString('ar-EG');
+        }
+        html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;">
+            <td><strong>${esc(c.caseNumber)}</strong></td>
+            <td>${esc(c.court || '--')}</td>
+            <td>${c.clients ? c.clients.map(cl=>esc(cl.name)).join(', ') : '--'}</td>
+            <td>${c.opponents ? c.opponents.map(op=>esc(op.name)).join(', ') : '--'}</td>
+            <td>${esc(c.subject || '--')}</td>
+            <td>${esc(lastDate)}</td>
+            <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td>
+        </tr>`;
+    });
+    html += '</tbody></table></div>';
+    div.innerHTML = html;
+}
+
+// =============================================
+//  اختصارات لوحة المفاتيح
+// =============================================
+function showKeyboardShortcuts() {
+    let modal = document.getElementById('shortcutsModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'shortcutsModal';
+        modal.className = 'shortcuts-modal';
+        modal.innerHTML = `
+            <h3><i class="fas fa-keyboard"></i> اختصارات لوحة المفاتيح</h3>
+            <table>
+                <tr><td><kbd>Ctrl</kbd> + <kbd>C</kbd></td><td>الانتقال إلى الموكلون</td></tr>
+                <tr><td><kbd>Ctrl</kbd> + <kbd>Q</kbd></td><td>الانتقال إلى القضايا</td></tr>
+                <tr><td><kbd>Ctrl</kbd> + <kbd>M</kbd></td><td>الانتقال إلى المهام</td></tr>
+                <tr><td><kbd>Ctrl</kbd> + <kbd>B</kbd></td><td>الانتقال إلى لوحة التحكم</td></tr>
+                <tr><td><kbd>Ctrl</kbd> + <kbd>S</kbd></td><td>الانتقال إلى البحث</td></tr>
+                <tr><td><kbd>Ctrl</kbd> + <kbd>D</kbd></td><td>تبديل الوضع الليلي</td></tr>
+                <tr><td><kbd>Esc</kbd></td><td>إغلاق النوافذ المنبثقة</td></tr>
+                <tr><td><kbd>?</kbd></td><td>عرض هذه القائمة</td></tr>
+            </table>
+            <button class="btn btn-sm" style="margin-top:15px;width:100%;" onclick="document.getElementById('shortcutsModal').classList.remove('open')">إغلاق</button>
+        `;
+        document.body.appendChild(modal);
+    }
+    modal.classList.toggle('open');
+}
+
+function addKeyboardShortcuts() {
+    // زر اختصارات في الزاوية
+    const shortcutsBtn = document.createElement('div');
+    shortcutsBtn.className = 'keyboard-shortcuts';
+    shortcutsBtn.innerHTML = '<i class="fas fa-keyboard"></i> <kbd>?</kbd>';
+    shortcutsBtn.onclick = showKeyboardShortcuts;
+    document.body.appendChild(shortcutsBtn);
+    
+    // اختصارات التنقل
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey) {
+            switch(e.key) {
+                case 'c':
+                case 'C':
+                    e.preventDefault();
+                    document.querySelector('.nav-item[data-tab="clients"]')?.click();
+                    addNotif('⌨️ تم الانتقال إلى الموكلون', 'info');
+                    break;
+                case 'q':
+                case 'Q':
+                    e.preventDefault();
+                    document.querySelector('.nav-item[data-tab="cases"]')?.click();
+                    addNotif('⌨️ تم الانتقال إلى القضايا', 'info');
+                    break;
+                case 'm':
+                case 'M':
+                    e.preventDefault();
+                    document.querySelector('.nav-item[data-tab="tasks"]')?.click();
+                    addNotif('⌨️ تم الانتقال إلى المهام', 'info');
+                    break;
+                case 'b':
+                case 'B':
+                    e.preventDefault();
+                    document.querySelector('.nav-item[data-tab="dashboard"]')?.click();
+                    addNotif('⌨️ تم الانتقال إلى لوحة التحكم', 'info');
+                    break;
+                case 's':
+                case 'S':
+                    e.preventDefault();
+                    document.querySelector('.nav-item[data-tab="search"]')?.click();
+                    addNotif('⌨️ تم الانتقال إلى البحث', 'info');
+                    break;
+                case 'd':
+                case 'D':
+                    e.preventDefault();
+                    toggleDarkMode();
+                    break;
+            }
+        }
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay, .columns-panel.open, .shortcuts-modal.open').forEach(el => el.remove?.());
+            document.querySelectorAll('.columns-panel.open').forEach(panel => panel.classList.remove('open'));
+            document.getElementById('shortcutsModal')?.classList.remove('open');
+        }
+        if (e.key === '?') {
+            e.preventDefault();
+            showKeyboardShortcuts();
+        }
+    });
+}
+
+// =============================================
+//  إضافة زر بحث متقدم في صفحة البحث
+// =============================================
+function addAdvancedSearchButton() {
+    const searchCard = document.querySelector('#searchTab .card');
+    if (searchCard && !document.querySelector('#advSearchBtn')) {
+        const btnDiv = document.querySelector('#searchTab .search-type-buttons');
+        if (btnDiv) {
+            const advBtn = document.createElement('button');
+            advBtn.id = 'advSearchBtn';
+            advBtn.className = 'search-type-btn';
+            advBtn.innerHTML = '<i class="fas fa-search-plus"></i> بحث متقدم';
+            advBtn.onclick = showAdvancedSearch;
+            btnDiv.appendChild(advBtn);
+        }
+    }
 }
 </script>
 </body>
