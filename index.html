@@ -1165,35 +1165,61 @@ function getStatusClass(s) {
 function renderCases() {
     const tbody = document.querySelector('#casesTable tbody');
     if (!tbody) return;
-    if (casesList.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا</td></tr>'; return; }
+    if (casesList.length === 0) { tbody.innerHTML = '</td><td colspan="8" class="loading">لا توجد قضايا</td></tr>'; return; }
     let html = '';
     for (const c of casesList) {
         const isExpanded = expandedCaseId === c.id;
         const sessions = c.sessions || [];
         const sortedSess = [...sessions].sort((a,b) => new Date(b.date)-new Date(a.date));
         const lastSession = sortedSess[0] ? new Date(sortedSess[0].date).toLocaleDateString('ar-EG') : null;
+        const lastSessionNotes = sortedSess[0] ? sortedSess[0].notes : '';
         const clientsHtml = c.clients ? c.clients.map(cl => esc(cl.name) + (cl.title ? ` (${esc(cl.title)})` : '')).join('<br>') : '--';
         const opponentsHtml = c.opponents ? c.opponents.map(op => esc(op.name) + (op.title ? ` (${esc(op.title)})` : '')).join('<br>') : '--';
-        html += `<tr class="case-row" data-id="${esc(c.id)}" onclick="window.toggleCaseDetails('${esc(c.id)}')"><td><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i></td>
-            <td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.court || '--')}${c.circuit ? ' — ' + esc(c.circuit) : ''}</td>
-            <td>${clientsHtml}</td><td>${opponentsHtml}</td>
-            <td>${esc(c.subject || '--')}${lastSession ? `<div><span class="badge">آخر جلسة: ${lastSession}</span></div>` : ''}</td>
+        
+        // عرض آخر جلسة مع الملاحظات
+        const lastSessionHtml = sessions.length > 0 ? `
+            <div style="margin-top:8px; padding-top:5px; border-top:1px dashed var(--border);">
+                <span class="badge" style="font-size:11px; background:var(--gold);"><i class="fas fa-calendar"></i> آخر جلسة: ${lastSession}</span>
+                ${lastSessionNotes ? `<div style="font-size:12px; color:var(--orange); margin-top:5px; padding:4px 8px; background:rgba(249,115,22,0.1); border-radius:6px;"><i class="fas fa-pen"></i> ملاحظات: ${esc(lastSessionNotes)}</div>` : ''}
+            </div>
+        ` : '<div style="margin-top:8px;"><span class="badge" style="font-size:11px; background:var(--muted);">لا توجد جلسات</span></div>';
+        
+        html += `<tr class="case-row" data-id="${esc(c.id)}" onclick="window.toggleCaseDetails('${esc(c.id)}')">
+            <td style="width:30px"><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i></td>
+            <td><strong>${esc(c.caseNumber)}</strong></td>
+            <td>${esc(c.court || '--')}${c.circuit ? ' — ' + esc(c.circuit) : ''}</td>
+            <td>${clientsHtml}</td>
+            <td>${opponentsHtml}</td>
+            <td>
+                <div><strong>📌 ${esc(c.subject || '--')}</strong></div>
+                ${lastSessionHtml}
+             </td>
             <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span></td>
-            <td class="action-buttons"><button class="btn btn-sm" style="background:var(--gold);" onclick="event.stopPropagation();window.editCase('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button>
-            <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteCase('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button></td>
+            <td class="action-buttons">
+                <button class="btn btn-sm" style="background:var(--gold);" onclick="event.stopPropagation();window.editCase('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button>
+                <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteCase('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button>
+             </td>
         </tr>`;
+        
         if (isExpanded) {
-            html += `<tr><td colspan="8"><div class="expanded-content"><h4>📄 تفاصيل الموضوع</h4><div>${esc(c.subjectDetails || 'لا توجد تفاصيل')}</div>
+            html += `<tr class="expanded-row"><td colspan="8"><div class="expanded-content">
+                <h4>📄 تفاصيل الموضوع</h4>
+                <div style="background:white;padding:12px;border-radius:10px;margin-bottom:8px;">${esc(c.subjectDetails || 'لا توجد تفاصيل')}</div>
                 <button class="btn btn-sm" onclick="event.stopPropagation();window.editSubjectDetails('${esc(c.id)}')">تعديل التفاصيل</button>
-                <h4>📅 الجلسات</h4><button class="btn btn-sm btn-success" onclick="event.stopPropagation();window.showAddSession('${esc(c.id)}')">+ إضافة جلسة</button>`;
-            if (sessions.length === 0) { html += '<p>لا توجد جلسات</p>'; }
-            else { const sorted = [...sessions].sort((a,b) => new Date(a.date)-new Date(b.date)); sorted.forEach(s => { html += `<div class="session-item"><div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}${s.notes ? ' — ' + esc(s.notes) : ''}</div><div><button class="btn btn-sm" onclick="event.stopPropagation();window.editSessionModal('${esc(c.id)}',${s.id})">تعديل</button><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteSession('${esc(c.id)}',${s.id})">حذف</button></div></div>`; }); }
+                <h4>📅 الجلسات</h4>
+                <button class="btn btn-sm btn-success" onclick="event.stopPropagation();window.showAddSession('${esc(c.id)}')">+ إضافة جلسة</button>`;
+            if (sessions.length === 0) { html += '<p style="margin-top:8px;color:var(--muted);">لا توجد جلسات</p>'; }
+            else { const sorted = [...sessions].sort((a,b) => new Date(a.date)-new Date(b.date)); 
+                sorted.forEach(s => { html += `<div class="session-item" style="margin-top:8px;">
+                    <div><i class="fas fa-calendar"></i> ${new Date(s.date).toLocaleDateString('ar-EG')}${s.notes ? '<br><span style="font-size:12px;"><i class="fas fa-pen"></i> ' + esc(s.notes) + '</span>' : ''}</div>
+                    <div><button class="btn btn-sm" onclick="event.stopPropagation();window.editSessionModal('${esc(c.id)}',${s.id})">تعديل</button>
+                    <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteSession('${esc(c.id)}',${s.id})">حذف</button></div>
+                </div>`; }); }
             html += `</div></td></tr>`;
         }
     }
     tbody.innerHTML = html;
 }
-
 window.toggleCaseDetails = (caseId) => { expandedCaseId = expandedCaseId === caseId ? null : caseId; renderCases(); };
 window.goToCase = (caseId) => { document.querySelector('.nav-item[data-tab="cases"]')?.click(); setTimeout(() => { expandedCaseId = caseId; renderCases(); setTimeout(() => { const row = document.querySelector(`.case-row[data-id="${caseId}"]`); if (row) { row.scrollIntoView({ behavior: 'smooth', block: 'center' }); row.style.background = '#fef9c3'; setTimeout(() => row.style.background = '', 2000); } }, 300); }, 300); };
 
