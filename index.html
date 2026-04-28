@@ -684,7 +684,7 @@ async function loadClients() {
 }
 
 async function loadCases() {
-    const snap = await getDocs(query(collection(db, 'cases'), orderBy('createdAt', 'desc')));
+   const snap = await getDocs(query(collection(db, 'cases'), orderBy('createdAt', 'asc')));
     casesList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
     casesList.forEach(c => {
