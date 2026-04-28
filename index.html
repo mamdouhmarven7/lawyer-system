@@ -716,23 +716,35 @@ async function loadClients() {
 async function loadCases() {
     const snap = await getDocs(query(collection(db, 'cases'), orderBy('createdAt', 'asc')));
     casesList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    
     casesList.forEach(c => {
         const sessions = c.sessions || [];
         if (sessions && sessions.length > 0) {
             const sorted = [...sessions].sort((a, b) => new Date(a.date) - new Date(b.date));
-            const today = new Date(); today.setHours(0,0,0,0);
+            const today = new Date(); 
+            today.setHours(0, 0, 0, 0);
+            
             const next = sorted.find(s => new Date(s.date) >= today);
             c.nextSessionDate = next ? next.date : null;
             c.lastSessionDate = sorted[sorted.length - 1].date;
+            c.lastSessionTimestamp = new Date(sorted[sorted.length - 1].date).getTime();
         } else {
             c.nextSessionDate = null;
             c.lastSessionDate = null;
+            c.lastSessionTimestamp = 0;
         }
     });
+    
+    // ترتيب القضايا حسب تاريخ آخر جلسة (من الأقدم إلى الأحدث)
+    casesList.sort((a, b) => {
+        const dateA = a.lastSessionTimestamp || 0;
+        const dateB = b.lastSessionTimestamp || 0;
+        return dateA - dateB; // الأقدم أولاً
+    });
+    
     renderCases();
     renderDashboard();
 }
-
 async function loadTasks() {
     const snap = await getDocs(query(collection(db, 'tasks'), orderBy('date', 'asc')));
     tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
