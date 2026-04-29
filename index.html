@@ -687,6 +687,27 @@ async function loadCases() {
 async function loadTasks() {
     const snap = await getDocs(collection(db, 'tasks'));
     tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    
+    // تحديث المهام القديمة التي ليس فيها clientNames
+    let needsUpdate = false;
+    for (const task of tasks) {
+        if (!task.clientNames && task.caseId) {
+            const foundCase = casesList.find(c => c.id === task.caseId);
+            if (foundCase && foundCase.clients) {
+                const clientNames = foundCase.clients.map(cl => cl.name).join(', ');
+                await updateDoc(doc(db, 'tasks', task.id), { clientNames: clientNames });
+                task.clientNames = clientNames;
+                needsUpdate = true;
+            }
+        }
+    }
+    
+    if (needsUpdate) {
+        // إعادة التحميل بعد التحديث
+        const newSnap = await getDocs(collection(db, 'tasks'));
+        tasks = newSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+    
     // ترتيب المهام حسب تاريخ الإنشاء (الأحدث أولاً)
     tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     renderTasks();
@@ -838,10 +859,20 @@ function renderTaskCard(t, cardClass) {
     const statusText = overallStatus === 'done' ? '✓ جميع المهام منجزة' : `⏳ ${completedCount}/${totalCount} مهمة منجزة`;
     const statusClass = overallStatus === 'done' ? 'status-done' : 'status-pending';
     
-    // عرض اسم الموكل (من البيانات المحفوظة)
-    const clientInfo = t.clientNames && t.clientNames !== 'بدون موكل' ? `
-        <div style="margin-top:4px;font-size:0.85rem;color:var(--slate);">
-            <i class="fas fa-user"></i> <strong>الموكل:</strong> ${esc(t.clientNames)}
+    // عرض اسم الموكل - محاولة الحصول عليه من بيانات المهمة أو من قاعدة البيانات
+    let clientDisplayName = t.clientNames || '';
+    
+    // إذا لم يكن هناك clientNames مخزن، نحاول جلبه من caseId
+    if (!clientDisplayName && t.caseId) {
+        const foundCase = casesList.find(c => c.id === t.caseId);
+        if (foundCase && foundCase.clients) {
+            clientDisplayName = foundCase.clients.map(cl => cl.name).join(', ');
+        }
+    }
+    
+    const clientInfo = clientDisplayName && clientDisplayName !== 'بدون موكل' ? `
+        <div style="margin-top:6px;font-size:0.9rem;color:var(--slate);background:rgba(250,204,21,0.15);padding:6px 10px;border-radius:8px;">
+            <i class="fas fa-user-tie"></i> <strong>الموكل:</strong> ${esc(clientDisplayName)}
         </div>
     ` : '';
     
@@ -850,9 +881,9 @@ function renderTaskCard(t, cardClass) {
     if (t.lastSessionDate) {
         const sessionDate = new Date(t.lastSessionDate).toLocaleDateString('ar-EG');
         lastSessionHtml = `
-            <div style="margin-top:6px;padding:6px;background:rgba(250,204,21,0.1);border-radius:8px;">
-                <div><i class="fas fa-calendar-alt"></i> <strong>آخر جلسة:</strong> ${sessionDate}</div>
-                ${t.lastSessionNotes ? `<div style="margin-top:4px;"><i class="fas fa-pen"></i> <strong>ملاحظات الجلسة:</strong> ${esc(t.lastSessionNotes)}</div>` : ''}
+            <div style="margin-top:8px;padding:8px;background:rgba(34,197,94,0.1);border-radius:8px;border-right:3px solid var(--green);">
+                <div><i class="fas fa-calendar-alt"></i> <strong>📅 آخر جلسة:</strong> ${sessionDate}</div>
+                ${t.lastSessionNotes ? `<div style="margin-top:5px;"><i class="fas fa-pen"></i> <strong>ملاحظات الجلسة:</strong> ${esc(t.lastSessionNotes)}</div>` : ''}
             </div>
         `;
     } else {
@@ -861,23 +892,23 @@ function renderTaskCard(t, cardClass) {
     
     let tasksHtml = '';
     if (taskItems.length > 0) {
-        tasksHtml = '<div style="margin-top:10px;margin-bottom:10px;"><strong><i class="fas fa-list-check"></i> قائمة المهام:</strong><div style="margin-top:8px;">';
+        tasksHtml = '<div style="margin-top:12px;"><strong><i class="fas fa-list-check"></i> 📋 قائمة المهام:</strong><div style="margin-top:8px;">';
         taskItems.forEach((item, idx) => {
             const isCompleted = item.completed === true;
             tasksHtml += `
-                <div style="display:flex;align-items:center;gap:10px;padding:8px;margin-bottom:5px;background:${isCompleted ? 'rgba(34,197,94,0.1)' : 'rgba(0,0,0,0.03)'};border-radius:8px;border-right:3px solid ${isCompleted ? 'var(--green)' : 'var(--gold)'};">
+                <div style="display:flex;align-items:center;gap:10px;padding:10px;margin-bottom:6px;background:${isCompleted ? 'rgba(34,197,94,0.1)' : 'rgba(250,204,21,0.1)'};border-radius:10px;border-right:3px solid ${isCompleted ? 'var(--green)' : 'var(--gold)'};">
                     <input type="checkbox" 
                            class="task-checkbox" 
                            data-task-id="${esc(t.id)}" 
                            data-item-idx="${idx}"
                            ${isCompleted ? 'checked' : ''}
-                           style="width:20px;height:20px;cursor:pointer;"
+                           style="width:22px;height:22px;cursor:pointer;"
                            onchange="window.toggleTaskItemCompleted('${esc(t.id)}', ${idx}, this.checked)">
-                    <span style="flex:1;${isCompleted ? 'text-decoration:line-through;color:var(--muted);' : ''}">
-                        <i class="fas fa-check-circle" style="color:${isCompleted ? 'var(--green)' : 'var(--muted)'};font-size:12px;"></i>
+                    <span style="flex:1;font-size:0.95rem;${isCompleted ? 'text-decoration:line-through;color:var(--muted);' : 'font-weight:500;'}">
+                        <i class="fas fa-check-circle" style="color:${isCompleted ? 'var(--green)' : 'var(--muted)'};font-size:14px;"></i>
                         ${esc(item.name)}
                     </span>
-                    <button class="btn btn-sm btn-danger" style="padding:2px 8px;font-size:12px;" onclick="event.stopPropagation(); window.deleteTaskItem('${esc(t.id)}', ${idx})">
+                    <button class="btn btn-sm btn-danger" style="padding:4px 10px;font-size:12px;" onclick="event.stopPropagation(); window.deleteTaskItem('${esc(t.id)}', ${idx})">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -890,25 +921,29 @@ function renderTaskCard(t, cardClass) {
     
     const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
     const progressBar = totalCount > 0 ? `
-        <div style="margin-top:8px;">
-            <div style="background:var(--border);border-radius:10px;height:6px;overflow:hidden;">
-                <div style="background:var(--green);width:${progressPercent}%;height:6px;transition:width 0.3s;"></div>
+        <div style="margin-top:10px;">
+            <div style="background:var(--border);border-radius:10px;height:8px;overflow:hidden;">
+                <div style="background:var(--green);width:${progressPercent}%;height:8px;transition:width 0.3s;"></div>
             </div>
-            <div style="font-size:12px;color:var(--muted);margin-top:4px;">التقدم: ${completedCount}/${totalCount}</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:5px;font-weight:500;">📊 نسبة الإنجاز: ${completedCount}/${totalCount} (${Math.round(progressPercent)}%)</div>
         </div>
     ` : '';
     
-    return `<div class="task-card ${cardClass}" onclick="event.stopPropagation();">
-        <div class="flex-between">
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <strong>⚖️ ${esc(t.caseNumber || 'بدون قضية')}</strong>
-                <span class="badge" style="font-size:11px;">${esc(t.court || 'محكمة غير محددة')}</span>
+    return `<div class="task-card ${cardClass}" style="padding:18px;margin-bottom:15px;border-radius:15px;" onclick="event.stopPropagation();">
+        <div class="flex-between" style="margin-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="background:var(--gold);color:var(--navy);padding:5px 12px;border-radius:20px;font-weight:800;">
+                    <i class="fas fa-gavel"></i> ${esc(t.caseNumber || 'بدون قضية')}
+                </span>
+                <span class="badge" style="font-size:12px;background:var(--navy-light);color:white;padding:5px 12px;">
+                    <i class="fas fa-building"></i> ${esc(t.court || 'محكمة غير محددة')}
+                </span>
             </div>
             <div style="display:flex;gap:8px;">
-                <button class="btn btn-sm" style="background:var(--gold);" onclick="event.stopPropagation(); window.editTask('${esc(t.id)}')">
+                <button class="btn btn-sm" style="background:var(--gold);padding:6px 14px;" onclick="event.stopPropagation(); window.editTask('${esc(t.id)}')">
                     <i class="fas fa-edit"></i> تعديل
                 </button>
-                <button class="task-status-btn ${statusClass}" onclick="event.stopPropagation();">
+                <button class="task-status-btn ${statusClass}" style="padding:6px 14px;" onclick="event.stopPropagation();">
                     ${statusText}
                 </button>
             </div>
@@ -919,8 +954,8 @@ function renderTaskCard(t, cardClass) {
         ${progressBar}
         ${tasksHtml}
         
-        <div class="flex-between" style="margin-top:8px;">
-            <span style="font-size:0.85rem;color:var(--muted);"><i class="fas fa-clock"></i> تم الإنشاء: ${new Date(t.createdAt).toLocaleDateString('ar-EG')}</span>
+        <div class="flex-between" style="margin-top:12px;padding-top:8px;border-top:1px solid var(--border);">
+            <span style="font-size:0.85rem;color:var(--muted);"><i class="fas fa-clock"></i> 🕐 تم الإنشاء: ${new Date(t.createdAt).toLocaleDateString('ar-EG')}</span>
             <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); window.deleteTask('${esc(t.id)}')">
                 <i class="fas fa-trash"></i> حذف المهمة
             </button>
