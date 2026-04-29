@@ -675,7 +675,12 @@ let tempOpponents = [];
 
 // ===== دوال إدارة المهام المقترحة =====
 
-function getSuggestedTasks() {
+
+function esc(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+    function getSuggestedTasks() {
     const saved = localStorage.getItem('suggestedTasks');
     if (saved) {
         return JSON.parse(saved);
@@ -696,17 +701,6 @@ function addToSuggestedTasks(newTask) {
     }
 }
 
-function esc(str) {
-    if (str == null) return '';
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
-
-// ... باقي الكود
-
-function esc(str) {
-    if (str == null) return '';
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
 
 function showToast(msg, type = 'info') {
     const container = document.getElementById('toastContainer');
