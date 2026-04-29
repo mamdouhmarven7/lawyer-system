@@ -1167,13 +1167,6 @@ function showTaskModal(task = null) {
         </option>`;
     });
     
-    const suggestedTypes = ['تقديم مذكرة', 'حضور جلسة', 'استلام حكم', 'معاينة', 'إيداع صحيفة', 'مقابلة موكل', 'تقديم مستندات', 'تسوية', 'استئناف', 'طعن بالنقض'];
-    let suggestionsHtml = '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;">';
-    suggestedTypes.forEach(type => {
-        suggestionsHtml += `<span style="background:var(--border);padding:3px 10px;border-radius:20px;font-size:12px;cursor:pointer;" onclick="addSuggestedTypeInternal('${esc(type)}')">+ ${type}</span>`;
-    });
-    suggestionsHtml += '</div>';
-    
     const modalHtml = `<div id="taskModal" class="modal-overlay">
         <div class="modal-container">
             <h3>${isEdit ? '✏️ تعديل المهمة' : '➕ إضافة مهمة جديدة'}</h3>
@@ -1187,10 +1180,9 @@ function showTaskModal(task = null) {
             <label style="margin-top:15px;">📋 المهام (يمكن إضافة عدة مهام)</label>
             <div id="taskTypesContainer"></div>
             <div class="flex-between" style="margin-top:8px;gap:6px;">
-                <input type="text" id="newTaskType" placeholder="اكتب اسم المهمة..." style="flex:2;margin:0;">
+                <input type="text" id="newTaskType" placeholder="اكتب اسم المهمة واضغط Enter أو زر الإضافة..." style="flex:2;margin:0;">
                 <button class="btn btn-sm" id="addTaskTypeBtn" style="background:var(--green);color:white;">+ إضافة مهمة</button>
             </div>
-            ${suggestionsHtml}
             <div class="modal-buttons" style="margin-top:20px;">
                 <button id="saveTaskBtn" style="background:var(--${isEdit ? 'gold' : 'green'});color:${isEdit ? 'var(--navy)' : 'white'};">${isEdit ? '💾 حفظ التعديلات' : '✅ إضافة'}</button>
                 <button id="closeTaskBtn" style="background:var(--border);">إلغاء</button>
@@ -1229,20 +1221,103 @@ function showTaskModal(task = null) {
         const container = document.getElementById('taskTypesContainer');
         if (!container) return;
         if (tempTaskTypes.length === 0) {
-            container.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;margin:5px 0;">لا توجد مهام مضافة</p>';
+            container.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;margin:5px 0;">📭 لا توجد مهام مضافة</p>';
             return;
         }
         container.innerHTML = tempTaskTypes.map((item, i) => `
-            <div class="party-item" style="background:var(--bg);margin-bottom:8px;justify-content:space-between;">
+            <div class="party-item" style="background:var(--bg);margin-bottom:8px;justify-content:space-between;border-radius:10px;">
                 <span style="display:flex;align-items:center;gap:8px;">
                     <i class="fas fa-tasks" style="color:var(--gold);"></i>
                     ${esc(item)}
                 </span>
-                <button class="remove-party" onclick="removeTaskTypeInternal(${i})">✖</button>
+                <button class="remove-party" onclick="removeTaskTypeInternal(${i})" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;">✖</button>
             </div>
         `).join('');
     };
     
+    window.removeTaskTypeInternal = (i) => {
+        tempTaskTypes.splice(i, 1);
+        renderTaskTypes();
+    };
+    
+    // إضافة مهمة جديدة مع دعم Enter
+    const addNewTask = () => {
+        const newType = document.getElementById('newTaskType').value.trim();
+        if (!newType) {
+            showToast('⚠️ يرجى إدخال اسم المهمة', 'warning');
+            return;
+        }
+        if (tempTaskTypes.includes(newType)) {
+            showToast('⚠️ هذه المهمة موجودة بالفعل', 'warning');
+            return;
+        }
+        tempTaskTypes.push(newType);
+        document.getElementById('newTaskType').value = '';
+        renderTaskTypes();
+        showToast(`✅ تم إضافة "${newType}"`, 'success');
+    };
+    
+    document.getElementById('addTaskTypeBtn').onclick = addNewTask;
+    
+    // إضافة المهمة عند الضغط على Enter
+    document.getElementById('newTaskType').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addNewTask();
+        }
+    });
+    
+    renderTaskTypes();
+    
+    document.getElementById('saveTaskBtn').onclick = async () => {
+        const caseId = document.getElementById('taskCaseId').value;
+        
+        if (tempTaskTypes.length === 0) {
+            showToast('⚠️ يرجى إضافة مهمة واحدة على الأقل', 'warning');
+            return;
+        }
+        
+        const selectedCase = caseId ? casesList.find(c => c.id === caseId) : null;
+        const caseNumber = selectedCase ? selectedCase.caseNumber : 'بدون قضية';
+        const court = selectedCase ? selectedCase.court : 'غير محدد';
+        const clientNames = selectedCase && selectedCase.clients ? selectedCase.clients.map(cl => cl.name).join(', ') : 'بدون موكل';
+        
+        let lastSessionDate = '';
+        let lastSessionNotes = '';
+        if (selectedCase && selectedCase.sessions && selectedCase.sessions.length > 0) {
+            const sortedSessions = [...selectedCase.sessions].sort((a,b) => new Date(b.date) - new Date(a.date));
+            const lastSession = sortedSessions[0];
+            lastSessionDate = lastSession.date;
+            lastSessionNotes = lastSession.notes || '';
+        }
+        
+        const taskItems = tempTaskTypes.map(name => ({
+            id: Date.now() + Math.random(),
+            name: name,
+            completed: false
+        }));
+        
+        const data = {
+            caseId: caseId || '',
+            caseNumber: caseNumber,
+            court: court,
+            clientNames: clientNames,
+            lastSessionDate: lastSessionDate,
+            lastSessionNotes: lastSessionNotes,
+            taskItems: taskItems,
+            createdAt: task?.createdAt || new Date().toISOString(),
+            status: 'pending'
+        };
+        
+        if (isEdit) await window.updateTask(task.id, data);
+        else await window.addTask({ ...data, createdAt: new Date().toISOString() });
+        document.getElementById('taskModal').remove();
+    };
+    
+    document.getElementById('closeTaskBtn').onclick = () => {
+        document.getElementById('taskModal').remove();
+    };
+}
     window.removeTaskTypeInternal = (i) => {
         tempTaskTypes.splice(i, 1);
         renderTaskTypes();
