@@ -1215,10 +1215,8 @@ function showTaskModal(task = null) {
     // إنشاء نسخة من casesList وترتيبها حسب اسم الموكل (ترتيب أبجدي)
     let sortedCases = [...casesList];
     sortedCases.sort((a, b) => {
-        // الحصول على اسم الموكل الأول لكل قضية
         let clientNameA = a.clients && a.clients.length > 0 ? a.clients[0].name : '';
         let clientNameB = b.clients && b.clients.length > 0 ? b.clients[0].name : '';
-        // ترتيب أبجدي
         return clientNameA.localeCompare(clientNameB, 'ar');
     });
     
@@ -1234,12 +1232,15 @@ function showTaskModal(task = null) {
             if (lastSession.notes) lastSessionInfo += ` | ${lastSession.notes.substring(0, 30)}`;
         }
         
+        // تنسيق النص بشكل مرتب
+        const optionText = `⚖️ ${c.caseNumber} | 🏛️ ${c.court || 'محكمة غير محددة'} | 👤 ${clientNames.substring(0, 50)}${clientNames.length > 50 ? '...' : ''}`;
+        
         casesOptions += `<option value="${esc(c.id)}" 
             ${task?.caseId === c.id ? 'selected' : ''} 
             data-client="${esc(clientNames)}" 
             data-last-session-date="${sessions.length > 0 ? new Date([...sessions].sort((a,b)=>new Date(b.date)-new Date(a.date))[0].date).toLocaleDateString('ar-EG') : ''}"
             data-last-session-notes="${sessions.length > 0 ? esc([...sessions].sort((a,b)=>new Date(b.date)-new Date(a.date))[0].notes || '') : ''}">
-            📁 ${esc(c.caseNumber)} - ${esc(c.court || 'محكمة غير محددة')} | 👤 ${esc(clientNames)}${lastSessionInfo}
+            ${esc(optionText)}
         </option>`;
     });
     
@@ -1258,10 +1259,10 @@ function showTaskModal(task = null) {
     }
     
     const modalHtml = `<div id="taskModal" class="modal-overlay">
-        <div class="modal-container">
+        <div class="modal-container" style="max-width: 650px;">
             <h3>${isEdit ? '✏️ تعديل المهمة' : '➕ إضافة مهمة جديدة'}</h3>
             <label>⚖️ اختيار القضية (مرتب حسب اسم الموكل)</label>
-            <select id="taskCaseId">${casesOptions}</select>
+            <select id="taskCaseId" style="width:100%; padding:12px; font-size:14px;">${casesOptions}</select>
             <div id="caseInfoPreview" style="background:var(--bg);padding:10px;border-radius:8px;margin-top:10px;font-size:13px;display:none;">
                 <div><i class="fas fa-user"></i> <strong>الموكل:</strong> <span id="previewClient"></span></div>
                 <div style="margin-top:5px;"><i class="fas fa-calendar"></i> <strong>آخر جلسة:</strong> <span id="previewLastSessionDate"></span></div>
@@ -1270,8 +1271,8 @@ function showTaskModal(task = null) {
             <label style="margin-top:15px;">📋 المهام (يمكن إضافة عدة مهام)</label>
             <div id="taskTypesContainer"></div>
             <div class="flex-between" style="margin-top:8px;gap:6px;">
-                <input type="text" id="newTaskType" placeholder="اكتب اسم المهمة واضغط Enter أو زر الإضافة..." style="flex:2;margin:0;">
-                <button class="btn btn-sm" id="addTaskTypeBtn" style="background:var(--green);color:white;">+ إضافة مهمة</button>
+                <input type="text" id="newTaskType" placeholder="اكتب اسم المهمة واضغط Enter أو زر الإضافة..." style="flex:2;margin:0;padding:10px;">
+                <button class="btn btn-sm" id="addTaskTypeBtn" style="background:var(--green);color:white;padding:10px 15px;">+ إضافة مهمة</button>
             </div>
             ${suggestionsHtml}
             <div class="modal-buttons" style="margin-top:20px;">
