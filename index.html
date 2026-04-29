@@ -154,7 +154,7 @@
         .btn:hover { background: var(--gold-dark); }
         .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--slate); }
         .btn-outline:hover { background: var(--bg); }
-        .btn-sm { padding: 5px 13px; font-size: 0.8rem; }
+        .btn-sm { padding: 4px 10px; font-size: 0.75rem; }
         .btn-danger { background: var(--red); color: white; }
         .btn-danger:hover { background: #dc2626; }
         .btn-success { background: var(--green); color: white; }
@@ -165,6 +165,17 @@
         th, td { text-align: right; padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
         th { font-weight: 700; color: var(--slate); background: var(--bg); }
         tr:hover td { background: #f8fafc; }
+
+        /* أزرار صغيرة داخل الجدول */
+        .action-buttons .btn-sm {
+            padding: 3px 8px !important;
+            font-size: 12px !important;
+            gap: 4px !important;
+        }
+        
+        .action-buttons .btn-sm i {
+            font-size: 11px !important;
+        }
 
         label { display: block; font-weight: 700; font-size: 0.88rem; color: var(--slate); margin-bottom: 4px; margin-top: 12px; }
         input, select, textarea {
@@ -209,13 +220,6 @@
             padding: 10px 14px; border-radius: 10px; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;
             background: #fef9c3;
         }
-
-        .session-card {
-            background: #fef9c3; padding: 14px 16px; border-radius: var(--radius-md);
-            border-right: 4px solid var(--gold); cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 10px;
-        }
-        .session-card:hover { transform: translateX(-4px); box-shadow: var(--shadow); }
 
         .task-card { border-radius: var(--radius-sm); padding: 15px; margin-bottom: 12px; border-right: 4px solid; cursor: pointer; transition: transform 0.2s; }
         .task-card:hover { transform: translateX(-3px); }
@@ -269,36 +273,211 @@
         #clientsTable td:first-child, #clientsTable td:first-child strong { font-weight: 700; }
         .expanded-content .session-item { font-size: 17px; font-weight: 600; }
         .expanded-content h4 { font-size: 19px; font-weight: 800; }
-        .action-buttons .btn-sm { font-size: 15px; font-weight: 700; }
+        .action-buttons .btn-sm { font-size: 13px !important; font-weight: 700; padding: 3px 8px !important; }
         .status-badge { font-size: 15px; font-weight: 800; }
         #clientsTable th, #casesTable th { font-size: 18px; font-weight: 800; }
 
+        /* ===== تنسيق لوحة التحكم ===== */
         #dashboardTab .stat-card h3 {
-            font-size: 22px !important;
-            font-weight: 800 !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            color: var(--slate) !important;
         }
         #dashboardTab .stat-number {
-            font-size: 36px !important;
-            font-weight: 900 !important;
+            font-size: 32px !important;
+            font-weight: 800 !important;
+            color: var(--navy) !important;
         }
         #dashboardTab .card h3 {
-            font-size: 24px !important;
-            font-weight: 800 !important;
-            margin-bottom: 20px !important;
-        }
-        #dashboardTab .session-card {
             font-size: 18px !important;
+            font-weight: 700 !important;
+            margin-bottom: 16px !important;
+            padding-right: 12px !important;
+            border-right: 4px solid var(--gold) !important;
         }
-        #dashboardTab .session-card .flex-between div strong,
-        #dashboardTab .session-card .flex-between div span {
-            font-size: 19px !important;
-            font-weight: 800 !important;
+
+        /* ===== مربعات الجلسات القادمة ===== */
+        #upcomingSessions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
-        #dashboardTab .session-card .badge {
-            font-size: 16px !important;
-            padding: 8px 14px !important;
-            font-weight: 800 !important;
+        
+        .session-item-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 16px 18px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
         }
+        
+        .session-item-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gold);
+        }
+        
+        .session-item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            border-color: transparent;
+        }
+        
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .session-case-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .session-case-number {
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--navy);
+            background: rgba(250,204,21,0.15);
+            padding: 4px 12px;
+            border-radius: 30px;
+        }
+        
+        .session-court {
+            font-size: 12px;
+            color: var(--slate);
+            background: var(--bg);
+            padding: 4px 10px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .session-circuit {
+            font-size: 12px;
+            color: var(--purple);
+            background: rgba(139,92,246,0.1);
+            padding: 4px 10px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .session-date-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 30px;
+            color: white;
+        }
+        
+        .session-body {
+            margin-bottom: 10px;
+        }
+        
+        .session-client {
+            font-size: 13px;
+            color: var(--slate);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .session-subject {
+            font-size: 13px;
+            color: var(--navy);
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .session-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .session-date {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gold-dark);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .session-notes {
+            font-size: 11px;
+            color: var(--orange);
+            background: rgba(249,115,22,0.1);
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        body.dark-mode .session-item-card {
+            background: #1e293b;
+            border-color: #334155;
+        }
+        
+        body.dark-mode .session-case-number {
+            background: rgba(250,204,21,0.2);
+            color: var(--gold);
+        }
+        
+        body.dark-mode .session-court {
+            background: #0f172a;
+        }
+        
+        body.dark-mode .session-subject {
+            color: #f1f5f9;
+        }
+        
+        body.dark-mode .session-footer {
+            border-top-color: #334155;
+        }
+
+        /* ===== البحث المتقدم ===== */
+        .advanced-search {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            display: none;
+        }
+        .advanced-search.show { display: block; }
+        .advanced-search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .advanced-search label { margin-top: 0; font-size: 13px; }
+        .advanced-search input, .advanced-search select { margin-top: 5px; }
 
         body.dark-mode {
             --bg: #111827;
@@ -322,8 +501,7 @@
         body.dark-mode .top-bar,
         body.dark-mode .stat-card,
         body.dark-mode .modal-container,
-        body.dark-mode .confirm-box,
-        body.dark-mode .columns-panel {
+        body.dark-mode .confirm-box {
             background: #1a1a1a !important;
             color: #f1f5f9 !important;
         }
@@ -336,10 +514,6 @@
             background: #0f0f0f;
             border-color: #334155;
             color: #f1f5f9;
-        }
-
-        body.dark-mode .session-card {
-            background: #1f1f1f !important;
         }
 
         body.dark-mode .task-today {
@@ -359,80 +533,6 @@
         body.dark-mode td {
             background: #1a1a1a !important;
         }
-        
-        .columns-panel {
-            position: fixed;
-            top: 80px;
-            left: 20px;
-            background: white;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
-            z-index: 9997;
-            display: none;
-            padding: 15px;
-            min-width: 200px;
-        }
-        .columns-panel.open { display: block; }
-        .columns-panel h4 { margin-bottom: 10px; font-size: 16px; }
-        .columns-panel label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 8px 0;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .columns-panel input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
-
-        .advanced-search {
-            background: var(--bg);
-            padding: 15px;
-            border-radius: var(--radius-md);
-            margin-bottom: 20px;
-            display: none;
-        }
-        .advanced-search.show { display: block; }
-        .advanced-search-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .advanced-search label { margin-top: 0; font-size: 13px; }
-        .advanced-search input, .advanced-search select { margin-top: 5px; }
-        /* تصغير حجم مربعات الجلسات القادمة */
-.session-card {
-    padding: 10px 12px !important;
-    margin-bottom: 8px !important;
-    border-radius: 10px !important;
-}
-
-.session-card .flex-between {
-    margin-bottom: 6px !important;
-}
-
-.session-card .badge {
-    font-size: 11px !important;
-    padding: 2px 8px !important;
-}
-
-.session-card div[style*="margin-bottom:5px"] {
-    font-size: 12px !important;
-    line-height: 1.4 !important;
-}
-
-.session-card i {
-    font-size: 11px !important;
-}
-
-.session-card div[style*="margin-top:5px"] {
-    padding: 3px 5px !important;
-    font-size: 11px !important;
-}
-
-#upcomingSessions {
-    gap: 8px !important;
-}
     </style>
 </head>
 <body>
@@ -501,9 +601,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>قائمة الموكلين</h3>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> إضافة موكل</button>
-                        </div>
+                        <button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> إضافة موكل</button>
                     </div>
                     <div class="table-wrap">
                         <table id="clientsTable">
@@ -521,13 +619,13 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>القضايا</h3>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="btn" id="addCaseBtn"><i class="fas fa-plus"></i> قضية جديدة</button>
-                        </div>
+                        <button class="btn" id="addCaseBtn"><i class="fas fa-plus"></i> قضية جديدة</button>
                     </div>
                     <div class="table-wrap">
                         <table id="casesTable">
-                            <thead><tr><th style="width:30px"></th><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th></tr></thead>
+                            <thead>
+                                <tr><th style="width:30px"></th><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th></tr>
+                            </thead>
                             <tbody><tr><td colspan="8" class="loading">جاري التحميل...</td></tr>
                             </tbody>
                         </table>
@@ -550,6 +648,7 @@
                     <div class="search-type-buttons">
                         <button class="search-type-btn active" data-type="client">بحث عن موكل</button>
                         <button class="search-type-btn" data-type="court">بحث عن محكمة</button>
+                        <button class="search-type-btn" id="advSearchBtn" style="background:var(--gold);"><i class="fas fa-search-plus"></i> بحث متقدم</button>
                     </div>
                     <div id="searchClientDiv">
                         <div class="flex-between">
@@ -562,6 +661,18 @@
                             <input type="text" id="searchCourtInput" placeholder="اسم المحكمة..." style="margin:0;">
                             <button class="btn" id="searchCourtBtn">بحث</button>
                         </div>
+                    </div>
+                    <div id="advancedSearchPanel" class="advanced-search" style="display:none;">
+                        <h4><i class="fas fa-filter"></i> بحث متقدم</h4>
+                        <div class="advanced-search-grid">
+                            <div><label>رقم القضية</label><input type="text" id="advCaseNumber" placeholder="رقم القضية..."></div>
+                            <div><label>المحكمة</label><input type="text" id="advCourt" placeholder="المحكمة..."></div>
+                            <div><label>الموكل</label><input type="text" id="advClient" placeholder="اسم الموكل..."></div>
+                            <div><label>الحالة</label><select id="advStatus"><option value="">الكل</option><option value="متداولة">متداولة</option><option value="حكم نهائي">حكم نهائي</option><option value="مستأنفة">مستأنفة</option><option value="نقض">نقض</option></select></div>
+                            <div><label>من تاريخ</label><input type="date" id="advDateFrom"></div>
+                            <div><label>إلى تاريخ</label><input type="date" id="advDateTo"></div>
+                        </div>
+                        <div class="flex-between"><button class="btn" onclick="performAdvancedSearch()"><i class="fas fa-search"></i> بحث</button><button class="btn btn-outline" onclick="clearAdvancedSearch()"><i class="fas fa-eraser"></i> مسح</button></div>
                     </div>
                     <div id="searchResults" style="margin-top:20px;"></div>
                 </div>
@@ -721,7 +832,6 @@ async function loadTasks() {
     const snap = await getDocs(collection(db, 'tasks'));
     tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     
-    // تحديث المهام القديمة التي ليس فيها clientNames
     let needsUpdate = false;
     for (const task of tasks) {
         if (!task.clientNames && task.caseId) {
@@ -736,12 +846,10 @@ async function loadTasks() {
     }
     
     if (needsUpdate) {
-        // إعادة التحميل بعد التحديث
         const newSnap = await getDocs(collection(db, 'tasks'));
         tasks = newSnap.docs.map(d => ({ id: d.id, ...d.data() }));
     }
     
-    // ترتيب المهام حسب تاريخ الإنشاء (الأحدث أولاً)
     tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     renderTasks();
 }
@@ -892,10 +1000,7 @@ function renderTaskCard(t, cardClass) {
     const statusText = overallStatus === 'done' ? '✓ جميع المهام منجزة' : `⏳ ${completedCount}/${totalCount} مهمة منجزة`;
     const statusClass = overallStatus === 'done' ? 'status-done' : 'status-pending';
     
-    // عرض اسم الموكل - محاولة الحصول عليه من بيانات المهمة أو من قاعدة البيانات
     let clientDisplayName = t.clientNames || '';
-    
-    // إذا لم يكن هناك clientNames مخزن، نحاول جلبه من caseId
     if (!clientDisplayName && t.caseId) {
         const foundCase = casesList.find(c => c.id === t.caseId);
         if (foundCase && foundCase.clients) {
@@ -909,7 +1014,6 @@ function renderTaskCard(t, cardClass) {
         </div>
     ` : '';
     
-    // عرض آخر جلسة وملاحظاتها
     let lastSessionHtml = '';
     if (t.lastSessionDate) {
         const sessionDate = new Date(t.lastSessionDate).toLocaleDateString('ar-EG');
@@ -995,6 +1099,7 @@ function renderTaskCard(t, cardClass) {
         </div>
     </div>`;
 }
+
 function renderTasks() {
     const container = document.getElementById('tasksList');
     if (!container) return;
@@ -1035,20 +1140,15 @@ let tempTaskTypes = [];
 function showTaskModal(task = null) {
     const isEdit = task !== null;
     
-    // تحميل أنواع المهام الموجودة إذا كان تعديل
     if (isEdit && task.taskItems && Array.isArray(task.taskItems)) {
         tempTaskTypes = [...task.taskItems.map(item => item.name)];
     } else {
         tempTaskTypes = [];
     }
     
-    // إنشاء قائمة القضايا للاختيار منها مع عرض اسم الموكل وآخر جلسة
     let casesOptions = '<option value="">-- اختر القضية --</option>';
     casesList.forEach(c => {
-        // الحصول على أسماء الموكلين
         const clientNames = c.clients ? c.clients.map(cl => cl.name).join(', ') : 'بدون موكل';
-        
-        // الحصول على آخر جلسة
         const sessions = c.sessions || [];
         let lastSessionInfo = '';
         if (sessions.length > 0) {
@@ -1067,7 +1167,6 @@ function showTaskModal(task = null) {
         </option>`;
     });
     
-    // خيارات مقترحة لأنواع المهام
     const suggestedTypes = ['تقديم مذكرة', 'حضور جلسة', 'استلام حكم', 'معاينة', 'إيداع صحيفة', 'مقابلة موكل', 'تقديم مستندات', 'تسوية', 'استئناف', 'طعن بالنقض'];
     let suggestionsHtml = '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;">';
     suggestedTypes.forEach(type => {
@@ -1078,16 +1177,13 @@ function showTaskModal(task = null) {
     const modalHtml = `<div id="taskModal" class="modal-overlay">
         <div class="modal-container">
             <h3>${isEdit ? '✏️ تعديل المهمة' : '➕ إضافة مهمة جديدة'}</h3>
-            
             <label>⚖️ اختيار القضية</label>
             <select id="taskCaseId">${casesOptions}</select>
-            
             <div id="caseInfoPreview" style="background:var(--bg);padding:10px;border-radius:8px;margin-top:10px;font-size:13px;display:none;">
                 <div><i class="fas fa-user"></i> <strong>الموكل:</strong> <span id="previewClient"></span></div>
                 <div style="margin-top:5px;"><i class="fas fa-calendar"></i> <strong>آخر جلسة:</strong> <span id="previewLastSessionDate"></span></div>
                 <div style="margin-top:5px;"><i class="fas fa-pen"></i> <strong>ملاحظات الجلسة:</strong> <span id="previewLastSessionNotes"></span></div>
             </div>
-            
             <label style="margin-top:15px;">📋 المهام (يمكن إضافة عدة مهام)</label>
             <div id="taskTypesContainer"></div>
             <div class="flex-between" style="margin-top:8px;gap:6px;">
@@ -1095,7 +1191,6 @@ function showTaskModal(task = null) {
                 <button class="btn btn-sm" id="addTaskTypeBtn" style="background:var(--green);color:white;">+ إضافة مهمة</button>
             </div>
             ${suggestionsHtml}
-            
             <div class="modal-buttons" style="margin-top:20px;">
                 <button id="saveTaskBtn" style="background:var(--${isEdit ? 'gold' : 'green'});color:${isEdit ? 'var(--navy)' : 'white'};">${isEdit ? '💾 حفظ التعديلات' : '✅ إضافة'}</button>
                 <button id="closeTaskBtn" style="background:var(--border);">إلغاء</button>
@@ -1104,7 +1199,6 @@ function showTaskModal(task = null) {
     </div>`;
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     
-    // إضافة معاينة معلومات القضية عند الاختيار
     const caseSelect = document.getElementById('taskCaseId');
     const previewDiv = document.getElementById('caseInfoPreview');
     const previewClient = document.getElementById('previewClient');
@@ -1126,13 +1220,11 @@ function showTaskModal(task = null) {
                 previewDiv.style.display = 'none';
             }
         };
-        // تشغيل الحدث إذا كان هناك قيمة محددة مسبقاً
         if (caseSelect.value) {
             caseSelect.dispatchEvent(new Event('change'));
         }
     }
     
-    // دالة عرض المهام المضافة
     const renderTaskTypes = () => {
         const container = document.getElementById('taskTypesContainer');
         if (!container) return;
@@ -1151,7 +1243,6 @@ function showTaskModal(task = null) {
         `).join('');
     };
     
-    // دوال إدارة المهام
     window.removeTaskTypeInternal = (i) => {
         tempTaskTypes.splice(i, 1);
         renderTaskTypes();
@@ -1167,7 +1258,6 @@ function showTaskModal(task = null) {
         }
     };
     
-    // إضافة مهمة جديدة
     document.getElementById('addTaskTypeBtn').onclick = () => {
         const newType = document.getElementById('newTaskType').value.trim();
         if (!newType) {
@@ -1186,7 +1276,6 @@ function showTaskModal(task = null) {
     
     renderTaskTypes();
     
-    // حفظ المهمة
     document.getElementById('saveTaskBtn').onclick = async () => {
         const caseId = document.getElementById('taskCaseId').value;
         
@@ -1200,7 +1289,6 @@ function showTaskModal(task = null) {
         const court = selectedCase ? selectedCase.court : 'غير محدد';
         const clientNames = selectedCase && selectedCase.clients ? selectedCase.clients.map(cl => cl.name).join(', ') : 'بدون موكل';
         
-        // الحصول على آخر جلسة وملاحظاتها
         let lastSessionDate = '';
         let lastSessionNotes = '';
         if (selectedCase && selectedCase.sessions && selectedCase.sessions.length > 0) {
@@ -1237,6 +1325,7 @@ function showTaskModal(task = null) {
         document.getElementById('taskModal').remove();
     };
 }
+
 window.editTask = (taskId) => {
     const task = tasks.find(t => t.id === taskId);
     if (task) showTaskModal(task);
@@ -1245,17 +1334,20 @@ window.editTask = (taskId) => {
 function renderClients() {
     const tbody = document.querySelector('#clientsTable tbody');
     if (!tbody) return;
-    if (clients.length === 0) { tbody.innerHTML = '<td><td colspan="7" class="loading">لا يوجد موكلون</td></tr>'; return; }
-    tbody.innerHTML = clients.map(c => { const caseCount = casesList.filter(cas => cas.clients?.some(cl => cl.id === c.id)).length;
+    if (clients.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="loading">لا يوجد موكلون<\/td><\/tr>'; return; }
+    tbody.innerHTML = clients.map(c => { 
+        const caseCount = casesList.filter(cas => cas.clients?.some(cl => cl.id === c.id)).length;
         return `<tr>
-            <td>${esc(c.name)}</td>
-            <td>${c.type === 'company' ? 'شركة' : 'فرد'}</td>
-            <td>${esc(c.phone || '--')}</td>
-            <td>${esc(c.idNumber || '--')}</td>
-            <td>${c.delegationNumber ? 'رقم: ' + esc(c.delegationNumber) : 'لا يوجد'}<br><button class="btn btn-outline btn-sm" onclick="window.editDelegation('${esc(c.id)}')"><i class="fas fa-file-signature"></i> تعديل التوكيل</button></td>
-            <td>${caseCount}</td>
-            <td class="action-buttons"><button class="btn btn-sm" style="background:var(--gold);" onclick="window.editClient('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button>
-            <button class="btn btn-sm btn-danger" onclick="window.deleteClient('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button></td>
+            <td>${esc(c.name)}<\/td>
+            <td>${c.type === 'company' ? 'شركة' : 'فرد'}<\/td>
+            <td>${esc(c.phone || '--')}<\/td>
+            <td>${esc(c.idNumber || '--')}<\/td>
+            <td>${c.delegationNumber ? 'رقم: ' + esc(c.delegationNumber) : 'لا يوجد'}<br><button class="btn btn-outline btn-sm" onclick="window.editDelegation('${esc(c.id)}')"><i class="fas fa-file-signature"></i> تعديل التوكيل</button><\/td>
+            <td>${caseCount}<\/td>
+            <td class="action-buttons">
+                <button class="btn btn-sm" style="background:var(--gold);" onclick="window.editClient('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button>
+                <button class="btn btn-sm btn-danger" onclick="window.deleteClient('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button>
+            <\/td>
         </tr>`;
     }).join('');
 }
@@ -1263,7 +1355,6 @@ function renderClients() {
 function renderDashboard() {
     const today = new Date(); today.setHours(0,0,0,0);
     
-    // حساب عدد المهام الصحيح
     let activeTasksCount = 0;
     tasks.forEach(t => {
         const taskItems = t.taskItems || [];
@@ -1279,7 +1370,6 @@ function renderDashboard() {
         <div class="stat-card"><h3>القضايا</h3><div class="stat-number">${casesList.length}</div></div>
         <div class="stat-card"><h3>المهام</h3><div class="stat-number">${activeTasksCount}</div></div>`;
     
-    // تجهيز الجلسات القادمة
     let upcomingSessions = [];
     casesList.forEach(c => { 
         if (c.sessions && c.sessions.length > 0) { 
@@ -1305,47 +1395,50 @@ function renderDashboard() {
     
     upcomingSessions.sort((a,b) => new Date(a.date) - new Date(b.date));
     
-    let html = '<div style="display:flex;flex-direction:column;gap:10px;">';
+    let html = '<div id="upcomingSessions">';
     if (upcomingSessions.length === 0) { 
-        html += '<p class="loading" style="font-size:14px;">لا توجد جلسات قادمة</p>'; 
+        html += '<div class="loading" style="padding:40px;text-align:center;">📭 لا توجد جلسات قادمة</div>'; 
     } else { 
         upcomingSessions.forEach(s => { 
             const sessionDate = new Date(s.date); 
             sessionDate.setHours(0,0,0,0); 
             const diff = Math.round((sessionDate - today) / 864e5); 
-            let dayLabel = diff === 0 ? '🔴 اليوم' : diff === 1 ? '🟡 غداً' : `🟢 بعد ${diff} أيام`;
+            let dayLabel = diff === 0 ? 'اليوم' : diff === 1 ? 'غداً' : `بعد ${diff} أيام`;
+            let dayColor = diff === 0 ? '#ef4444' : diff === 1 ? '#f97316' : '#10b981';
+            
+            const formattedDate = new Date(s.date).toLocaleDateString('ar-EG');
+            const formattedTime = s.date.includes('T') ? new Date(s.date).toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'}) : '';
             
             html += `
-                <div class="session-card" onclick="window.goToCase('${esc(s.caseId)}')" style="padding:12px;border-radius:12px;cursor:pointer;transition:all 0.2s;margin-bottom:0;">
-                    <div class="flex-between" style="margin-bottom:8px;">
-                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                            <span style="background:var(--gold);color:var(--navy);padding:3px 10px;border-radius:16px;font-weight:700;font-size:13px;">
-                                <i class="fas fa-gavel" style="font-size:11px;"></i> ${esc(s.caseNumber)}
-                            </span>
-                            <span class="badge" style="font-size:11px;background:var(--navy-light);color:white;padding:3px 8px;">
-                                <i class="fas fa-building" style="font-size:10px;"></i> ${esc(s.court)}
-                            </span>
-                            ${s.circuit !== 'غير محدد' ? `<span class="badge" style="font-size:11px;background:var(--purple);color:white;padding:3px 8px;">
-                                <i class="fas fa-chalkboard-user" style="font-size:10px;"></i> ${esc(s.circuit)}
-                            </span>` : ''}
+                <div class="session-item-card" onclick="window.goToCase('${esc(s.caseId)}')">
+                    <div class="session-header">
+                        <div class="session-case-info">
+                            <span class="session-case-number">📋 ${esc(s.caseNumber)}</span>
+                            <span class="session-court"><i class="fas fa-building"></i> ${esc(s.court)}</span>
+                            ${s.circuit && s.circuit !== 'غير محدد' ? `<span class="session-circuit"><i class="fas fa-chalkboard-user"></i> دائرة ${esc(s.circuit)}</span>` : ''}
                         </div>
-                        <span class="badge" style="font-size:11px;padding:3px 10px;font-weight:700;background:${diff === 0 ? 'var(--red)' : diff === 1 ? 'var(--orange)' : 'var(--green)'};color:white;">
-                            ${dayLabel}
-                        </span>
+                        <span class="session-date-badge" style="background: ${dayColor};">${dayLabel}</span>
                     </div>
                     
-                    <div style="margin-bottom:5px;font-size:12px;">
-                        <div style="margin-bottom:3px;">
-                            <i class="fas fa-user-tie" style="font-size:11px;"></i> <strong>الموكل:</strong> ${esc(s.clientNames.substring(0, 30))}${s.clientNames.length > 30 ? '...' : ''}
+                    <div class="session-body">
+                        <div class="session-client">
+                            <i class="fas fa-user-circle" style="color: var(--gold);"></i>
+                            <span>${esc(s.clientNames.length > 40 ? s.clientNames.substring(0, 40) + '...' : s.clientNames)}</span>
                         </div>
-                        <div style="margin-bottom:3px;">
-                            <i class="fas fa-tag" style="font-size:11px;"></i> <strong>الموضوع:</strong> ${esc(s.subject.substring(0, 40))}${s.subject.length > 40 ? '...' : ''}
+                        <div class="session-subject">
+                            <i class="fas fa-tag" style="color: var(--gold);"></i>
+                            <span>${esc(s.subject.length > 50 ? s.subject.substring(0, 50) + '...' : s.subject)}</span>
                         </div>
-                        <div>
-                            <i class="fas fa-calendar-alt" style="font-size:11px;"></i> <strong>الجلسة:</strong> <span style="font-weight:700;">${new Date(s.date).toLocaleDateString('ar-EG')}</span>
+                    </div>
+                    
+                    <div class="session-footer" style="display: flex; justify-content: flex-start; align-items: center; gap: 12px; padding-top: 8px; border-top: 1px solid var(--border);">
+                        <div class="session-date" style="display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: var(--gold-dark); background: rgba(250,204,21,0.1); padding: 4px 10px; border-radius: 20px;">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>${formattedDate}</span>
+                            ${formattedTime ? `<span style="font-size: 11px;">${formattedTime}</span>` : ''}
                         </div>
-                        ${s.notes ? `<div style="margin-top:5px;padding:4px 6px;background:rgba(249,115,22,0.1);border-radius:6px;font-size:11px;">
-                            <i class="fas fa-pen" style="font-size:10px;"></i> ${esc(s.notes.substring(0, 50))}${s.notes.length > 50 ? '...' : ''}
+                        ${s.notes ? `<div class="session-notes" style="display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--orange); background: rgba(249,115,22,0.1); padding: 4px 10px; border-radius: 20px;">
+                            <i class="fas fa-pen"></i> ${esc(s.notes.length > 35 ? s.notes.substring(0, 35) + '...' : s.notes)}
                         </div>` : ''}
                     </div>
                 </div>
@@ -1366,7 +1459,7 @@ function getStatusClass(s) {
 function renderCases() {
     const tbody = document.querySelector('#casesTable tbody');
     if (!tbody) return;
-    if (casesList.length === 0) { tbody.innerHTML = '</td><td colspan="8" class="loading">لا توجد قضايا</td></tr>'; return; }
+    if (casesList.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا<\/td><\/tr>'; return; }
     let html = '';
     for (const c of casesList) {
         const isExpanded = expandedCaseId === c.id;
@@ -1377,7 +1470,6 @@ function renderCases() {
         const clientsHtml = c.clients ? c.clients.map(cl => esc(cl.name) + (cl.title ? ` (${esc(cl.title)})` : '')).join('<br>') : '--';
         const opponentsHtml = c.opponents ? c.opponents.map(op => esc(op.name) + (op.title ? ` (${esc(op.title)})` : '')).join('<br>') : '--';
         
-        // عرض آخر جلسة مع الملاحظات
         const lastSessionHtml = sessions.length > 0 ? `
             <div style="margin-top:8px; padding-top:5px; border-top:1px dashed var(--border);">
                 <span class="badge" style="font-size:11px; background:var(--gold);"><i class="fas fa-calendar"></i> آخر جلسة: ${lastSession}</span>
@@ -1386,21 +1478,21 @@ function renderCases() {
         ` : '<div style="margin-top:8px;"><span class="badge" style="font-size:11px; background:var(--muted);">لا توجد جلسات</span></div>';
         
         html += `<tr class="case-row" data-id="${esc(c.id)}" onclick="window.toggleCaseDetails('${esc(c.id)}')">
-            <td style="width:30px"><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i></td>
-            <td><strong>${esc(c.caseNumber)}</strong></td>
-            <td>${esc(c.court || '--')}${c.circuit ? ' — ' + esc(c.circuit) : ''}</td>
-            <td>${clientsHtml}</td>
-            <td>${opponentsHtml}</td>
+            <td style="width:30px"><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i><\/td>
+            <td><strong>${esc(c.caseNumber)}</strong><\/td>
+            <td>${esc(c.court || '--')}${c.circuit ? ' — ' + esc(c.circuit) : ''}<\/td>
+            <td>${clientsHtml}<\/td>
+            <td>${opponentsHtml}<\/td>
             <td>
                 <div><strong>📌 ${esc(c.subject || '--')}</strong></div>
                 ${lastSessionHtml}
-             </td>
-            <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span></td>
+              <\/td>
+            <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span><\/td>
             <td class="action-buttons">
                 <button class="btn btn-sm" style="background:var(--gold);" onclick="event.stopPropagation();window.editCase('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button>
                 <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteCase('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button>
-             </td>
-        </tr>`;
+              <\/td>
+         <\/tr>`;
         
         if (isExpanded) {
             html += `<tr class="expanded-row"><td colspan="8"><div class="expanded-content">
@@ -1416,21 +1508,222 @@ function renderCases() {
                     <div><button class="btn btn-sm" onclick="event.stopPropagation();window.editSessionModal('${esc(c.id)}',${s.id})">تعديل</button>
                     <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteSession('${esc(c.id)}',${s.id})">حذف</button></div>
                 </div>`; }); }
-            html += `</div></td></tr>`;
+            html += `<\/div><\/td><\/tr>`;
         }
     }
     tbody.innerHTML = html;
 }
+
 window.toggleCaseDetails = (caseId) => { expandedCaseId = expandedCaseId === caseId ? null : caseId; renderCases(); };
 window.goToCase = (caseId) => { document.querySelector('.nav-item[data-tab="cases"]')?.click(); setTimeout(() => { expandedCaseId = caseId; renderCases(); setTimeout(() => { const row = document.querySelector(`.case-row[data-id="${caseId}"]`); if (row) { row.scrollIntoView({ behavior: 'smooth', block: 'center' }); row.style.background = '#fef9c3'; setTimeout(() => row.style.background = '', 2000); } }, 300); }, 300); };
 
-function searchClient() { const term = document.getElementById('searchClientInput').value.trim().toLowerCase(); const div = document.getElementById('searchResults'); if (!term) { div.innerHTML = '<p class="loading">أدخل اسم موكل للبحث</p>'; return; } const found = clients.filter(c => (c.name||'').toLowerCase().includes(term)); if (!found.length) { div.innerHTML = '<p class="loading">❌ لا توجد نتائج</p>'; return; } let html = ''; found.forEach(client => { const clientCases = casesList.filter(c => c.clients?.some(cl => cl.id === client.id)); html += `<div style="background:var(--bg);border-radius:var(--radius-md);padding:20px;margin-bottom:20px;border-right:4px solid var(--gold);"><div style="background:var(--gold);padding:12px;border-radius:var(--radius-sm);margin-bottom:14px;"><h3>${esc(client.name)}</h3><div>${client.phone ? '📞 ' + esc(client.phone) : ''}</div></div><h4>قضايا الموكل (${clientCases.length})</h4>`; if (clientCases.length === 0) { html += '<p>لا توجد قضايا</p>'; } else { html += `<table><thead><tr><th>رقم القضية</th><th>المحكمة</th><th>الخصوم</th><th>الحالة</th><th></th></tr></thead><tbody>`; clientCases.forEach(c => { html += `<tr onclick="window.goToCase('${esc(c.id)}')"><td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.court||'--')}</td><td>${c.opponents ? c.opponents.map(o=>esc(o.name)).join(', ') : '--'}</td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span></td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td></tr>`; }); html += '</tbody></table>'; } html += '</div>'; }); div.innerHTML = html; }
-
-function searchCourt() { const term = document.getElementById('searchCourtInput').value.trim().toLowerCase(); const div = document.getElementById('searchResults'); if (!term) { div.innerHTML = '<p class="loading">أدخل اسم محكمة للبحث</p>'; return; } const found = casesList.filter(c => c.court && c.court.toLowerCase().includes(term)); if (!found.length) { div.innerHTML = '<p class="loading">❌ لا توجد قضايا</p>'; return; } let html = `<div><h3>قضايا المحكمة (${esc(term)})</h3><p>عدد القضايا: ${found.length}</p><table><thead><tr><th>رقم القضية</th><th>الموكلون</th><th>الخصوم</th><th>الحالة</th><th></th></tr></thead><tbody>`; found.forEach(c => { html += `<tr onclick="window.goToCase('${esc(c.id)}')"><td><strong>${esc(c.caseNumber)}</strong></td><td>${c.clients ? c.clients.map(cl=>esc(cl.name)).join(', ') : '--'}</td><td>${c.opponents ? c.opponents.map(op=>esc(op.name)).join(', ') : '--'}</td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span></td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td></tr>`; }); html += '</tbody></table></div>'; div.innerHTML = html; }
-
-window.searchClient = searchClient;
-window.searchCourt = searchCourt;
-
+function searchClient() { 
+    const term = document.getElementById('searchClientInput').value.trim().toLowerCase(); 
+    const div = document.getElementById('searchResults'); 
+    
+    if (!term) { 
+        div.innerHTML = '<p class="loading">🔍 أدخل اسم موكل للبحث</p>'; 
+        return; 
+    } 
+    
+    const found = clients.filter(c => (c.name || '').toLowerCase().includes(term)); 
+    
+    if (!found.length) { 
+        div.innerHTML = '<div class="loading" style="text-align:center; padding:40px;"><i class="fas fa-search" style="font-size:48px; color:var(--muted);"></i><br>❌ لا توجد نتائج مطابقة لبحثك</div>'; 
+        return; 
+    } 
+    
+    let html = '';
+    found.forEach(client => { 
+        const clientCases = casesList.filter(c => c.clients?.some(cl => cl.id === client.id)); 
+        
+        html += `
+            <div style="background: var(--white); border-radius: 20px; padding: 20px; margin-bottom: 20px; border-right: 5px solid var(--gold); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <!-- رأس الموكل -->
+                <div style="background: linear-gradient(135deg, var(--gold), var(--gold-dark)); padding: 12px 16px; border-radius: 12px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <i class="fas fa-user-circle" style="font-size: 28px; color: var(--navy);"></i>
+                            <div>
+                                <h3 style="font-size: 18px; font-weight: 800; color: var(--navy); margin: 0;">${esc(client.name)}</h3>
+                                <div style="font-size: 13px; color: var(--navy); opacity: 0.8; margin-top: 3px;">
+                                    <i class="fas fa-tag"></i> ${client.type === 'company' ? 'شركة' : 'فرد'}
+                                    ${client.phone ? ` | <i class="fas fa-phone"></i> ${esc(client.phone)}` : ''}
+                                    ${client.delegationNumber ? ` | <i class="fas fa-file-signature"></i> توكيل: ${esc(client.delegationNumber)}` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <span style="background: var(--navy); color: white; padding: 5px 12px; border-radius: 30px; font-size: 13px; font-weight: 600;">
+                            <i class="fas fa-gavel"></i> ${clientCases.length} قضية
+                        </span>
+                    </div>
+                </div>
+                
+                <h4 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: var(--navy); border-right: 3px solid var(--gold); padding-right: 10px;">
+                    <i class="fas fa-balance-scale"></i> قضايا الموكل
+                </h4>`;
+        
+        if (clientCases.length === 0) { 
+            html += '<p style="color: var(--muted); text-align: center; padding: 20px;"><i class="fas fa-folder-open"></i> لا توجد قضايا مسجلة لهذا الموكل</p>'; 
+        } else { 
+            html += `
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <thead>
+                            <tr style="background: var(--bg);">
+                                <th style="text-align: right; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">رقم القضية</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">المحكمة</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">الخصوم</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">الموضوع</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">آخر جلسة</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">الحالة</th>
+                                <th style="text-align: center; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);"></th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+            
+            clientCases.forEach(c => { 
+                let lastDate = 'لا توجد', lastNotes = ''; 
+                if (c.sessions && c.sessions.length) { 
+                    const sorted = [...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date)); 
+                    lastDate = new Date(sorted[0].date).toLocaleDateString('ar-EG'); 
+                    lastNotes = sorted[0].notes || ''; 
+                } 
+                
+                html += `
+                    <tr style="border-bottom: 1px solid var(--border); cursor: pointer;" onclick="window.goToCase('${esc(c.id)}')">
+                        <td style="padding: 10px; font-weight: 700; color: var(--navy);">${esc(c.caseNumber)}</td>
+                        <td style="padding: 10px; color: var(--slate);">${esc(c.court || '--')}</td>
+                        <td style="padding: 10px; color: var(--slate); font-size: 13px;">${c.opponents ? c.opponents.map(o => esc(o.name)).join(', ') : '--'}</td>
+                        <td style="padding: 10px; color: var(--slate);">${esc(c.subject || '--')}</td>
+                        <td style="padding: 10px;">
+                            <span style="font-size: 12px; color: var(--gold-dark); font-weight: 600;">📅 ${lastDate}</span>
+                            ${lastNotes ? `<div style="font-size: 11px; color: var(--orange); margin-top: 3px;">✏️ ${esc(lastNotes.length > 30 ? lastNotes.substring(0, 30) + '...' : lastNotes)}</div>` : ''}
+                        </td>
+                        <td style="padding: 10px;"><span class="status-badge ${getStatusClass(c.caseStatus)}" style="font-size: 12px;">${esc(c.caseStatus || 'متداولة')}</span></td>
+                        <td style="padding: 10px; text-align: center;">
+                            <button class="btn btn-sm" style="background: var(--gold); padding: 5px 12px;" onclick="event.stopPropagation(); window.goToCase('${esc(c.id)}')">
+                                <i class="fas fa-eye"></i> عرض
+                            </button>
+                        </td>
+                    </tr>
+                `; 
+            }); 
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `; 
+        } 
+        html += '</div>'; 
+    }); 
+    div.innerHTML = html; 
+}
+function searchCourt() { 
+    const term = document.getElementById('searchCourtInput').value.trim().toLowerCase(); 
+    const div = document.getElementById('searchResults'); 
+    
+    if (!term) { 
+        div.innerHTML = '<p class="loading">🔍 أدخل اسم محكمة للبحث</p>'; 
+        return; 
+    } 
+    
+    const found = casesList.filter(c => c.court && c.court.toLowerCase().includes(term)); 
+    
+    if (!found.length) { 
+        div.innerHTML = '<div class="loading" style="text-align:center; padding:40px;"><i class="fas fa-search" style="font-size:48px; color:var(--muted);"></i><br>❌ لا توجد نتائج مطابقة لبحثك عن محكمة "' + esc(term) + '"</div>'; 
+        return; 
+    } 
+    
+    let html = `
+        <div style="background: linear-gradient(135deg, var(--gold), var(--gold-dark)); padding: 16px 20px; border-radius: 20px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <i class="fas fa-building" style="font-size: 32px; color: var(--navy);"></i>
+                    <div>
+                        <h2 style="font-size: 20px; font-weight: 800; color: var(--navy); margin: 0;">نتائج البحث عن المحكمة</h2>
+                        <p style="font-size: 14px; color: var(--navy); opacity: 0.9; margin: 5px 0 0 0;">
+                            <i class="fas fa-search"></i> "${esc(term)}"
+                        </p>
+                    </div>
+                </div>
+                <span style="background: var(--navy); color: white; padding: 6px 14px; border-radius: 30px; font-size: 14px; font-weight: 600;">
+                    <i class="fas fa-gavel"></i> ${found.length} قضية
+                </span>
+            </div>
+        </div>
+        
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px; background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <thead>
+                    <tr style="background: var(--bg);">
+                        <th style="text-align: right; padding: 14px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">رقم القضية</th>
+                        <th style="text-align: right; padding: 14px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">المحكمة</th>
+                        <th style="text-align: right; padding: 14px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">الدائرة</th>
+                        <th style="text-align: right; padding: 14px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">الموكلون</th>
+                        <th style="text-align: right; padding: 14px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">الخصوم</th>
+                        <th style="text-align: right; padding: 14px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">الموضوع</th>
+                        <th style="text-align: right; padding: 14px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">آخر جلسة</th>
+                        <th style="text-align: right; padding: 14px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">الحالة</th>
+                        <th style="text-align: center; padding: 14px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);"></th>
+                    </tr>
+                </thead>
+                <tbody>`;
+    
+    found.forEach(c => { 
+        let lastDate = 'لا توجد', lastNotes = ''; 
+        if (c.sessions && c.sessions.length) { 
+            const sorted = [...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date)); 
+            lastDate = new Date(sorted[0].date).toLocaleDateString('ar-EG'); 
+            lastNotes = sorted[0].notes || ''; 
+        } 
+        
+        const clientsNames = c.clients ? c.clients.map(cl => esc(cl.name)).join('<br>') : '--';
+        const opponentsNames = c.opponents ? c.opponents.map(op => esc(op.name)).join('<br>') : '--';
+        
+        html += `
+            <tr style="border-bottom: 1px solid var(--border); cursor: pointer;" onclick="window.goToCase('${esc(c.id)}')">
+                <td style="padding: 12px; font-weight: 700; color: var(--navy);">${esc(c.caseNumber)}</td>
+                <td style="padding: 12px; color: var(--slate);">
+                    <i class="fas fa-building" style="color: var(--gold);"></i> ${esc(c.court || '--')}
+                </td>
+                <td style="padding: 12px; color: var(--slate);">
+                    ${c.circuit ? `<i class="fas fa-chalkboard-user"></i> ${esc(c.circuit)}` : '--'}
+                </td>
+                <td style="padding: 12px; color: var(--slate); font-size: 13px; line-height: 1.5;">${clientsNames}</td>
+                <td style="padding: 12px; color: var(--slate); font-size: 13px; line-height: 1.5;">${opponentsNames}</td>
+                <td style="padding: 12px; color: var(--slate);">${esc(c.subject || '--')}</td>
+                <td style="padding: 12px;">
+                    <div style="display: flex; flex-direction: column; gap: 3px;">
+                        <span style="font-size: 12px; color: var(--gold-dark); font-weight: 600;">
+                            <i class="fas fa-calendar-alt"></i> ${lastDate}
+                        </span>
+                        ${lastNotes ? `<span style="font-size: 11px; color: var(--orange); background: rgba(249,115,22,0.1); padding: 3px 8px; border-radius: 15px; display: inline-block; width: fit-content;">
+                            <i class="fas fa-pen"></i> ${esc(lastNotes.length > 30 ? lastNotes.substring(0, 30) + '...' : lastNotes)}
+                        </span>` : ''}
+                    </div>
+                </td>
+                <td style="padding: 12px;">
+                    <span class="status-badge ${getStatusClass(c.caseStatus)}" style="font-size: 12px; padding: 4px 10px;">${esc(c.caseStatus || 'متداولة')}</span>
+                </td>
+                <td style="padding: 12px; text-align: center;">
+                    <button class="btn btn-sm" style="background: var(--gold); padding: 5px 12px;" onclick="event.stopPropagation(); window.goToCase('${esc(c.id)}')">
+                        <i class="fas fa-eye"></i> عرض
+                    </button>
+                </td>
+            </tr>
+        `; 
+    }); 
+    
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `; 
+    
+    div.innerHTML = html; 
+}
 function showCaseModal(caseData = null) {
     if (clients.length === 0) { showToast('⚠️ أضف موكلاً أولاً', 'warning'); return; }
     const isEdit = caseData !== null;
@@ -1539,127 +1832,74 @@ function loadDarkModePreference() {
     }
 }
 
-function showColumnsPanel(tableId, panelId) {
-    let panel = document.getElementById(panelId);
-    if (!panel) {
-        panel = document.createElement('div');
-        panel.id = panelId;
-        panel.className = 'columns-panel';
-        document.body.appendChild(panel);
-    }
-    const table = document.getElementById(tableId);
-    if (!table) return;
-    const headers = table.querySelectorAll('thead th');
-    const savedColumns = JSON.parse(localStorage.getItem(`${tableId}_columns`) || '[]');
-    let html = `<h4><i class="fas fa-eye"></i> إظهار/إخفاء الأعمدة</h4>`;
-    headers.forEach((th, index) => {
-        const colName = th.innerText.trim() || `عمود ${index + 1}`;
-        const isChecked = savedColumns.length === 0 || savedColumns.includes(index);
-        html += `<label><input type="checkbox" data-col="${index}" ${isChecked ? 'checked' : ''}> ${colName}</label>`;
-    });
-    html += `<button class="btn btn-sm" style="margin-top:10px;width:100%;" onclick="applyColumnsVisibility('${tableId}', '${panelId}')">تطبيق</button>`;
-    panel.innerHTML = html;
-    panel.classList.toggle('open');
+function setupUIEnhancements() {
+    loadDarkModePreference();
+    addDarkModeButton();
 }
 
-window.applyColumnsVisibility = (tableId, panelId) => {
-    const table = document.getElementById(tableId);
-    const panel = document.getElementById(panelId);
-    const checkboxes = panel.querySelectorAll('input[type="checkbox"]');
-    const visibleColumns = [];
-    checkboxes.forEach((cb, idx) => {
-        if (cb.checked) visibleColumns.push(idx);
+function setupEvents() {
+    document.getElementById('addClientBtn').onclick = () => showClientModal();
+    document.getElementById('addCaseBtn').onclick = () => showCaseModal();
+    document.getElementById('addTaskBtn').onclick = () => showTaskModal();
+    document.getElementById('searchClientBtn').onclick = searchClient;
+    document.getElementById('searchCourtBtn').onclick = searchCourt;
+    document.getElementById('searchClientInput').addEventListener('keypress', e => { if (e.key==='Enter') searchClient(); });
+    document.getElementById('searchCourtInput').addEventListener('keypress', e => { if (e.key==='Enter') searchCourt(); });
+    
+    // البحث المتقدم
+    document.getElementById('advSearchBtn').onclick = () => {
+        const panel = document.getElementById('advancedSearchPanel');
+        if (panel) panel.classList.toggle('show');
+    };
+    
+    document.querySelectorAll('.search-type-btn').forEach(btn => { 
+        if (btn.id !== 'advSearchBtn') {
+            btn.onclick = () => { 
+                document.querySelectorAll('.search-type-btn').forEach(b => b.classList.remove('active')); 
+                btn.classList.add('active'); 
+                const type = btn.dataset.type; 
+                document.getElementById('searchClientDiv').style.display = type==='client' ? 'block' : 'none'; 
+                document.getElementById('searchCourtDiv').style.display = type==='court' ? 'block' : 'none'; 
+                document.getElementById('searchResults').innerHTML = ''; 
+            }; 
+        } 
     });
-    localStorage.setItem(`${tableId}_columns`, JSON.stringify(visibleColumns));
-    const rows = table.querySelectorAll('tr');
-    rows.forEach(row => {
-        const cells = row.querySelectorAll('th, td');
-        cells.forEach((cell, idx) => {
-            if (visibleColumns.includes(idx)) {
-                cell.style.display = '';
-            } else {
-                cell.style.display = 'none';
-            }
-        });
+    
+    document.querySelectorAll('.nav-item').forEach(item => { 
+        item.onclick = () => { 
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
+            item.classList.add('active'); 
+            const tab = item.dataset.tab; 
+            document.querySelectorAll('.tab-content').forEach(t => t.style.display='none'); 
+            document.getElementById(tab+'Tab').style.display = 'block'; 
+            const titles = { dashboard:'لوحة التحكم', clients:'الموكلون', cases:'القضايا', tasks:'المهام الإدارية', search:'بحث' }; 
+            document.getElementById('pageTitle').textContent = titles[tab] || ''; 
+            if (tab==='clients') renderClients(); 
+            if (tab==='cases') renderCases(); 
+            if (tab==='dashboard') renderDashboard(); 
+            if (tab==='tasks') renderTasks(); 
+            if (tab==='search') document.getElementById('searchResults').innerHTML = ''; 
+            if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open'); 
+        }; 
     });
-    panel.classList.remove('open');
-    addNotif('✅ تم تحديث عرض الأعمدة', 'success');
-};
-
-function loadColumnsPreference(tableId) {
-    const table = document.getElementById(tableId);
-    if (!table) return;
-    const savedColumns = JSON.parse(localStorage.getItem(`${tableId}_columns`) || '[]');
-    if (savedColumns.length === 0) return;
-    const rows = table.querySelectorAll('tr');
-    rows.forEach(row => {
-        const cells = row.querySelectorAll('th, td');
-        cells.forEach((cell, idx) => {
-            if (savedColumns.includes(idx)) {
-                cell.style.display = '';
-            } else {
-                cell.style.display = 'none';
-            }
-        });
-    });
+    
+    document.getElementById('menuToggle').onclick = () => document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('notifIcon').onclick = (e) => { 
+        e.stopPropagation(); 
+        const panel = document.getElementById('notifPanel'); 
+        panel.classList.toggle('open'); 
+        if (panel.classList.contains('open')) { 
+            notifications.forEach(n => n.read = true); 
+            document.getElementById('notifCount').textContent = ''; 
+            const list = document.getElementById('notifList'); 
+            list.innerHTML = notifications.slice(0, 30).map(n => `<div class="notif-item">${esc(n.text)}</div>`).join(''); 
+        } 
+    };
+    
+    document.addEventListener('click', () => document.getElementById('notifPanel').classList.remove('open'));
+    document.getElementById('notifPanel').addEventListener('click', e => e.stopPropagation());
 }
 
-function addColumnButtons() {
-    const clientsCardHeader = document.querySelector('#clientsTab .card-header');
-    const casesCardHeader = document.querySelector('#casesTab .card-header');
-    if (clientsCardHeader && !document.querySelector('#clientsColumnBtn')) {
-        const btn = document.createElement('button');
-        btn.id = 'clientsColumnBtn';
-        btn.className = 'btn btn-outline btn-sm';
-        btn.innerHTML = '<i class="fas fa-columns"></i> تخصيص الأعمدة';
-        btn.onclick = () => showColumnsPanel('clientsTable', 'clientsColumnsPanel');
-        clientsCardHeader.appendChild(btn);
-    }
-    if (casesCardHeader && !document.querySelector('#casesColumnBtn')) {
-        const btn = document.createElement('button');
-        btn.id = 'casesColumnBtn';
-        btn.className = 'btn btn-outline btn-sm';
-        btn.innerHTML = '<i class="fas fa-columns"></i> تخصيص الأعمدة';
-        btn.onclick = () => showColumnsPanel('casesTable', 'casesColumnsPanel');
-        casesCardHeader.appendChild(btn);
-    }
-}
-
-function addAdvancedSearchButton() {
-    const searchTypeDiv = document.querySelector('#searchTab .search-type-buttons');
-    if (searchTypeDiv && !document.querySelector('#advSearchBtn')) {
-        const advBtn = document.createElement('button');
-        advBtn.id = 'advSearchBtn';
-        advBtn.className = 'search-type-btn';
-        advBtn.innerHTML = '<i class="fas fa-search-plus"></i> بحث متقدم';
-        advBtn.onclick = () => {
-            let existingPanel = document.getElementById('advancedSearchPanel');
-            if (!existingPanel) {
-                const searchCard = document.querySelector('#searchTab .card');
-                if (searchCard) {
-                    const advancedHtml = `
-                        <div id="advancedSearchPanel" class="advanced-search">
-                            <h4><i class="fas fa-filter"></i> بحث متقدم</h4>
-                            <div class="advanced-search-grid">
-                                <div><label>رقم القضية</label><input type="text" id="advCaseNumber" placeholder="رقم القضية..."></div>
-                                <div><label>المحكمة</label><input type="text" id="advCourt" placeholder="المحكمة..."></div>
-                                <div><label>الموكل</label><input type="text" id="advClient" placeholder="اسم الموكل..."></div>
-                                <div><label>الحالة</label><select id="advStatus"><option value="">الكل</option><option value="متداولة">متداولة</option><option value="حكم نهائي">حكم نهائي</option><option value="مستأنفة">مستأنفة</option><option value="نقض">نقض</option></select></div>
-                                <div><label>من تاريخ</label><input type="date" id="advDateFrom"></div>
-                                <div><label>إلى تاريخ</label><input type="date" id="advDateTo"></div>
-                            </div>
-                            <div class="flex-between"><button class="btn" onclick="performAdvancedSearch()"><i class="fas fa-search"></i> بحث</button><button class="btn btn-outline" onclick="clearAdvancedSearch()"><i class="fas fa-eraser"></i> مسح</button></div>
-                        </div>
-                    `;
-                    searchCard.insertAdjacentHTML('afterbegin', advancedHtml);
-                    existingPanel = document.getElementById('advancedSearchPanel');
-                }
-            }
-            if (existingPanel) existingPanel.classList.toggle('show');
-        };
-        searchTypeDiv.appendChild(advBtn);
-    }
-}
 window.performAdvancedSearch = () => {
     const caseNumber = document.getElementById('advCaseNumber')?.value.trim().toLowerCase() || '';
     const court = document.getElementById('advCourt')?.value.trim().toLowerCase() || '';
@@ -1681,7 +1921,7 @@ window.performAdvancedSearch = () => {
     else {
         let html = `<table style="width:100%"><thead><tr><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th></tr></thead><tbody>`;
         results.forEach(c => {
-            html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong></td><td>${esc(c.court || '--')}</td><td>${c.clients ? c.clients.map(cl=>esc(cl.name)).join(', ') : '--'}</td><td>${c.opponents ? c.opponents.map(op=>esc(op.name)).join(', ') : '--'}</td><td>${esc(c.subject || '--')}</td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span></td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button></td></tr>`;
+            html += `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong><\/td><td>${esc(c.court || '--')}<\/td><td>${c.clients ? c.clients.map(cl=>esc(cl.name)).join(', ') : '--'}<\/td><td>${c.opponents ? c.opponents.map(op=>esc(op.name)).join(', ') : '--'}<\/td><td>${esc(c.subject || '--')}<\/td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span><\/td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button><\/td><\/tr>`;
         });
         html += '</tbody></table>';
         div.innerHTML = html;
@@ -1694,34 +1934,6 @@ window.clearAdvancedSearch = () => {
     fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     window.performAdvancedSearch();
 };
-
-function setupUIEnhancements() {
-    loadDarkModePreference();
-    addDarkModeButton();
-    setTimeout(() => {
-        addColumnButtons();
-        loadColumnsPreference('clientsTable');
-        loadColumnsPreference('casesTable');
-        addAdvancedSearchButton();
-    }, 1000);
-}
-
-function setupEvents() {
-    document.getElementById('addClientBtn').onclick = () => showClientModal();
-    document.getElementById('addCaseBtn').onclick = () => showCaseModal();
-    document.getElementById('addTaskBtn').onclick = () => showTaskModal();
-    document.getElementById('searchClientBtn').onclick = searchClient;
-    document.getElementById('searchCourtBtn').onclick = searchCourt;
-    document.getElementById('searchClientInput').addEventListener('keypress', e => { if (e.key==='Enter') searchClient(); });
-    document.getElementById('searchCourtInput').addEventListener('keypress', e => { if (e.key==='Enter') searchCourt(); });
-    document.querySelectorAll('.search-type-btn').forEach(btn => { if (!btn.id || btn.id !== 'advSearchBtn') { btn.onclick = () => { document.querySelectorAll('.search-type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); const type = btn.dataset.type; document.getElementById('searchClientDiv').style.display = type==='client' ? 'block' : 'none'; document.getElementById('searchCourtDiv').style.display = type==='court' ? 'block' : 'none'; document.getElementById('searchResults').innerHTML = ''; }; } });
-    
-    document.querySelectorAll('.nav-item').forEach(item => { item.onclick = () => { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); item.classList.add('active'); const tab = item.dataset.tab; document.querySelectorAll('.tab-content').forEach(t => t.style.display='none'); document.getElementById(tab+'Tab').style.display = 'block'; const titles = { dashboard:'لوحة التحكم', clients:'الموكلون', cases:'القضايا', tasks:'المهام الإدارية', search:'بحث' }; document.getElementById('pageTitle').textContent = titles[tab] || ''; if (tab==='clients') renderClients(); if (tab==='cases') renderCases(); if (tab==='dashboard') renderDashboard(); if (tab==='tasks') renderTasks(); if (tab==='search') document.getElementById('searchResults').innerHTML = ''; if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open'); }; });
-    document.getElementById('menuToggle').onclick = () => document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('notifIcon').onclick = (e) => { e.stopPropagation(); const panel = document.getElementById('notifPanel'); panel.classList.toggle('open'); if (panel.classList.contains('open')) { notifications.forEach(n => n.read = true); document.getElementById('notifCount').textContent = ''; const list = document.getElementById('notifList'); list.innerHTML = notifications.slice(0, 30).map(n => `<div class="notif-item">${esc(n.text)}</div>`).join(''); } };
-    document.addEventListener('click', () => document.getElementById('notifPanel').classList.remove('open'));
-    document.getElementById('notifPanel').addEventListener('click', e => e.stopPropagation());
-}
 </script>
 </body>
 </html>
