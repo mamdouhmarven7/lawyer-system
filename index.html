@@ -687,6 +687,7 @@ async function loadCases() {
 async function loadTasks() {
     const snap = await getDocs(collection(db, 'tasks'));
     tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    // ترتيب المهام حسب تاريخ الإنشاء (الأحدث أولاً)
     tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     renderTasks();
 }
@@ -837,6 +838,23 @@ function renderTaskCard(t, cardClass) {
     const statusText = overallStatus === 'done' ? '✓ جميع المهام منجزة' : `⏳ ${completedCount}/${totalCount} مهمة منجزة`;
     const statusClass = overallStatus === 'done' ? 'status-done' : 'status-pending';
     
+    // عرض معلومات القضية مع اسم الموكل
+    const clientInfo = t.clientNames ? `<div style="margin-top:4px;font-size:0.85rem;color:var(--slate);"><i class="fas fa-user"></i> ${esc(t.clientNames)}</div>` : '';
+    
+    // عرض آخر جلسة وملاحظاتها
+    let lastSessionHtml = '';
+    if (t.lastSessionDate) {
+        const sessionDate = new Date(t.lastSessionDate).toLocaleDateString('ar-EG');
+        lastSessionHtml = `
+            <div style="margin-top:6px;padding:6px;background:rgba(250,204,21,0.1);border-radius:8px;">
+                <div><i class="fas fa-calendar-alt"></i> <strong>آخر جلسة:</strong> ${sessionDate}</div>
+                ${t.lastSessionNotes ? `<div style="margin-top:4px;"><i class="fas fa-pen"></i> <strong>ملاحظات الجلسة:</strong> ${esc(t.lastSessionNotes)}</div>` : ''}
+            </div>
+        `;
+    } else {
+        lastSessionHtml = '<div style="margin-top:6px;color:var(--muted);font-size:0.8rem;"><i class="fas fa-info-circle"></i> لا توجد جلسات مسجلة</div>';
+    }
+    
     let tasksHtml = '';
     if (taskItems.length > 0) {
         tasksHtml = '<div style="margin-top:10px;margin-bottom:10px;"><strong><i class="fas fa-list-check"></i> قائمة المهام:</strong><div style="margin-top:8px;">';
@@ -891,11 +909,12 @@ function renderTaskCard(t, cardClass) {
                 </button>
             </div>
         </div>
-        <div style="margin-top:6px;font-size:0.88rem;color:var(--slate);">
-            <i class="fas fa-location-dot"></i> ${esc(t.location || 'غير محدد')}
-        </div>
+        
+        ${clientInfo}
+        ${lastSessionHtml}
         ${progressBar}
         ${tasksHtml}
+        
         <div class="flex-between" style="margin-top:8px;">
             <span style="font-size:0.85rem;color:var(--muted);"><i class="fas fa-clock"></i> تم الإنشاء: ${new Date(t.createdAt).toLocaleDateString('ar-EG')}</span>
             <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); window.deleteTask('${esc(t.id)}')">
@@ -904,7 +923,6 @@ function renderTaskCard(t, cardClass) {
         </div>
     </div>`;
 }
-
 function renderTasks() {
     const container = document.getElementById('tasksList');
     if (!container) return;
@@ -942,6 +960,8 @@ function renderTasks() {
 
 let tempTaskTypes = [];
 
+let tempTaskTypes = [];
+
 function showTaskModal(task = null) {
     const isEdit = task !== null;
     
@@ -953,7 +973,19 @@ function showTaskModal(task = null) {
     
     let casesOptions = '<option value="">-- اختر القضية --</option>';
     casesList.forEach(c => {
-        casesOptions += `<option value="${esc(c.id)}" ${task?.caseId === c.id ? 'selected' : ''}>${esc(c.caseNumber)} - ${esc(c.court || 'محكمة غير محددة')}</option>`;
+        // الحصول على آخر جلسة وملاحظاتها للعرض
+        const sessions = c.sessions || [];
+        let lastSessionInfo = '';
+        if (sessions.length > 0) {
+            const sortedSessions = [...sessions].sort((a,b) => new Date(b.date) - new Date(a.date));
+            const lastSession = sortedSessions[0];
+            lastSessionInfo = ` | آخر جلسة: ${new Date(lastSession.date).toLocaleDateString('ar-EG')}`;
+            if (lastSession.notes) lastSessionInfo += ` | ${lastSession.notes.substring(0, 30)}`;
+        }
+        const clientNames = c.clients ? c.clients.map(cl => cl.name).join(', ') : 'بدون موكل';
+        casesOptions += `<option value="${esc(c.id)}" ${task?.caseId === c.id ? 'selected' : ''} data-client="${esc(clientNames)}" data-last-session="${esc(lastSessionInfo)}">
+            ${esc(c.caseNumber)} - ${esc(c.court || 'محكمة غير محددة')} | ${esc(clientNames)}${lastSessionInfo}
+        </option>`;
     });
     
     const suggestedTypes = ['تقديم مذكرة', 'حضور جلسة', 'استلام حكم', 'معاينة', 'إيداع صحيفة', 'مقابلة موكل', 'تقديم مستندات', 'تسوية', 'استئناف', 'طعن بالنقض'];
@@ -964,8 +996,14 @@ function showTaskModal(task = null) {
     suggestionsHtml += '</div>';
     
     const modalHtml = `<div id="taskModal" class="modal-overlay"><div class="modal-container"><h3>${isEdit ? '✏️ تعديل المهمة' : '➕ إضافة مهمة جديدة'}</h3>
-        <label>⚖️ القضية المرتبطة</label>
+        <label>⚖️ اختيار القضية</label>
         <select id="taskCaseId">${casesOptions}</select>
+        
+        <div id="caseInfoPreview" style="background:var(--bg);padding:10px;border-radius:8px;margin-top:10px;font-size:13px;display:none;">
+            <div><i class="fas fa-user"></i> <strong>الموكل:</strong> <span id="previewClient"></span></div>
+            <div><i class="fas fa-calendar"></i> <strong>آخر جلسة:</strong> <span id="previewLastSession"></span></div>
+        </div>
+        
         <label style="margin-top:15px;">📋 المهام (يمكن إضافة عدة مهام)</label>
         <div id="taskTypesContainer"></div>
         <div class="flex-between" style="margin-top:8px;gap:6px;">
@@ -973,14 +1011,38 @@ function showTaskModal(task = null) {
             <button class="btn btn-sm" id="addTaskTypeBtn" style="background:var(--green);color:white;">+ إضافة مهمة</button>
         </div>
         ${suggestionsHtml}
-        <label style="margin-top:15px;">📍 المكان / الجهة</label>
-        <input type="text" id="taskLocation" value="${esc(task?.location || '')}" placeholder="المحكمة، النيابة، مكتب الشهر العقاري...">
+        
         <div class="modal-buttons">
             <button id="saveTaskBtn" style="background:var(--${isEdit ? 'gold' : 'green'});color:${isEdit ? 'var(--navy)' : 'white'};">${isEdit ? '💾 حفظ التعديلات' : '✅ إضافة'}</button>
             <button id="closeTaskBtn" style="background:var(--border);">إلغاء</button>
         </div>
     </div></div>`;
     document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    // إضافة معاينة معلومات القضية عند الاختيار
+    const caseSelect = document.getElementById('taskCaseId');
+    const previewDiv = document.getElementById('caseInfoPreview');
+    const previewClient = document.getElementById('previewClient');
+    const previewLastSession = document.getElementById('previewLastSession');
+    
+    if (caseSelect) {
+        caseSelect.onchange = () => {
+            const selectedOption = caseSelect.options[caseSelect.selectedIndex];
+            if (caseSelect.value && selectedOption) {
+                const clientName = selectedOption.getAttribute('data-client') || '';
+                const lastSessionInfo = selectedOption.getAttribute('data-last-session') || '';
+                previewClient.textContent = clientName;
+                previewLastSession.textContent = lastSessionInfo || 'لا توجد جلسات';
+                previewDiv.style.display = 'block';
+            } else {
+                previewDiv.style.display = 'none';
+            }
+        };
+        // تشغيل الحدث إذا كان هناك قيمة محددة مسبقاً
+        if (caseSelect.value) {
+            caseSelect.dispatchEvent(new Event('change'));
+        }
+    }
     
     const renderTaskTypes = () => {
         const container = document.getElementById('taskTypesContainer');
@@ -1035,7 +1097,6 @@ function showTaskModal(task = null) {
     
     document.getElementById('saveTaskBtn').onclick = async () => {
         const caseId = document.getElementById('taskCaseId').value;
-        const location = document.getElementById('taskLocation').value.trim();
         
         if (tempTaskTypes.length === 0) {
             showToast('⚠️ يرجى إضافة مهمة واحدة على الأقل', 'warning');
@@ -1045,6 +1106,17 @@ function showTaskModal(task = null) {
         const selectedCase = caseId ? casesList.find(c => c.id === caseId) : null;
         const caseNumber = selectedCase ? selectedCase.caseNumber : 'بدون قضية';
         const court = selectedCase ? selectedCase.court : '';
+        const clientNames = selectedCase && selectedCase.clients ? selectedCase.clients.map(cl => cl.name).join(', ') : 'بدون موكل';
+        
+        // الحصول على آخر جلسة وملاحظاتها
+        let lastSessionDate = '';
+        let lastSessionNotes = '';
+        if (selectedCase && selectedCase.sessions && selectedCase.sessions.length > 0) {
+            const sortedSessions = [...selectedCase.sessions].sort((a,b) => new Date(b.date) - new Date(a.date));
+            const lastSession = sortedSessions[0];
+            lastSessionDate = lastSession.date;
+            lastSessionNotes = lastSession.notes || '';
+        }
         
         const taskItems = tempTaskTypes.map(name => ({
             id: Date.now() + Math.random(),
@@ -1056,8 +1128,10 @@ function showTaskModal(task = null) {
             caseId: caseId || '',
             caseNumber: caseNumber,
             court: court,
+            clientNames: clientNames,
+            lastSessionDate: lastSessionDate,
+            lastSessionNotes: lastSessionNotes,
             taskItems: taskItems,
-            location: location || 'غير محدد',
             createdAt: task?.createdAt || new Date().toISOString(),
             status: 'pending'
         };
@@ -1068,7 +1142,6 @@ function showTaskModal(task = null) {
     };
     document.getElementById('closeTaskBtn').onclick = () => document.getElementById('taskModal').remove();
 }
-
 window.editTask = (taskId) => {
     const task = tasks.find(t => t.id === taskId);
     if (task) showTaskModal(task);
