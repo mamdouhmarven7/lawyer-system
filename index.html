@@ -673,6 +673,36 @@ let expandedCaseId = null;
 let tempClients = [];
 let tempOpponents = [];
 
+// ===== دوال إدارة المهام المقترحة =====
+
+function getSuggestedTasks() {
+    const saved = localStorage.getItem('suggestedTasks');
+    if (saved) {
+        return JSON.parse(saved);
+    }
+    return ['تقديم مذكرة', 'حضور جلسة', 'استلام حكم', 'معاينة', 'إيداع صحيفة', 'مقابلة موكل', 'تقديم مستندات', 'تسوية', 'استئناف', 'طعن بالنقض'];
+}
+
+function saveSuggestedTasks(tasks) {
+    localStorage.setItem('suggestedTasks', JSON.stringify(tasks));
+}
+
+function addToSuggestedTasks(newTask) {
+    let suggested = getSuggestedTasks();
+    if (!suggested.includes(newTask)) {
+        suggested.unshift(newTask);
+        if (suggested.length > 20) suggested.pop();
+        saveSuggestedTasks(suggested);
+    }
+}
+
+function esc(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// ... باقي الكود
+
 function esc(str) {
     if (str == null) return '';
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -1133,6 +1163,15 @@ function showTaskModal(task = null) {
         </option>`;
     });
     
+    // جلب قائمة المهام المقترحة من التخزين المحلي
+    const suggestedTasksList = getSuggestedTasks();
+    
+    let suggestionsHtml = '<div style="margin-top:8px;"><label style="font-size:13px;color:var(--slate);">✨ المهام المقترحة (اختر من القائمة):</label><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:5px;">';
+    suggestedTasksList.forEach(type => {
+        suggestionsHtml += `<span style="background:rgba(250,204,21,0.2);padding:4px 12px;border-radius:25px;font-size:12px;cursor:pointer;transition:all 0.2s;border:1px solid var(--gold);" onclick="addSuggestedTypeInternal('${esc(type)}')" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='rgba(250,204,21,0.2)'">+ ${type}</span>`;
+    });
+    suggestionsHtml += '</div></div>';
+    
     const modalHtml = `<div id="taskModal" class="modal-overlay">
         <div class="modal-container">
             <h3>${isEdit ? '✏️ تعديل المهمة' : '➕ إضافة مهمة جديدة'}</h3>
@@ -1149,6 +1188,7 @@ function showTaskModal(task = null) {
                 <input type="text" id="newTaskType" placeholder="اكتب اسم المهمة واضغط Enter أو زر الإضافة..." style="flex:2;margin:0;">
                 <button class="btn btn-sm" id="addTaskTypeBtn" style="background:var(--green);color:white;">+ إضافة مهمة</button>
             </div>
+            ${suggestionsHtml}
             <div class="modal-buttons" style="margin-top:20px;">
                 <button id="saveTaskBtn" style="background:var(--${isEdit ? 'gold' : 'green'});color:${isEdit ? 'var(--navy)' : 'white'};">${isEdit ? '💾 حفظ التعديلات' : '✅ إضافة'}</button>
                 <button id="closeTaskBtn" style="background:var(--border);">إلغاء</button>
@@ -1206,6 +1246,16 @@ function showTaskModal(task = null) {
         renderTaskTypes();
     };
     
+    window.addSuggestedTypeInternal = (type) => {
+        if (!tempTaskTypes.includes(type)) {
+            tempTaskTypes.push(type);
+            renderTaskTypes();
+            showToast(`✅ تم إضافة "${type}"`, 'success');
+        } else {
+            showToast(`⚠️ "${type}" موجود بالفعل`, 'warning');
+        }
+    };
+    
     const addNewTask = () => {
         const newType = document.getElementById('newTaskType').value.trim();
         if (!newType) {
@@ -1217,9 +1267,11 @@ function showTaskModal(task = null) {
             return;
         }
         tempTaskTypes.push(newType);
+        // إضافة المهمة الجديدة إلى المقترحات
+        addToSuggestedTasks(newType);
         document.getElementById('newTaskType').value = '';
         renderTaskTypes();
-        showToast(`✅ تم إضافة "${newType}"`, 'success');
+        showToast(`✅ تم إضافة "${newType}" وسيظهر في المقترحات下次`, 'success');
     };
     
     document.getElementById('addTaskTypeBtn').onclick = addNewTask;
@@ -1288,7 +1340,6 @@ function showTaskModal(task = null) {
         document.getElementById('taskModal').remove();
     };
 }
-
 window.editTask = (taskId) => {
     const task = tasks.find(t => t.id === taskId);
     if (task) showTaskModal(task);
