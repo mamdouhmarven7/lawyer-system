@@ -576,77 +576,77 @@
                 </div>
             </div>
 
-            <div id="clientsTab" class="tab-content" style="display:none;">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>قائمة الموكلين</h3>
-                        <button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> إضافة موكل</button>
-                    </div>
-                    <div class="table-wrap">
-                        <table id="clientsTable">
-                            <thead>
-                                <tr><th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>التوكيل</th><th>القضايا</th><th></th></tr>
-                            </thead>
-                            <tbody><tr><td colspan="7" class="loading">جاري التحميل...<\/td><\/tr>
-                            </tbody>
-                        }</div>
-                    </div>
-                </div>
+           <div id="clientsTab" class="tab-content" style="display:none;">
+    <div class="card">
+        <div class="card-header">
+            <h3>قائمة الموكلين</h3>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> إضافة موكل</button>
             </div>
-
-            <div id="casesTab" class="tab-content" style="display:none;">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>القضايا</h3>
-                        <button class="btn" id="addCaseBtn"><i class="fas fa-plus"></i> قضية جديدة</button>
-                    </div>
-                    <div class="table-wrap">
-                        <table id="casesTable">
-                            <thead>
-                                <tr><th style="width:30px"></th><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th></tr>
-                            </thead>
-                            <tbody><tr><td colspan="8" class="loading">جاري التحميل...<\/td><\/tr>
-                            </tbody>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="tasksTab" class="tab-content" style="display:none;">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>📋 المهام الإدارية</h3>
-                        <button class="btn" id="addTaskBtn"><i class="fas fa-plus"></i> إضافة مهمة</button>
-                    </div>
-                    <div id="tasksList"></div>
-                </div>
-            </div>
-            
-            <div id="searchTab" class="tab-content" style="display:none;">
-                <div class="card">
-                    <div class="search-type-buttons">
-                        <button class="search-type-btn active" data-type="client">بحث عن موكل</button>
-                        <button class="search-type-btn" data-type="court">بحث عن محكمة</button>
-                    </div>
-                    <div id="searchClientDiv">
-                        <div class="flex-between">
-                            <input type="text" id="searchClientInput" placeholder="اسم الموكل..." style="margin:0;">
-                            <button class="btn" id="searchClientBtn">بحث</button>
-                        </div>
-                    </div>
-                    <div id="searchCourtDiv" style="display:none;">
-                        <div class="flex-between">
-                            <input type="text" id="searchCourtInput" placeholder="اسم المحكمة..." style="margin:0;">
-                            <button class="btn" id="searchCourtBtn">بحث</button>
-                        </div>
-                    </div>
-                    <div id="searchResults" style="margin-top:20px;"></div>
-                </div>
-            </div>
+        </div>
+        <div class="table-wrap">
+            <table id="clientsTable">
+                <thead>
+                    <tr><th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>التوكيل</th><th>القضايا</th><th></th></tr>
+                </thead>
+                <tbody><tr><td colspan="7" class="loading">جاري التحميل...<\/td><\/tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
+          <div id="casesTab" class="tab-content" style="display:none;">
+    <div class="card">
+        <div class="card-header">
+            <h3>القضايا</h3>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn" id="addCaseBtn"><i class="fas fa-plus"></i> قضية جديدة</button>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table id="casesTable">
+                <thead>
+                    <tr><th style="width:30px"></th><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th></tr>
+                </thead>
+                <tbody><tr><td colspan="8" class="loading">جاري التحميل...<\/td><\/tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+          <div id="tasksTab" class="tab-content" style="display:none;">
+    <div class="card">
+        <div class="card-header">
+            <h3>📋 المهام الإدارية</h3>
+            <button class="btn" id="addTaskBtn"><i class="fas fa-plus"></i> إضافة مهمة</button>
+        </div>
+        <div id="tasksList"></div>
+    </div>
+</div>
+            
+         <div id="searchTab" class="tab-content" style="display:none;">
+    <div class="card">
+        <div class="search-type-buttons">
+            <button class="search-type-btn active" data-type="client">بحث عن موكل</button>
+            <button class="search-type-btn" data-type="court">بحث عن محكمة</button>
+        </div>
+        <div id="searchClientDiv">
+            <div class="flex-between">
+                <input type="text" id="searchClientInput" placeholder="اسم الموكل..." style="margin:0;">
+                <button class="btn" id="searchClientBtn">بحث</button>
+            </div>
+        </div>
+        <div id="searchCourtDiv" style="display:none;">
+            <div class="flex-between">
+                <input type="text" id="searchCourtInput" placeholder="اسم المحكمة..." style="margin:0;">
+                <button class="btn" id="searchCourtBtn">بحث</button>
+            </div>
+        </div>
+        <div id="searchResults" style="margin-top:20px;"></div>
+    </div>
+</div>
 <script type="module">
 const firebaseConfig = {
     apiKey: "AIzaSyB8EHWxJrl_rPnHJBVZiF-ihZacUiNVYJs",
