@@ -1230,11 +1230,10 @@ function renderClients() {
 function renderDashboard() {
     const today = new Date(); today.setHours(0,0,0,0);
     
-    // حساب عدد المهام الصحيح - المهام التي لها taskItems فقط
+    // حساب عدد المهام الصحيح
     let activeTasksCount = 0;
     tasks.forEach(t => {
         const taskItems = t.taskItems || [];
-        // نحسب المهمة فقط إذا كان فيها مهام فرعية ولم تكتمل كلها
         if (taskItems.length > 0) {
             const allCompleted = taskItems.every(item => item.completed === true);
             if (!allCompleted) {
@@ -1247,6 +1246,7 @@ function renderDashboard() {
         <div class="stat-card"><h3>القضايا</h3><div class="stat-number">${casesList.length}</div></div>
         <div class="stat-card"><h3>المهام</h3><div class="stat-number">${activeTasksCount}</div></div>`;
     
+    // تجهيز الجلسات القادمة مع المحكمة والدائرة
     let upcomingSessions = [];
     casesList.forEach(c => { 
         if (c.sessions && c.sessions.length > 0) { 
@@ -1254,20 +1254,28 @@ function renderDashboard() {
                 const sessionDate = new Date(s.date); 
                 sessionDate.setHours(0,0,0,0); 
                 if (sessionDate >= today) { 
+                    // الحصول على أسماء الموكلين
+                    const clientNames = c.clients ? c.clients.map(cl => cl.name).join(', ') : 'غير معروف';
+                    
                     upcomingSessions.push({ 
-                        caseNumber: c.caseNumber, 
-                        caseId: c.id, 
-                        clientNames: c.clients ? c.clients.map(cl => cl.name).join(', ') : 'غير معروف', 
-                        date: s.date, 
-                        notes: s.notes 
+                        caseNumber: c.caseNumber,
+                        caseId: c.id,
+                        court: c.court || 'غير محدد',
+                        circuit: c.circuit || 'غير محدد',
+                        clientNames: clientNames,
+                        subject: c.subject || 'لا يوجد موضوع',
+                        date: s.date,
+                        notes: s.notes,
+                        sessionType: s.sessionType || 'جلسة عادية'
                     }); 
                 } 
             }); 
         } 
     });
     
-    upcomingSessions.sort((a,b) => new Date(a.date)-new Date(b.date));
-    let html = '<div style="display:flex;flex-direction:column;gap:12px;">';
+    upcomingSessions.sort((a,b) => new Date(a.date) - new Date(b.date));
+    
+    let html = '<div style="display:flex;flex-direction:column;gap:15px;">';
     if (upcomingSessions.length === 0) { 
         html += '<p class="loading" style="font-size:16px;">لا توجد جلسات قادمة</p>'; 
     } else { 
@@ -1275,15 +1283,43 @@ function renderDashboard() {
             const sessionDate = new Date(s.date); 
             sessionDate.setHours(0,0,0,0); 
             const diff = Math.round((sessionDate - today) / 864e5); 
-            let dayLabel = diff === 0 ? '🔴 اليوم' : diff === 1 ? '🟡 غداً' : `🟢 بعد ${diff} أيام`; 
-            html += `<div class="session-card" onclick="window.goToCase('${esc(s.caseId)}')">
-                <div class="flex-between">
-                    <div><strong>⚖️ ${esc(s.caseNumber)}</strong> — ${esc(s.clientNames)}</div>
-                    <span class="badge">${dayLabel}</span>
+            let dayLabel = diff === 0 ? '🔴 اليوم' : diff === 1 ? '🟡 غداً' : `🟢 بعد ${diff} أيام`;
+            
+            html += `
+                <div class="session-card" onclick="window.goToCase('${esc(s.caseId)}')" style="padding:18px;border-radius:15px;cursor:pointer;transition:all 0.2s;">
+                    <div class="flex-between" style="margin-bottom:12px;">
+                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                            <span style="background:var(--gold);color:var(--navy);padding:5px 12px;border-radius:20px;font-weight:800;">
+                                <i class="fas fa-gavel"></i> ${esc(s.caseNumber)}
+                            </span>
+                            <span class="badge" style="font-size:12px;background:var(--navy-light);color:white;padding:5px 12px;">
+                                <i class="fas fa-building"></i> ${esc(s.court)}
+                            </span>
+                            ${s.circuit !== 'غير محدد' ? `<span class="badge" style="font-size:12px;background:var(--purple);color:white;padding:5px 12px;">
+                                <i class="fas fa-chalkboard-user"></i> دائرة ${esc(s.circuit)}
+                            </span>` : ''}
+                        </div>
+                        <span class="badge" style="font-size:14px;padding:6px 14px;font-weight:800;background:${diff === 0 ? 'var(--red)' : diff === 1 ? 'var(--orange)' : 'var(--green)'};color:white;">
+                            ${dayLabel}
+                        </span>
+                    </div>
+                    
+                    <div style="margin-bottom:10px;">
+                        <div style="margin-bottom:6px;">
+                            <i class="fas fa-user-tie"></i> <strong>الموكل:</strong> ${esc(s.clientNames)}
+                        </div>
+                        <div style="margin-bottom:6px;">
+                            <i class="fas fa-tag"></i> <strong>الموضوع:</strong> ${esc(s.subject)}
+                        </div>
+                        <div style="margin-bottom:8px;">
+                            <i class="fas fa-calendar-alt"></i> <strong>تاريخ الجلسة:</strong> <span style="font-weight:800;">${new Date(s.date).toLocaleDateString('ar-EG')}</span>
+                        </div>
+                        ${s.notes ? `<div style="margin-top:8px;padding:8px;background:rgba(249,115,22,0.15);border-radius:10px;border-right:3px solid var(--orange);">
+                            <i class="fas fa-pen"></i> <strong>ملاحظات الجلسة:</strong> ${esc(s.notes)}
+                        </div>` : ''}
+                    </div>
                 </div>
-                <div>📅 ${new Date(s.date).toLocaleDateString('ar-EG')}</div>
-                ${s.notes ? `<div>📝 ${esc(s.notes)}</div>` : ''}
-            </div>`; 
+            `; 
         }); 
     }
     html += '</div>';
