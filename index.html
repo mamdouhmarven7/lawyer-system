@@ -1240,7 +1240,6 @@ function showTaskModal(task = null) {
         renderTaskTypes();
     };
     
-    // إضافة مهمة جديدة مع دعم Enter
     const addNewTask = () => {
         const newType = document.getElementById('newTaskType').value.trim();
         if (!newType) {
@@ -1259,13 +1258,15 @@ function showTaskModal(task = null) {
     
     document.getElementById('addTaskTypeBtn').onclick = addNewTask;
     
-    // إضافة المهمة عند الضغط على Enter
-    document.getElementById('newTaskType').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            addNewTask();
-        }
-    });
+    const newTaskInput = document.getElementById('newTaskType');
+    if (newTaskInput) {
+        newTaskInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addNewTask();
+            }
+        });
+    }
     
     renderTaskTypes();
     
@@ -1309,8 +1310,11 @@ function showTaskModal(task = null) {
             status: 'pending'
         };
         
-        if (isEdit) await window.updateTask(task.id, data);
-        else await window.addTask({ ...data, createdAt: new Date().toISOString() });
+        if (isEdit) {
+            await window.updateTask(task.id, data);
+        } else {
+            await window.addTask({ ...data, createdAt: new Date().toISOString() });
+        }
         document.getElementById('taskModal').remove();
     };
     
