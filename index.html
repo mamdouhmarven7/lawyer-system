@@ -838,8 +838,12 @@ function renderTaskCard(t, cardClass) {
     const statusText = overallStatus === 'done' ? '✓ جميع المهام منجزة' : `⏳ ${completedCount}/${totalCount} مهمة منجزة`;
     const statusClass = overallStatus === 'done' ? 'status-done' : 'status-pending';
     
-    // عرض معلومات القضية مع اسم الموكل
-    const clientInfo = t.clientNames ? `<div style="margin-top:4px;font-size:0.85rem;color:var(--slate);"><i class="fas fa-user"></i> ${esc(t.clientNames)}</div>` : '';
+    // عرض اسم الموكل (من البيانات المحفوظة)
+    const clientInfo = t.clientNames && t.clientNames !== 'بدون موكل' ? `
+        <div style="margin-top:4px;font-size:0.85rem;color:var(--slate);">
+            <i class="fas fa-user"></i> <strong>الموكل:</strong> ${esc(t.clientNames)}
+        </div>
+    ` : '';
     
     // عرض آخر جلسة وملاحظاتها
     let lastSessionHtml = '';
@@ -963,15 +967,20 @@ let tempTaskTypes = [];
 function showTaskModal(task = null) {
     const isEdit = task !== null;
     
+    // تحميل أنواع المهام الموجودة إذا كان تعديل
     if (isEdit && task.taskItems && Array.isArray(task.taskItems)) {
         tempTaskTypes = [...task.taskItems.map(item => item.name)];
     } else {
         tempTaskTypes = [];
     }
     
+    // إنشاء قائمة القضايا للاختيار منها مع عرض اسم الموكل وآخر جلسة
     let casesOptions = '<option value="">-- اختر القضية --</option>';
     casesList.forEach(c => {
-        // الحصول على آخر جلسة وملاحظاتها للعرض
+        // الحصول على أسماء الموكلين
+        const clientNames = c.clients ? c.clients.map(cl => cl.name).join(', ') : 'بدون موكل';
+        
+        // الحصول على آخر جلسة
         const sessions = c.sessions || [];
         let lastSessionInfo = '';
         if (sessions.length > 0) {
@@ -980,12 +989,17 @@ function showTaskModal(task = null) {
             lastSessionInfo = ` | آخر جلسة: ${new Date(lastSession.date).toLocaleDateString('ar-EG')}`;
             if (lastSession.notes) lastSessionInfo += ` | ${lastSession.notes.substring(0, 30)}`;
         }
-        const clientNames = c.clients ? c.clients.map(cl => cl.name).join(', ') : 'بدون موكل';
-        casesOptions += `<option value="${esc(c.id)}" ${task?.caseId === c.id ? 'selected' : ''} data-client="${esc(clientNames)}" data-last-session="${esc(lastSessionInfo)}">
-            ${esc(c.caseNumber)} - ${esc(c.court || 'محكمة غير محددة')} | ${esc(clientNames)}${lastSessionInfo}
+        
+        casesOptions += `<option value="${esc(c.id)}" 
+            ${task?.caseId === c.id ? 'selected' : ''} 
+            data-client="${esc(clientNames)}" 
+            data-last-session-date="${sessions.length > 0 ? new Date([...sessions].sort((a,b)=>new Date(b.date)-new Date(a.date))[0].date).toLocaleDateString('ar-EG') : ''}"
+            data-last-session-notes="${sessions.length > 0 ? esc([...sessions].sort((a,b)=>new Date(b.date)-new Date(a.date))[0].notes || '') : ''}">
+            📁 ${esc(c.caseNumber)} - ${esc(c.court || 'محكمة غير محددة')} | 👤 ${esc(clientNames)}${lastSessionInfo}
         </option>`;
     });
     
+    // خيارات مقترحة لأنواع المهام
     const suggestedTypes = ['تقديم مذكرة', 'حضور جلسة', 'استلام حكم', 'معاينة', 'إيداع صحيفة', 'مقابلة موكل', 'تقديم مستندات', 'تسوية', 'استئناف', 'طعن بالنقض'];
     let suggestionsHtml = '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;">';
     suggestedTypes.forEach(type => {
@@ -993,44 +1007,52 @@ function showTaskModal(task = null) {
     });
     suggestionsHtml += '</div>';
     
-    const modalHtml = `<div id="taskModal" class="modal-overlay"><div class="modal-container"><h3>${isEdit ? '✏️ تعديل المهمة' : '➕ إضافة مهمة جديدة'}</h3>
-        <label>⚖️ اختيار القضية</label>
-        <select id="taskCaseId">${casesOptions}</select>
-        
-        <div id="caseInfoPreview" style="background:var(--bg);padding:10px;border-radius:8px;margin-top:10px;font-size:13px;display:none;">
-            <div><i class="fas fa-user"></i> <strong>الموكل:</strong> <span id="previewClient"></span></div>
-            <div><i class="fas fa-calendar"></i> <strong>آخر جلسة:</strong> <span id="previewLastSession"></span></div>
+    const modalHtml = `<div id="taskModal" class="modal-overlay">
+        <div class="modal-container">
+            <h3>${isEdit ? '✏️ تعديل المهمة' : '➕ إضافة مهمة جديدة'}</h3>
+            
+            <label>⚖️ اختيار القضية</label>
+            <select id="taskCaseId">${casesOptions}</select>
+            
+            <div id="caseInfoPreview" style="background:var(--bg);padding:10px;border-radius:8px;margin-top:10px;font-size:13px;display:none;">
+                <div><i class="fas fa-user"></i> <strong>الموكل:</strong> <span id="previewClient"></span></div>
+                <div style="margin-top:5px;"><i class="fas fa-calendar"></i> <strong>آخر جلسة:</strong> <span id="previewLastSessionDate"></span></div>
+                <div style="margin-top:5px;"><i class="fas fa-pen"></i> <strong>ملاحظات الجلسة:</strong> <span id="previewLastSessionNotes"></span></div>
+            </div>
+            
+            <label style="margin-top:15px;">📋 المهام (يمكن إضافة عدة مهام)</label>
+            <div id="taskTypesContainer"></div>
+            <div class="flex-between" style="margin-top:8px;gap:6px;">
+                <input type="text" id="newTaskType" placeholder="اكتب اسم المهمة..." style="flex:2;margin:0;">
+                <button class="btn btn-sm" id="addTaskTypeBtn" style="background:var(--green);color:white;">+ إضافة مهمة</button>
+            </div>
+            ${suggestionsHtml}
+            
+            <div class="modal-buttons" style="margin-top:20px;">
+                <button id="saveTaskBtn" style="background:var(--${isEdit ? 'gold' : 'green'});color:${isEdit ? 'var(--navy)' : 'white'};">${isEdit ? '💾 حفظ التعديلات' : '✅ إضافة'}</button>
+                <button id="closeTaskBtn" style="background:var(--border);">إلغاء</button>
+            </div>
         </div>
-        
-        <label style="margin-top:15px;">📋 المهام (يمكن إضافة عدة مهام)</label>
-        <div id="taskTypesContainer"></div>
-        <div class="flex-between" style="margin-top:8px;gap:6px;">
-            <input type="text" id="newTaskType" placeholder="اكتب اسم المهمة..." style="flex:2;margin:0;">
-            <button class="btn btn-sm" id="addTaskTypeBtn" style="background:var(--green);color:white;">+ إضافة مهمة</button>
-        </div>
-        ${suggestionsHtml}
-        
-        <div class="modal-buttons">
-            <button id="saveTaskBtn" style="background:var(--${isEdit ? 'gold' : 'green'});color:${isEdit ? 'var(--navy)' : 'white'};">${isEdit ? '💾 حفظ التعديلات' : '✅ إضافة'}</button>
-            <button id="closeTaskBtn" style="background:var(--border);">إلغاء</button>
-        </div>
-    </div></div>`;
+    </div>`;
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     
     // إضافة معاينة معلومات القضية عند الاختيار
     const caseSelect = document.getElementById('taskCaseId');
     const previewDiv = document.getElementById('caseInfoPreview');
     const previewClient = document.getElementById('previewClient');
-    const previewLastSession = document.getElementById('previewLastSession');
+    const previewLastSessionDate = document.getElementById('previewLastSessionDate');
+    const previewLastSessionNotes = document.getElementById('previewLastSessionNotes');
     
     if (caseSelect) {
         caseSelect.onchange = () => {
             const selectedOption = caseSelect.options[caseSelect.selectedIndex];
             if (caseSelect.value && selectedOption) {
                 const clientName = selectedOption.getAttribute('data-client') || '';
-                const lastSessionInfo = selectedOption.getAttribute('data-last-session') || '';
-                previewClient.textContent = clientName;
-                previewLastSession.textContent = lastSessionInfo || 'لا توجد جلسات';
+                const lastSessionDate = selectedOption.getAttribute('data-last-session-date') || '';
+                const lastSessionNotes = selectedOption.getAttribute('data-last-session-notes') || '';
+                previewClient.textContent = clientName || 'لا يوجد موكل';
+                previewLastSessionDate.textContent = lastSessionDate || 'لا توجد جلسات';
+                previewLastSessionNotes.textContent = lastSessionNotes || 'لا توجد ملاحظات';
                 previewDiv.style.display = 'block';
             } else {
                 previewDiv.style.display = 'none';
@@ -1042,6 +1064,7 @@ function showTaskModal(task = null) {
         }
     }
     
+    // دالة عرض المهام المضافة
     const renderTaskTypes = () => {
         const container = document.getElementById('taskTypesContainer');
         if (!container) return;
@@ -1060,6 +1083,7 @@ function showTaskModal(task = null) {
         `).join('');
     };
     
+    // دوال إدارة المهام
     window.removeTaskTypeInternal = (i) => {
         tempTaskTypes.splice(i, 1);
         renderTaskTypes();
@@ -1075,6 +1099,7 @@ function showTaskModal(task = null) {
         }
     };
     
+    // إضافة مهمة جديدة
     document.getElementById('addTaskTypeBtn').onclick = () => {
         const newType = document.getElementById('newTaskType').value.trim();
         if (!newType) {
@@ -1093,6 +1118,7 @@ function showTaskModal(task = null) {
     
     renderTaskTypes();
     
+    // حفظ المهمة
     document.getElementById('saveTaskBtn').onclick = async () => {
         const caseId = document.getElementById('taskCaseId').value;
         
@@ -1103,7 +1129,7 @@ function showTaskModal(task = null) {
         
         const selectedCase = caseId ? casesList.find(c => c.id === caseId) : null;
         const caseNumber = selectedCase ? selectedCase.caseNumber : 'بدون قضية';
-        const court = selectedCase ? selectedCase.court : '';
+        const court = selectedCase ? selectedCase.court : 'غير محدد';
         const clientNames = selectedCase && selectedCase.clients ? selectedCase.clients.map(cl => cl.name).join(', ') : 'بدون موكل';
         
         // الحصول على آخر جلسة وملاحظاتها
@@ -1138,7 +1164,10 @@ function showTaskModal(task = null) {
         else await window.addTask({ ...data, createdAt: new Date().toISOString() });
         document.getElementById('taskModal').remove();
     };
-    document.getElementById('closeTaskBtn').onclick = () => document.getElementById('taskModal').remove();
+    
+    document.getElementById('closeTaskBtn').onclick = () => {
+        document.getElementById('taskModal').remove();
+    };
 }
 window.editTask = (taskId) => {
     const task = tasks.find(t => t.id === taskId);
