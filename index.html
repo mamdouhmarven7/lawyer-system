@@ -1406,7 +1406,6 @@ function renderDashboard() {
             let dayLabel = diff === 0 ? 'اليوم' : diff === 1 ? 'غداً' : `بعد ${diff} أيام`;
             let dayColor = diff === 0 ? '#ef4444' : diff === 1 ? '#f97316' : '#10b981';
             
-            // تنسيق التاريخ
             const formattedDate = new Date(s.date).toLocaleDateString('ar-EG');
             const formattedTime = s.date.includes('T') ? new Date(s.date).toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'}) : '';
             
@@ -1432,7 +1431,7 @@ function renderDashboard() {
                         </div>
                     </div>
                     
-                    <div class="session-footer" style="display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-top: 8px; border-top: 1px solid var(--border);">
+                    <div class="session-footer" style="display: flex; justify-content: flex-start; align-items: center; gap: 12px; padding-top: 8px; border-top: 1px solid var(--border);">
                         <div class="session-date" style="display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: var(--gold-dark); background: rgba(250,204,21,0.1); padding: 4px 10px; border-radius: 20px;">
                             <i class="fas fa-calendar-alt"></i>
                             <span>${formattedDate}</span>
