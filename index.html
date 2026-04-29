@@ -1428,13 +1428,13 @@ function renderDashboard() {
                         </div>
                     </div>
                     
-                    <div class="session-footer">
-                        <div class="session-date">
+                    <div class="session-footer" style="justify-content: flex-end; gap: 10px;">
+                        <div class="session-date" style="order: 2;">
                             <i class="fas fa-calendar-alt"></i>
                             <span>${new Date(s.date).toLocaleDateString('ar-EG')}</span>
                             ${s.date.includes('T') ? `<span style="font-size: 11px;">${new Date(s.date).toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'})}</span>` : ''}
                         </div>
-                        ${s.notes ? `<div class="session-notes"><i class="fas fa-pen"></i> ${esc(s.notes.length > 35 ? s.notes.substring(0, 35) + '...' : s.notes)}</div>` : ''}
+                        ${s.notes ? `<div class="session-notes" style="order: 1;"><i class="fas fa-pen"></i> ${esc(s.notes.length > 35 ? s.notes.substring(0, 35) + '...' : s.notes)}</div>` : ''}
                     </div>
                 </div>
             `; 
@@ -1443,7 +1443,6 @@ function renderDashboard() {
     html += '</div>';
     document.getElementById('upcomingSessions').innerHTML = html;
 }
-
 function getStatusClass(s) {
     if (s === 'متداولة') return 'status-mutadawla';
     if (s === 'حكم نهائي') return 'status-hukm';
