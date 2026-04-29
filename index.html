@@ -1520,25 +1520,106 @@ window.goToCase = (caseId) => { document.querySelector('.nav-item[data-tab="case
 function searchClient() { 
     const term = document.getElementById('searchClientInput').value.trim().toLowerCase(); 
     const div = document.getElementById('searchResults'); 
-    if (!term) { div.innerHTML = '<p class="loading">أدخل اسم موكل للبحث</p>'; return; } 
-    const found = clients.filter(c => (c.name||'').toLowerCase().includes(term)); 
-    if (!found.length) { div.innerHTML = '<p class="loading">❌ لا توجد نتائج</p>'; return; } 
-    let html = ''; 
+    
+    if (!term) { 
+        div.innerHTML = '<p class="loading">🔍 أدخل اسم موكل للبحث</p>'; 
+        return; 
+    } 
+    
+    const found = clients.filter(c => (c.name || '').toLowerCase().includes(term)); 
+    
+    if (!found.length) { 
+        div.innerHTML = '<div class="loading" style="text-align:center; padding:40px;"><i class="fas fa-search" style="font-size:48px; color:var(--muted);"></i><br>❌ لا توجد نتائج مطابقة لبحثك</div>'; 
+        return; 
+    } 
+    
+    let html = '';
     found.forEach(client => { 
         const clientCases = casesList.filter(c => c.clients?.some(cl => cl.id === client.id)); 
-        html += `<div style="background:var(--bg);border-radius:var(--radius-md);padding:20px;margin-bottom:20px;border-right:4px solid var(--gold);"><div style="background:var(--gold);padding:12px;border-radius:var(--radius-sm);margin-bottom:14px;"><h3>${esc(client.name)}</h3><div>${client.phone ? '📞 ' + esc(client.phone) : ''}</div></div><h4>قضايا الموكل (${clientCases.length})</h4>`; 
-        if (clientCases.length === 0) { html += '<p>لا توجد قضايا</p>'; } 
-        else { html += `<td><thead><tr><th>رقم القضية</th><th>المحكمة</th><th>الخصوم</th><th>الحالة</th><th></th></tr></thead><tbody>`; 
+        
+        html += `
+            <div style="background: var(--white); border-radius: 20px; padding: 20px; margin-bottom: 20px; border-right: 5px solid var(--gold); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <!-- رأس الموكل -->
+                <div style="background: linear-gradient(135deg, var(--gold), var(--gold-dark)); padding: 12px 16px; border-radius: 12px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <i class="fas fa-user-circle" style="font-size: 28px; color: var(--navy);"></i>
+                            <div>
+                                <h3 style="font-size: 18px; font-weight: 800; color: var(--navy); margin: 0;">${esc(client.name)}</h3>
+                                <div style="font-size: 13px; color: var(--navy); opacity: 0.8; margin-top: 3px;">
+                                    <i class="fas fa-tag"></i> ${client.type === 'company' ? 'شركة' : 'فرد'}
+                                    ${client.phone ? ` | <i class="fas fa-phone"></i> ${esc(client.phone)}` : ''}
+                                    ${client.delegationNumber ? ` | <i class="fas fa-file-signature"></i> توكيل: ${esc(client.delegationNumber)}` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <span style="background: var(--navy); color: white; padding: 5px 12px; border-radius: 30px; font-size: 13px; font-weight: 600;">
+                            <i class="fas fa-gavel"></i> ${clientCases.length} قضية
+                        </span>
+                    </div>
+                </div>
+                
+                <h4 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: var(--navy); border-right: 3px solid var(--gold); padding-right: 10px;">
+                    <i class="fas fa-balance-scale"></i> قضايا الموكل
+                </h4>`;
+        
+        if (clientCases.length === 0) { 
+            html += '<p style="color: var(--muted); text-align: center; padding: 20px;"><i class="fas fa-folder-open"></i> لا توجد قضايا مسجلة لهذا الموكل</p>'; 
+        } else { 
+            html += `
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <thead>
+                            <tr style="background: var(--bg);">
+                                <th style="text-align: right; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">رقم القضية</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">المحكمة</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">الخصوم</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">الموضوع</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">آخر جلسة</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);">الحالة</th>
+                                <th style="text-align: center; padding: 12px; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--gold);"></th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+            
             clientCases.forEach(c => { 
-                html += `<tr onclick="window.goToCase('${esc(c.id)}')"><td><strong>${esc(c.caseNumber)}</strong><\/td><td>${esc(c.court||'--')}<\/td><td>${c.opponents ? c.opponents.map(o=>esc(o.name)).join(', ') : '--'}<\/td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span><\/td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')">عرض</button><\/td><\/tr>`; 
+                let lastDate = 'لا توجد', lastNotes = ''; 
+                if (c.sessions && c.sessions.length) { 
+                    const sorted = [...c.sessions].sort((a,b) => new Date(b.date) - new Date(a.date)); 
+                    lastDate = new Date(sorted[0].date).toLocaleDateString('ar-EG'); 
+                    lastNotes = sorted[0].notes || ''; 
+                } 
+                
+                html += `
+                    <tr style="border-bottom: 1px solid var(--border); cursor: pointer;" onclick="window.goToCase('${esc(c.id)}')">
+                        <td style="padding: 10px; font-weight: 700; color: var(--navy);">${esc(c.caseNumber)}</td>
+                        <td style="padding: 10px; color: var(--slate);">${esc(c.court || '--')}</td>
+                        <td style="padding: 10px; color: var(--slate); font-size: 13px;">${c.opponents ? c.opponents.map(o => esc(o.name)).join(', ') : '--'}</td>
+                        <td style="padding: 10px; color: var(--slate);">${esc(c.subject || '--')}</td>
+                        <td style="padding: 10px;">
+                            <span style="font-size: 12px; color: var(--gold-dark); font-weight: 600;">📅 ${lastDate}</span>
+                            ${lastNotes ? `<div style="font-size: 11px; color: var(--orange); margin-top: 3px;">✏️ ${esc(lastNotes.length > 30 ? lastNotes.substring(0, 30) + '...' : lastNotes)}</div>` : ''}
+                        </td>
+                        <td style="padding: 10px;"><span class="status-badge ${getStatusClass(c.caseStatus)}" style="font-size: 12px;">${esc(c.caseStatus || 'متداولة')}</span></td>
+                        <td style="padding: 10px; text-align: center;">
+                            <button class="btn btn-sm" style="background: var(--gold); padding: 5px 12px;" onclick="event.stopPropagation(); window.goToCase('${esc(c.id)}')">
+                                <i class="fas fa-eye"></i> عرض
+                            </button>
+                        </td>
+                    </tr>
+                `; 
             }); 
-            html += '</tbody><table>'; 
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `; 
         } 
         html += '</div>'; 
     }); 
     div.innerHTML = html; 
 }
-
 function searchCourt() { 
     const term = document.getElementById('searchCourtInput').value.trim().toLowerCase(); 
     const div = document.getElementById('searchResults'); 
