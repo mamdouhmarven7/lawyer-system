@@ -686,6 +686,65 @@
     background: var(--gold);
     border-radius: 10px;
 }
+        /* ===== إعادة تصميم الجداول للموبايل ===== */
+@media (max-width: 768px) {
+    /* تحويل الجدول إلى بطاقات على الموبايل */
+    #clientsTable thead,
+    #casesTable thead {
+        display: none;
+    }
+    
+    #clientsTable tbody tr,
+    #casesTable tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px;
+        background: var(--white);
+    }
+    
+    #clientsTable tbody td,
+    #casesTable tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 8px 5px;
+        border-bottom: 1px solid var(--border);
+        text-align: right;
+    }
+    
+    #clientsTable tbody td:last-child,
+    #casesTable tbody td:last-child {
+        border-bottom: none;
+    }
+    
+    #clientsTable tbody td::before,
+    #casesTable tbody td::before {
+        content: attr(data-label);
+        font-weight: 800;
+        color: var(--gold-dark);
+        margin-left: 10px;
+        font-size: 12px;
+    }
+    
+    /* أزرار التحكم */
+    .action-buttons {
+        justify-content: flex-start;
+    }
+    
+    .action-buttons .btn-sm {
+        padding: 4px 10px;
+        font-size: 11px;
+    }
+    
+    /* تحسين عرض القضايا الموسعة */
+    .expanded-content {
+        font-size: 13px;
+    }
+}
     </style>
 </head>
 <body>
@@ -1536,20 +1595,19 @@ function renderClients() {
     tbody.innerHTML = clients.map(c => { 
         const caseCount = casesList.filter(cas => cas.clients?.some(cl => cl.id === c.id)).length;
         return `<tr>
-            <td>${esc(c.name)}<\/td>
-            <td>${c.type === 'company' ? 'شركة' : 'فرد'}<\/td>
-            <td>${esc(c.phone || '--')}<\/td>
-            <td>${esc(c.idNumber || '--')}<\/td>
-            <td>${c.delegationNumber ? 'رقم: ' + esc(c.delegationNumber) : 'لا يوجد'}<br><button class="btn btn-outline btn-sm" onclick="window.editDelegation('${esc(c.id)}')"><i class="fas fa-file-signature"></i> تعديل التوكيل</button><\/td>
-            <td>${caseCount}<\/td>
-            <td class="action-buttons">
+            <td data-label="الاسم">${esc(c.name)}<\/td>
+            <td data-label="النوع">${c.type === 'company' ? 'شركة' : 'فرد'}<\/td>
+            <td data-label="الهاتف">${esc(c.phone || '--')}<\/td>
+            <td data-label="الرقم الوطني">${esc(c.idNumber || '--')}<\/td>
+            <td data-label="التوكيل">${c.delegationNumber ? 'رقم: ' + esc(c.delegationNumber) : 'لا يوجد'}<br><button class="btn btn-outline btn-sm" onclick="window.editDelegation('${esc(c.id)}')"><i class="fas fa-file-signature"></i> تعديل</button><\/td>
+            <td data-label="القضايا">${caseCount}<\/td>
+            <td data-label="التحكم" class="action-buttons">
                 <button class="btn btn-sm" style="background:var(--gold);" onclick="window.editClient('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button>
                 <button class="btn btn-sm btn-danger" onclick="window.deleteClient('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button>
             <\/td>
-        </tr>`;
+         <\/tr>`;
     }).join('');
 }
-
 function renderDashboard() {
     const today = new Date(); today.setHours(0,0,0,0);
     
@@ -1677,17 +1735,17 @@ function renderCases() {
         ` : '<div style="margin-top:8px;"><span class="badge" style="font-size:11px; background:var(--muted);">لا توجد جلسات</span></div>';
         
         html += `<tr class="case-row" data-id="${esc(c.id)}" onclick="window.toggleCaseDetails('${esc(c.id)}')">
-            <td style="width:30px"><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i><\/td>
-            <td><strong>${esc(c.caseNumber)}</strong><\/td>
-            <td>${esc(c.court || '--')}${c.circuit ? ' — ' + esc(c.circuit) : ''}<\/td>
-            <td>${clientsHtml}<\/td>
-            <td>${opponentsHtml}<\/td>
-            <td>
+            <td data-label="" style="width:30px"><i class="fas fa-chevron-${isExpanded ? 'down' : 'left'}"></i><\/td>
+            <td data-label="رقم القضية"><strong>${esc(c.caseNumber)}</strong><\/td>
+            <td data-label="المحكمة">${esc(c.court || '--')}${c.circuit ? ' — ' + esc(c.circuit) : ''}<\/td>
+            <td data-label="الموكلون">${clientsHtml}<\/td>
+            <td data-label="الخصوم">${opponentsHtml}<\/td>
+            <td data-label="الموضوع">
                 <div><strong>📌 ${esc(c.subject || '--')}</strong></div>
                 ${lastSessionHtml}
               <\/td>
-            <td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span><\/td>
-            <td class="action-buttons">
+            <td data-label="الحالة"><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus || 'متداولة')}</span><\/td>
+            <td data-label="التحكم" class="action-buttons">
                 <button class="btn btn-sm" style="background:var(--gold);" onclick="event.stopPropagation();window.editCase('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button>
                 <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteCase('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button>
               <\/td>
@@ -1712,10 +1770,6 @@ function renderCases() {
     }
     tbody.innerHTML = html;
 }
-
-window.toggleCaseDetails = (caseId) => { expandedCaseId = expandedCaseId === caseId ? null : caseId; renderCases(); };
-window.goToCase = (caseId) => { document.querySelector('.nav-item[data-tab="cases"]')?.click(); setTimeout(() => { expandedCaseId = caseId; renderCases(); setTimeout(() => { const row = document.querySelector(`.case-row[data-id="${caseId}"]`); if (row) { row.scrollIntoView({ behavior: 'smooth', block: 'center' }); row.style.background = '#fef9c3'; setTimeout(() => row.style.background = '', 2000); } }, 300); }, 300); };
-
 function searchClient() { 
     const term = document.getElementById('searchClientInput').value.trim().toLowerCase(); 
     const div = document.getElementById('searchResults'); 
