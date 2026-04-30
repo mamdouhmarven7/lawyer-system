@@ -239,13 +239,81 @@
         .remove-party { background: none; border: none; color: var(--red); cursor: pointer; font-size: 1rem; margin-right: auto; }
 
         .menu-toggle { display: none; background: var(--navy); color: white; border: none; font-size: 1.4rem; cursor: pointer; padding: 6px 10px; border-radius: 10px; }
-      @media (max-width: 768px) {
-    /* الوضع الجانبي */
-    .sidebar { transform: translateX(100%); }
-    .sidebar.open { transform: translateX(0); }
-    .main-content { margin-right: 0; padding: 10px; }
-    .menu-toggle { display: block; }
-    .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+     @media (max-width: 768px) {
+    /* الوضع الجانبي الأساسي */
+    .sidebar {
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .main-content {
+        margin-right: 0;
+        transition: margin-right 0.3s ease;
+    }
+    .menu-toggle {
+        display: block;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    /* ===== الجديد: إخفاء القائمة يدوياً عبر الزر ===== */
+    /* هذه الكلاسات تستخدم مع زر الـ toggle */
+    .sidebar.hide-sidebar {
+        transform: translateX(100%);
+    }
+    
+    .main-content.full-width {
+        margin-right: 0 !important;
+    }
+    
+    /* تحسينات إضافية للشاشات الصغيرة */
+    .stat-card {
+        padding: 12px;
+    }
+    .stat-number {
+        font-size: 24px !important;
+    }
+    .stat-card h3 {
+        font-size: 12px !important;
+    }
+    
+    /* تحسين الجداول للموبايل */
+    .table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #clientsTable,
+    #casesTable {
+        min-width: 550px;
+    }
+    
+    #clientsTable th,
+    #clientsTable td,
+    #casesTable th,
+    #casesTable td {
+        padding: 6px 4px;
+        font-size: 12px;
+    }
+    
+    .action-buttons .btn-sm {
+        padding: 2px 6px;
+        font-size: 10px;
+    }
+    
+    /* تحسين المربعات */
+    .session-item-card {
+        padding: 10px 12px;
+    }
+    
+    .page-title {
+        font-size: 1.2rem;
+    }
+}
     
     /* تحسين البطاقات */
     .stat-card { padding: 12px; }
@@ -743,6 +811,47 @@
     /* تحسين عرض القضايا الموسعة */
     .expanded-content {
         font-size: 13px;
+    }
+}
+        /* ===== زر إظهار/إخفاء القائمة الجانبية للموبايل ===== */
+.sidebar-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    cursor: pointer;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    transform: scale(1.05);
+    background: var(--gold-dark);
+}
+
+@media (max-width: 768px) {
+    .sidebar-toggle {
+        display: flex;
+    }
+    
+    /* عندما تكون القائمة مخفية */
+    .sidebar.hide-sidebar {
+        transform: translateX(100%);
+    }
+    
+    /* عندما تكون القائمة مخفية، المحتوى يأخذ العرض كامل */
+    .main-content.full-width {
+        margin-right: 0 !important;
     }
 }
     </style>
@@ -2088,6 +2197,7 @@ function loadDarkModePreference() {
 function setupUIEnhancements() {
     loadDarkModePreference();
     addDarkModeButton();
+    initSidebarToggle();  // أضف هذا السطر
 }
 
 function setupEvents() {
@@ -2144,6 +2254,36 @@ function setupEvents() {
     document.addEventListener('click', () => document.getElementById('notifPanel').classList.remove('open'));
     document.getElementById('notifPanel').addEventListener('click', e => e.stopPropagation());
 }
+    // ===== دوال إظهار/إخفاء القائمة الجانبية للموبايل =====
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.querySelector('.main-content');
+    const toggleBtn = document.getElementById('sidebarToggleBtn');
+    
+    sidebar.classList.toggle('hide-sidebar');
+    mainContent.classList.toggle('full-width');
+    
+    // تغيير أيقونة الزر
+    if (sidebar.classList.contains('hide-sidebar')) {
+        toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+        showToast('📱 تم إخفاء القائمة، اضغط مرة أخرى لإظهارها', 'info');
+    } else {
+        toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        showToast('📱 تم إظهار القائمة', 'info');
+    }
+}
+
+// إضافة مستمع الحدث للزر
+function initSidebarToggle() {
+    const toggleBtn = document.getElementById('sidebarToggleBtn');
+    if (toggleBtn) {
+        toggleBtn.onclick = toggleSidebar;
+    }
+}
 </script>
+                    <!-- زر إظهار/إخفاء القائمة الجانبية للموبايل -->
+<button class="sidebar-toggle" id="sidebarToggleBtn">
+    <i class="fas fa-bars"></i>
+</button>
 </body>
 </html>
