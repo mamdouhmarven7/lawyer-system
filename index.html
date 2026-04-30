@@ -239,13 +239,55 @@
         .remove-party { background: none; border: none; color: var(--red); cursor: pointer; font-size: 1rem; margin-right: auto; }
 
         .menu-toggle { display: none; background: var(--navy); color: white; border: none; font-size: 1.4rem; cursor: pointer; padding: 6px 10px; border-radius: 10px; }
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-right: 0; }
-            .menu-toggle { display: block; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-        }
+      @media (max-width: 768px) {
+    /* الوضع الجانبي */
+    .sidebar { transform: translateX(100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main-content { margin-right: 0; padding: 10px; }
+    .menu-toggle { display: block; }
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    
+    /* تحسين البطاقات */
+    .stat-card { padding: 12px; }
+    .stat-number { font-size: 24px !important; }
+    .stat-card h3 { font-size: 12px !important; }
+    
+    /* تحسين الجداول للموبايل */
+    .table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #clientsTable,
+    #casesTable {
+        min-width: 550px;
+        font-size: 12px;
+    }
+    
+    #clientsTable th,
+    #clientsTable td,
+    #casesTable th,
+    #casesTable td {
+        padding: 6px 4px;
+        font-size: 12px;
+    }
+    
+    /* تصغير الأزرار */
+    .btn-sm {
+        padding: 2px 6px;
+        font-size: 10px;
+    }
+    
+    /* تحسين المربعات */
+    .session-item-card {
+        padding: 10px 12px;
+    }
+    
+    /* تحسين عنوان الصفحة */
+    .page-title {
+        font-size: 1.2rem;
+    }
+}
         @media (max-width: 480px) {
             .stats-grid { grid-template-columns: 1fr; }
             .main-content { padding: 14px; }
@@ -586,6 +628,63 @@
 /* تنسيق أيقونة التاريخ */
 #upcomingSessions .session-date i {
     font-size: 13px !important;
+}
+        /* ===== تحسينات الجداول للموبايل ===== */
+@media (max-width: 768px) {
+    /* جعل الجداول قابلة للتمرير أفقياً */
+    .table-wrap {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #clientsTable,
+    #casesTable {
+        min-width: 600px !important;
+        width: 100%;
+    }
+    
+    #clientsTable th,
+    #clientsTable td,
+    #casesTable th,
+    #casesTable td {
+        white-space: nowrap !important;
+        padding: 8px 6px !important;
+        font-size: 13px !important;
+    }
+    
+    /* تصغير حجم الأزرار في الجداول */
+    .action-buttons .btn-sm {
+        padding: 2px 6px !important;
+        font-size: 10px !important;
+    }
+    
+    /* تحسين عرض خانة القضايا في الموبايل */
+    .case-row td:nth-child(6) {
+        min-width: 120px;
+    }
+}
+        /* تحسين الجداول للشاشات الصغيرة */
+.table-wrap {
+    overflow-x: auto;
+    margin-bottom: 10px;
+}
+
+.table-wrap table {
+    min-width: 600px;
+}
+
+.table-wrap::-webkit-scrollbar {
+    height: 5px;
+}
+
+.table-wrap::-webkit-scrollbar-track {
+    background: var(--border);
+    border-radius: 10px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 10px;
 }
     </style>
 </head>
