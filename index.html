@@ -29,156 +29,65 @@
             --shadow-lg: 0 8px 40px rgba(15,23,42,0.14);
             --sidebar-width: 280px;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { font-size: 18px; }
         body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--navy); font-weight: 800; }
-
-        #toastContainer {
-            position: fixed; top: 16px; right: 16px; z-index: 99999;
-            display: flex; flex-direction: column; gap: 8px; pointer-events: none;
-            max-width: calc(100vw - 32px);
-        }
-        .toast {
-            background: var(--navy); color: white; padding: 12px 16px;
-            border-radius: var(--radius-sm); font-size: 0.88rem;
-            box-shadow: var(--shadow-lg); pointer-events: all;
-            animation: toastIn 0.3s ease; max-width: 320px;
-            border-right: 4px solid var(--gold); width: fit-content;
-            font-weight: 800;
-        }
+        #toastContainer { position: fixed; top: 16px; right: 16px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; max-width: calc(100vw - 32px); }
+        .toast { background: var(--navy); color: white; padding: 12px 16px; border-radius: var(--radius-sm); font-size: 0.88rem; box-shadow: var(--shadow-lg); pointer-events: all; animation: toastIn 0.3s ease; max-width: 320px; border-right: 4px solid var(--gold); width: fit-content; font-weight: 800; }
         .toast.success { border-right-color: var(--green); }
         .toast.error   { border-right-color: var(--red); }
         .toast.warning { border-right-color: var(--orange); }
         @keyframes toastIn  { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:translateX(0); } }
         @keyframes toastOut { to   { opacity:0; transform:translateX(20px); } }
-
-        #notifPanel {
-            position: fixed; top: 64px; right: 16px;
-            width: min(340px, calc(100vw - 32px));
-            background: white; border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg); z-index: 9998;
-            display: none; max-height: 70vh; overflow-y: auto;
-        }
+        #notifPanel { position: fixed; top: 64px; right: 16px; width: min(340px, calc(100vw - 32px)); background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); z-index: 9998; display: none; max-height: 70vh; overflow-y: auto; }
         #notifPanel.open { display: block; }
         .notif-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 800; }
         .notif-item { padding: 11px 18px; border-bottom: 1px solid var(--border); font-size: 0.85rem; line-height: 1.4; font-weight: 800; }
         .notif-item.unread { background: #fef9c3; }
         .notif-empty { padding: 28px; text-align: center; color: var(--muted); font-weight: 800; }
-
-        .login-container {
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; min-height: 100dvh;
-            background: linear-gradient(135deg, var(--navy), var(--navy-mid));
-            position: fixed; inset: 0; z-index: 100; padding: 16px;
-        }
-        .login-card {
-            background: white; padding: 32px 28px; border-radius: var(--radius-lg);
-            width: 100%; max-width: 400px; text-align: center; box-shadow: var(--shadow-lg);
-        }
+        .login-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; min-height: 100dvh; background: linear-gradient(135deg, var(--navy), var(--navy-mid)); position: fixed; inset: 0; z-index: 100; padding: 16px; }
+        .login-card { background: white; padding: 32px 28px; border-radius: var(--radius-lg); width: 100%; max-width: 400px; text-align: center; box-shadow: var(--shadow-lg); }
         .login-card h2 { font-size: 1.4rem; color: var(--navy); margin-bottom: 6px; font-weight: 800; }
         .login-card p  { color: var(--muted); margin-bottom: 20px; font-size: 0.9rem; font-weight: 800; }
-        .login-card input {
-            width: 100%; padding: 12px 16px; margin: 6px 0;
-            border: 1.5px solid var(--border); border-radius: 40px;
-            font-family: 'Cairo', sans-serif; font-size: 1rem; outline: none;
-            transition: border 0.2s; -webkit-appearance: none; font-weight: 800;
-        }
+        .login-card input { width: 100%; padding: 12px 16px; margin: 6px 0; border: 1.5px solid var(--border); border-radius: 40px; font-family: 'Cairo', sans-serif; font-size: 1rem; outline: none; transition: border 0.2s; -webkit-appearance: none; font-weight: 800; }
         .login-card input:focus { border-color: var(--gold); }
-        .login-card button {
-            width: 100%; padding: 13px; background: var(--gold); border: none;
-            border-radius: 40px; font-weight: 800; font-family: 'Cairo', sans-serif;
-            font-size: 1rem; cursor: pointer; margin-top: 10px; transition: background 0.2s;
-            -webkit-tap-highlight-color: transparent;
-        }
+        .login-card button { width: 100%; padding: 13px; background: var(--gold); border: none; border-radius: 40px; font-weight: 800; font-family: 'Cairo', sans-serif; font-size: 1rem; cursor: pointer; margin-top: 10px; transition: background 0.2s; -webkit-tap-highlight-color: transparent; }
         .login-card button:hover { background: var(--gold-dark); }
         #loginError { color: var(--red); margin-top: 10px; font-size: 0.88rem; min-height: 18px; font-weight: 800; }
-
         .app-container { display: flex; min-height: 100vh; min-height: 100dvh; }
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 49; }
         .sidebar-overlay.active { display: block; }
-
-        .sidebar {
-            width: var(--sidebar-width);
-            background: linear-gradient(180deg, var(--navy), var(--navy-mid));
-            color: #e2e8f0; position: fixed; right: 0; top: 0; bottom: 0;
-            overflow-y: auto; z-index: 50; transition: transform 0.3s ease;
-        }
+        .sidebar { width: var(--sidebar-width); background: linear-gradient(180deg, var(--navy), var(--navy-mid)); color: #e2e8f0; position: fixed; right: 0; top: 0; bottom: 0; overflow-y: auto; z-index: 50; transition: transform 0.3s ease; }
         .sidebar-header { padding: 22px 18px; border-bottom: 1px solid var(--navy-light); text-align: center; }
         .sidebar-header h2 { font-size: 1.15rem; color: var(--gold); font-weight: 800; }
         .lawyer-name { font-size: 0.88rem; color: #cbd5e1; margin-top: 5px; font-weight: 800; }
         .lawyer-name-small { font-size: 0.8rem; color: var(--muted); margin-top: 3px; font-weight: 800; }
         .consultant-text { font-size: 0.76rem; color: var(--muted); margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--navy-light); font-weight: 800; }
         .nav-menu { padding: 14px 0; }
-        .nav-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 14px 22px; margin: 3px 10px; border-radius: var(--radius-sm);
-            cursor: pointer; transition: all 0.2s; font-size: 0.95rem;
-            -webkit-tap-highlight-color: transparent; font-weight: 800;
-        }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 14px 22px; margin: 3px 10px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s; font-size: 0.95rem; -webkit-tap-highlight-color: transparent; font-weight: 800; }
         .nav-item:hover  { background: var(--navy-light); }
         .nav-item.active { background: var(--gold); color: var(--navy); font-weight: 800; }
-
-        .main-content {
-            flex: 1; margin-right: var(--sidebar-width); padding: 20px;
-            background: var(--bg); position: relative; z-index: 2;
-            min-height: 100vh; min-height: 100dvh; transition: margin-right 0.3s;
-        }
-
-        .top-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            background: white; padding: 10px 16px; border-radius: var(--radius-md);
-            margin-bottom: 18px; box-shadow: var(--shadow); gap: 8px;
-        }
+        .main-content { flex: 1; margin-right: var(--sidebar-width); padding: 20px; background: var(--bg); position: relative; z-index: 2; min-height: 100vh; min-height: 100dvh; transition: margin-right 0.3s; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px 16px; border-radius: var(--radius-md); margin-bottom: 18px; box-shadow: var(--shadow); gap: 8px; }
         .page-title { font-size: 1.3rem; font-weight: 800; flex: 1; text-align: center; }
         .top-actions { display: flex; gap: 8px; align-items: center; }
-        .logout-btn {
-            background: var(--red); color: white; border: none;
-            padding: 7px 14px; border-radius: 40px; cursor: pointer;
-            font-family: 'Cairo', sans-serif; font-weight: 800; font-size: 0.85rem;
-            -webkit-tap-highlight-color: transparent;
-        }
+        .logout-btn { background: var(--red); color: white; border: none; padding: 7px 14px; border-radius: 40px; cursor: pointer; font-family: 'Cairo', sans-serif; font-weight: 800; font-size: 0.85rem; -webkit-tap-highlight-color: transparent; }
         .notif-badge { position: relative; cursor: pointer; padding: 8px; }
-        .badge-count {
-            position: absolute; top: 0; right: 0;
-            background: var(--red); color: white; border-radius: 50%;
-            width: 18px; height: 18px; font-size: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 800;
-        }
-        .menu-toggle {
-            background: var(--navy); color: white; border: none;
-            font-size: 1.2rem; cursor: pointer; padding: 8px 10px;
-            border-radius: 10px; display: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .dark-mode-toggle {
-            background: transparent; border: 1.5px solid var(--border);
-            color: var(--slate); border-radius: 50%; width: 36px; height: 36px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 0.9rem;
-        }
-
+        .badge-count { position: absolute; top: 0; right: 0; background: var(--red); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        .menu-toggle { background: var(--navy); color: white; border: none; font-size: 1.2rem; cursor: pointer; padding: 8px 10px; border-radius: 10px; display: none; -webkit-tap-highlight-color: transparent; }
+        .dark-mode-toggle { background: transparent; border: 1.5px solid var(--border); color: var(--slate); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 18px; }
         .stat-card { background: white; padding: 16px; border-radius: var(--radius-md); border-right: 5px solid var(--gold); box-shadow: var(--shadow); }
         .stat-card h3 { font-size: 0.85rem; color: var(--slate); margin-bottom: 6px; font-weight: 800; }
         .stat-number { font-size: 1.8rem; font-weight: 800; color: var(--navy); }
-
         .card { background: white; border-radius: var(--radius-md); padding: 16px; margin-bottom: 18px; box-shadow: var(--shadow); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
-
-        .btn {
-            background: var(--gold); color: var(--navy); border: none;
-            padding: 9px 16px; border-radius: 40px; font-weight: 800;
-            cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
-            font-family: 'Cairo', sans-serif; font-size: 0.88rem; transition: all 0.2s;
-        }
+        .btn { background: var(--gold); color: var(--navy); border: none; padding: 9px 16px; border-radius: 40px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: 'Cairo', sans-serif; font-size: 0.88rem; transition: all 0.2s; }
         .btn:active { opacity: 0.85; transform: scale(0.97); }
         .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--slate); }
         .btn-sm { padding: 4px 10px; font-size: 0.78rem; }
         .btn-danger  { background: var(--red); color: white; }
         .btn-success { background: var(--green); color: white; }
-
         .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-sm); }
         .table-wrap::-webkit-scrollbar { height: 4px; }
         .table-wrap::-webkit-scrollbar-track { background: var(--border); border-radius: 10px; }
@@ -187,52 +96,28 @@
         th, td { text-align: right; padding: 11px 9px; border-bottom: 1px solid var(--border); font-size: 0.88rem; font-weight: 800; }
         th { font-weight: 800; color: var(--slate); background: var(--bg); white-space: nowrap; }
         tr:hover td { background: #f8fafc; }
-
         label { display: block; font-weight: 800; font-size: 0.86rem; color: var(--slate); margin-bottom: 4px; margin-top: 12px; }
-        input, select, textarea {
-            width: 100%; padding: 11px 14px;
-            border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-            font-family: 'Cairo', sans-serif; font-size: 1rem; font-weight: 800;
-            outline: none; transition: border 0.2s; background: white;
-            -webkit-appearance: none; color: var(--navy);
-        }
+        input, select, textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'Cairo', sans-serif; font-size: 1rem; font-weight: 800; outline: none; transition: border 0.2s; background: white; -webkit-appearance: none; color: var(--navy); }
         input:focus, select:focus, textarea:focus { border-color: var(--gold); }
         textarea { resize: vertical; }
-
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.65);
-            display: flex; justify-content: center; align-items: flex-end;
-            z-index: 9999; padding: 0; animation: fadeIn 0.2s ease;
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: flex; justify-content: center; align-items: flex-end; z-index: 9999; padding: 0; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-        .modal-container {
-            background: white; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-            width: 100%; max-height: 92vh; max-height: 92dvh;
-            overflow-y: auto; padding: 24px 20px; text-align: right;
-            box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease;
-        }
+        .modal-container { background: white; border-radius: var(--radius-lg) var(--radius-lg) 0 0; width: 100%; max-height: 92vh; max-height: 92dvh; overflow-y: auto; padding: 24px 20px; text-align: right; box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { transform:translateY(40px); opacity:0; } to { transform:translateY(0); opacity:1; } }
         .modal-container h3 { font-size: 1.15rem; margin-bottom: 14px; font-weight: 800; }
         .modal-buttons { display: flex; gap: 10px; margin-top: 18px; }
         .modal-buttons button { flex: 1; padding: 13px; border-radius: 40px; font-weight: 800; cursor: pointer; border: none; font-family: 'Cairo', sans-serif; font-size: 0.95rem; }
-
         .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 13px; font-weight: 800; display: inline-block; white-space: nowrap; }
         .status-mutadawla { background: var(--gold); color: var(--navy); }
         .status-hukm      { background: var(--green); color: white; }
         .status-mostanfa  { background: var(--orange); color: white; }
         .status-naqd      { background: var(--purple); color: white; }
         .badge { background: var(--gold); color: var(--navy); padding: 2px 8px; border-radius: 20px; font-size: 13px; font-weight: 800; }
-
         .case-row { cursor: pointer; }
         .case-row:hover td { background: #fef9c3 !important; }
         .expanded-content { padding: 16px; background: var(--bg); border-radius: var(--radius-sm); }
         .expanded-content h4 { margin: 14px 0 8px; font-size: 0.95rem; color: var(--slate); border-bottom: 1px solid var(--border); padding-bottom: 5px; font-weight: 800; }
-        .session-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 12px; border-radius: 10px; margin-bottom: 8px;
-            flex-wrap: wrap; gap: 8px; background: #fef9c3; font-weight: 800;
-        }
-
+        .session-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; background: #fef9c3; font-weight: 800; }
         .task-card { border-radius: var(--radius-sm); padding: 16px; margin-bottom: 12px; border-right: 4px solid; }
         .task-today { border-right-color: var(--gold); background: #fef9c3; }
         .task-done  { border-right-color: var(--green); background: #f0fdf4; opacity: 0.85; }
@@ -240,41 +125,23 @@
         .status-pending { background: var(--orange); color: white; }
         .status-done    { background: var(--green); color: white; }
         .task-checkbox  { width: 22px; height: 22px; cursor: pointer; accent-color: var(--green); }
-
         .search-type-buttons { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
         .search-type-btn { padding: 8px 18px; border-radius: 40px; cursor: pointer; background: var(--border); border: none; font-family: 'Cairo', sans-serif; font-weight: 800; font-size: 0.88rem; transition: all 0.2s; }
         .search-type-btn.active { background: var(--gold); }
-
         .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
         .loading { text-align: center; padding: 36px; color: var(--muted); font-weight: 800; }
         .action-buttons { display: flex; gap: 5px; flex-wrap: wrap; }
         .party-item { display: flex; align-items: center; gap: 8px; background: var(--bg); padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; font-weight: 800; }
         .remove-party { background: none; border: none; color: var(--red); cursor: pointer; font-size: 1rem; margin-right: auto; font-weight: 800; }
-
-        .confirm-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.65);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 99999; padding: 20px;
-        }
-        .confirm-box {
-            background: white; border-radius: var(--radius-lg); padding: 26px;
-            width: 100%; max-width: 380px; text-align: center; box-shadow: var(--shadow-lg);
-        }
+        .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: flex; justify-content: center; align-items: center; z-index: 99999; padding: 20px; }
+        .confirm-box { background: white; border-radius: var(--radius-lg); padding: 26px; width: 100%; max-width: 380px; text-align: center; box-shadow: var(--shadow-lg); }
         .confirm-box h3 { margin-bottom: 8px; font-size: 1.05rem; font-weight: 800; }
         .confirm-box p  { color: var(--slate); font-size: 0.88rem; margin-bottom: 18px; line-height: 1.5; font-weight: 800; }
         .confirm-btns   { display: flex; gap: 10px; justify-content: center; }
         .confirm-btns button { flex: 1; padding: 12px; border-radius: 40px; border: none; font-family: 'Cairo', sans-serif; font-weight: 800; cursor: pointer; font-size: 0.9rem; }
-
         #upcomingSessions { display: flex; flex-direction: column; gap: 10px; }
-        .session-item-card {
-            background: white; border-radius: var(--radius-md); padding: 14px 16px;
-            cursor: pointer; box-shadow: var(--shadow);
-            border: 1px solid var(--border); position: relative; overflow: hidden;
-        }
-        .session-item-card::before {
-            content: ''; position: absolute; top: 0; right: 0;
-            width: 4px; height: 100%; background: var(--gold);
-        }
+        .session-item-card { background: white; border-radius: var(--radius-md); padding: 14px 16px; cursor: pointer; box-shadow: var(--shadow); border: 1px solid var(--border); position: relative; overflow: hidden; }
+        .session-item-card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: var(--gold); }
         .session-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
         .session-case-info { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .session-case-number { font-weight: 800; font-size: 15px; color: var(--navy); background: rgba(250,204,21,0.2); padding: 3px 10px; border-radius: 20px; }
@@ -286,16 +153,10 @@
         .session-footer { display: flex; justify-content: flex-start; align-items: center; gap: 8px; flex-wrap: wrap; padding-top: 8px; border-top: 1px solid var(--border); }
         .session-date { font-size: 14px; font-weight: 800; color: var(--gold-dark); display: flex; align-items: center; gap: 4px; background: rgba(250,204,21,0.1); padding: 3px 8px; border-radius: 20px; }
         .session-notes { font-size: 13px; color: var(--orange); background: rgba(249,115,22,0.1); padding: 3px 8px; border-radius: 20px; display: flex; align-items: center; gap: 4px; font-weight: 800; }
-
-        body.dark-mode {
-            --bg: #111827; --navy: #f1f5f9; --border: #374151;
-            --white: #1f2937; --slate: #d1d5db; --muted: #9ca3af;
-        }
+        body.dark-mode { --bg: #111827; --navy: #f1f5f9; --border: #374151; --white: #1f2937; --slate: #d1d5db; --muted: #9ca3af; }
         body.dark-mode .sidebar { background: linear-gradient(180deg, #000, #0a0a0a) !important; }
         body.dark-mode .main-content { background: #0f0f0f !important; }
-        body.dark-mode .card, body.dark-mode .top-bar, body.dark-mode .stat-card,
-        body.dark-mode .modal-container, body.dark-mode .confirm-box,
-        body.dark-mode .session-item-card { background: #1a1a1a !important; color: #f1f5f9 !important; }
+        body.dark-mode .card, body.dark-mode .top-bar, body.dark-mode .stat-card, body.dark-mode .modal-container, body.dark-mode .confirm-box, body.dark-mode .session-item-card { background: #1a1a1a !important; color: #f1f5f9 !important; }
         body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background: #0f0f0f; border-color: #334155; color: #f1f5f9; }
         body.dark-mode th { background: #111 !important; color: #d1d5db !important; }
         body.dark-mode td { background: #1a1a1a !important; color: #f1f5f9 !important; }
@@ -304,888 +165,89 @@
         body.dark-mode .session-item { background: #2d2d2d; }
         body.dark-mode .expanded-content { background: #111; }
         body.dark-mode #notifPanel { background: #1a1a1a; }
-
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-right: 0; padding: 12px; }
-            .menu-toggle { display: block; }
-            .page-title { font-size: 1.1rem; }
-            .logout-btn span { display: none; }
-            .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-            .stat-card { padding: 12px; }
-            .stat-number { font-size: 1.5rem; }
-            .stat-card h3 { font-size: 0.78rem; }
-            table { min-width: 520px; }
-            th, td { padding: 8px 6px; font-size: 0.8rem; }
-            .action-buttons { flex-direction: column; gap: 4px; }
-            .action-buttons .btn-sm { width: 100%; justify-content: center; }
-            .card { padding: 12px; }
-            .card-header { gap: 8px; }
-            .top-bar { padding: 8px 12px; margin-bottom: 12px; }
-            .modal-container { border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 20px 16px; }
-            .confirm-box { padding: 20px 16px; }
-            .session-item-card { padding: 12px 14px; }
-            #notifPanel { top: 60px; right: 8px; left: 8px; width: auto; }
-        }
-        @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .main-content { padding: 10px; }
-            .search-type-buttons { gap: 6px; }
-            .search-type-btn { padding: 7px 14px; font-size: 0.82rem; }
-        }
+        @media (max-width: 768px) { .sidebar { transform: translateX(100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-right: 0; padding: 12px; } .menu-toggle { display: block; } .page-title { font-size: 1.1rem; } .logout-btn span { display: none; } .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; } .stat-card { padding: 12px; } .stat-number { font-size: 1.5rem; } .stat-card h3 { font-size: 0.78rem; } table { min-width: 520px; } th, td { padding: 8px 6px; font-size: 0.8rem; } .action-buttons { flex-direction: column; gap: 4px; } .action-buttons .btn-sm { width: 100%; justify-content: center; } .card { padding: 12px; } .card-header { gap: 8px; } .top-bar { padding: 8px 12px; margin-bottom: 12px; } .modal-container { border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 20px 16px; } .confirm-box { padding: 20px 16px; } .session-item-card { padding: 12px 14px; } #notifPanel { top: 60px; right: 8px; left: 8px; width: auto; } }
+        @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; } .main-content { padding: 10px; } .search-type-buttons { gap: 6px; } .search-type-btn { padding: 7px 14px; font-size: 0.82rem; } }
     </style>
 </head>
 <body>
-
 <div id="toastContainer"></div>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-<div id="notifPanel">
-    <div class="notif-header">
-        <strong>🔔 الإشعارات</strong>
-        <button onclick="window.markAllRead && window.markAllRead()" class="btn btn-sm">قراءة الكل</button>
-    </div>
-    <div id="notifList"><div class="notif-empty">لا توجد إشعارات</div></div>
-</div>
-
-<div id="loginScreen" class="login-container">
-    <div class="login-card">
-        <h2><i class="fas fa-gavel"></i> مكتب المستشارين</h2>
-        <p>تسجيل الدخول للمتابعة</p>
-        <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" autocomplete="username" value="admin@law.com">
-        <input type="password" id="loginPassword" placeholder="كلمة المرور" autocomplete="current-password" value="123456">
-        <button id="loginBtn">دخول</button>
-        <div id="loginError"></div>
-    </div>
-</div>
-
-<div id="appContent" style="display:none;">
-    <div class="app-container">
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2><i class="fas fa-gavel"></i> مكتب المستشارين</h2>
-                <div class="lawyer-name">ممدوح زهوي سرجيوس</div>
-                <div class="lawyer-name-small">أندرو ممدوح زهوي</div>
-                <div class="consultant-text">مستشارون قانونيون</div>
-            </div>
-            <div class="nav-menu">
-                <div class="nav-item active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</div>
-                <div class="nav-item" data-tab="clients"><i class="fas fa-users"></i> الموكلون</div>
-                <div class="nav-item" data-tab="cases"><i class="fas fa-balance-scale"></i> القضايا</div>
-                <div class="nav-item" data-tab="tasks"><i class="fas fa-tasks"></i> المهام الإدارية</div>
-                <div class="nav-item" data-tab="search"><i class="fas fa-search"></i> بحث</div>
-            </div>
-        </div>
-
-        <div class="main-content">
-            <div class="top-bar">
-                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-                <h1 class="page-title" id="pageTitle">لوحة التحكم</h1>
-                <div class="top-actions">
-                    <button class="dark-mode-toggle" id="darkModeBtn" title="الوضع الليلي"><i class="fas fa-moon"></i></button>
-                    <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>خروج</span></button>
-                    <div class="notif-badge" id="notifIcon">
-                        <i class="fas fa-bell fa-lg"></i>
-                        <span class="badge-count" id="notifCount"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div id="dashboardTab" class="tab-content">
-                <div class="stats-grid" id="statsGrid"></div>
-                <div class="card">
-                    <h3>📅 الجلسات القادمة</h3>
-                    <div id="upcomingSessions" style="margin-top:14px;"></div>
-                </div>
-            </div>
-
-            <div id="clientsTab" class="tab-content" style="display:none;">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>قائمة الموكلين</h3>
-                        <button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> إضافة موكل</button>
-                    </div>
-                    <div class="table-wrap">
-                        <table id="clientsTable">
-                            <thead><tr><th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>التوكيل</th><th>القضايا</th><th></th></tr></thead>
-                            <tbody><td><td colspan="7" class="loading">جاري التحميل...<\/td><\/tr></tbody>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="casesTab" class="tab-content" style="display:none;">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>القضايا</h3>
-                        <button class="btn" id="addCaseBtn"><i class="fas fa-plus"></i> قضية جديدة</button>
-                    </div>
-                    <div class="table-wrap">
-                        <table id="casesTable">
-                            <thead><tr><th style="width:28px"></th><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th></tr></thead>
-                            <tbody><tr><td colspan="8" class="loading">جاري التحميل...<\/td><\/tr></tbody>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="tasksTab" class="tab-content" style="display:none;">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>📋 المهام الإدارية</h3>
-                        <button class="btn" id="addTaskBtn"><i class="fas fa-plus"></i> إضافة مهمة</button>
-                    </div>
-                    <div id="tasksList"></div>
-                </div>
-            </div>
-
-            <div id="searchTab" class="tab-content" style="display:none;">
-                <div class="card">
-                    <div class="search-type-buttons">
-                        <button class="search-type-btn active" data-type="client">بحث عن موكل</button>
-                        <button class="search-type-btn" data-type="court">بحث عن محكمة</button>
-                    </div>
-                    <div id="searchClientDiv">
-                        <div class="flex-between">
-                            <input type="text" id="searchClientInput" placeholder="اسم الموكل..." style="margin:0;">
-                            <button class="btn" id="searchClientBtn">بحث</button>
-                        </div>
-                    </div>
-                    <div id="searchCourtDiv" style="display:none;">
-                        <div class="flex-between">
-                            <input type="text" id="searchCourtInput" placeholder="اسم المحكمة..." style="margin:0;">
-                            <button class="btn" id="searchCourtBtn">بحث</button>
-                        </div>
-                    </div>
-                    <div id="searchResults" style="margin-top:16px;"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+<div id="notifPanel"><div class="notif-header"><strong>🔔 الإشعارات</strong><button onclick="window.markAllRead && window.markAllRead()" class="btn btn-sm">قراءة الكل</button></div><div id="notifList"><div class="notif-empty">لا توجد إشعارات</div></div></div>
+<div id="loginScreen" class="login-container"><div class="login-card"><h2><i class="fas fa-gavel"></i> مكتب المستشارين</h2><p>تسجيل الدخول للمتابعة</p><input type="email" id="loginEmail" placeholder="البريد الإلكتروني" autocomplete="username" value="admin@law.com"><input type="password" id="loginPassword" placeholder="كلمة المرور" autocomplete="current-password" value="123456"><button id="loginBtn">دخول</button><div id="loginError"></div></div></div>
+<div id="appContent" style="display:none;"><div class="app-container"><div class="sidebar" id="sidebar"><div class="sidebar-header"><h2><i class="fas fa-gavel"></i> مكتب المستشارين</h2><div class="lawyer-name">ممدوح زهوي سرجيوس</div><div class="lawyer-name-small">أندرو ممدوح زهوي</div><div class="consultant-text">مستشارون قانونيون</div></div><div class="nav-menu"><div class="nav-item active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</div><div class="nav-item" data-tab="clients"><i class="fas fa-users"></i> الموكلون</div><div class="nav-item" data-tab="cases"><i class="fas fa-balance-scale"></i> القضايا</div><div class="nav-item" data-tab="tasks"><i class="fas fa-tasks"></i> المهام الإدارية</div><div class="nav-item" data-tab="search"><i class="fas fa-search"></i> بحث</div></div></div><div class="main-content"><div class="top-bar"><button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button><h1 class="page-title" id="pageTitle">لوحة التحكم</h1><div class="top-actions"><button class="dark-mode-toggle" id="darkModeBtn"><i class="fas fa-moon"></i></button><button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>خروج</span></button><div class="notif-badge" id="notifIcon"><i class="fas fa-bell fa-lg"></i><span class="badge-count" id="notifCount"></span></div></div></div>
+<div id="dashboardTab" class="tab-content"><div class="stats-grid" id="statsGrid"></div><div class="card"><h3>📅 الجلسات القادمة</h3><div id="upcomingSessions" style="margin-top:14px;"></div></div></div>
+<div id="clientsTab" class="tab-content" style="display:none;"><div class="card"><div class="card-header"><h3>قائمة الموكلين</h3><button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> إضافة موكل</button></div><div class="table-wrap"><table id="clientsTable"><thead><tr><th>الاسم</th><th>النوع</th><th>الهاتف</th><th>الرقم الوطني</th><th>التوكيل</th><th>القضايا</th><th></th></tr></thead><tbody><tr><td colspan="7" class="loading">جاري التحميل...</td></tr></tbody></table></div></div></div>
+<div id="casesTab" class="tab-content" style="display:none;"><div class="card"><div class="card-header"><h3>القضايا</h3><button class="btn" id="addCaseBtn"><i class="fas fa-plus"></i> قضية جديدة</button></div><div class="table-wrap"><table id="casesTable"><thead><tr><th style="width:28px"></th><th>رقم القضية</th><th>المحكمة</th><th>الموكلون</th><th>الخصوم</th><th>الموضوع</th><th>الحالة</th><th></th></tr></thead><tbody><tr><td colspan="8" class="loading">جاري التحميل...</td></tr></tbody></table></div></div></div>
+<div id="tasksTab" class="tab-content" style="display:none;"><div class="card"><div class="card-header"><h3>📋 المهام الإدارية</h3><button class="btn" id="addTaskBtn"><i class="fas fa-plus"></i> إضافة مهمة</button></div><div id="tasksList"></div></div></div>
+<div id="searchTab" class="tab-content" style="display:none;"><div class="card"><div class="search-type-buttons"><button class="search-type-btn active" data-type="client">بحث عن موكل</button><button class="search-type-btn" data-type="court">بحث عن محكمة</button></div><div id="searchClientDiv"><div class="flex-between"><input type="text" id="searchClientInput" placeholder="اسم الموكل..." style="margin:0;"><button class="btn" id="searchClientBtn">بحث</button></div></div><div id="searchCourtDiv" style="display:none;"><div class="flex-between"><input type="text" id="searchCourtInput" placeholder="اسم المحكمة..." style="margin:0;"><button class="btn" id="searchCourtBtn">بحث</button></div></div><div id="searchResults" style="margin-top:16px;"></div></div></div>
+</div></div></div>
 <script type="module">
-const firebaseConfig = {
-    apiKey: "AIzaSyB8EHWxJrl_rPnHJBVZiF-ihZacUiNVYJs",
-    authDomain: "lawyer-system-2aefd.firebaseapp.com",
-    projectId: "lawyer-system-2aefd",
-    storageBucket: "lawyer-system-2aefd.appspot.com",
-    messagingSenderId: "819922262043",
-    appId: "1:819922262043:web:888e08dbf72895cd0bc0be"
-};
-
+const firebaseConfig = { apiKey: "AIzaSyB8EHWxJrl_rPnHJBVZiF-ihZacUiNVYJs", authDomain: "lawyer-system-2aefd.firebaseapp.com", projectId: "lawyer-system-2aefd", storageBucket: "lawyer-system-2aefd.appspot.com", messagingSenderId: "819922262043", appId: "1:819922262043:web:888e08dbf72895cd0bc0be" };
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
 let clients = [], casesList = [], notifications = [], tasks = [], expandedCaseId = null;
 let tempClients = [], tempOpponents = [], tempTaskTypes = [];
-
-function esc(str) {
-    if (str == null) return '';
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-
-function showToast(msg, type = 'info') {
-    const c = document.getElementById('toastContainer');
-    const t = document.createElement('div');
-    t.className = `toast ${type}`;
-    t.textContent = msg;
-    c.appendChild(t);
-    setTimeout(() => {
-        t.style.animation = 'toastOut 0.3s ease forwards';
-        setTimeout(() => t.remove(), 300);
-    }, 3500);
-}
-
-function confirmDialog(title, text) {
-    return new Promise(resolve => {
-        const div = document.createElement('div');
-        div.className = 'confirm-overlay';
-        div.innerHTML = `<div class="confirm-box"><h3>${esc(title)}</h3><p>${esc(text)}</p><div class="confirm-btns"><button id="cfmYes" style="background:var(--red);color:white;font-weight:800;">تأكيد الحذف</button><button id="cfmNo" style="background:var(--border);font-weight:800;">إلغاء</button></div></div>`;
-        document.body.appendChild(div);
-        div.querySelector('#cfmYes').onclick = () => { div.remove(); resolve(true); };
-        div.querySelector('#cfmNo').onclick = () => { div.remove(); resolve(false); };
-    });
-}
-
-function addNotif(msg, type = 'info') {
-    notifications.unshift({ id: Date.now(), text: msg, type, read: false });
-    if (notifications.length > 100) notifications.pop();
-    const unread = notifications.filter(n => !n.read).length;
-    const badge = document.getElementById('notifCount');
-    badge.textContent = unread > 0 ? unread : '';
-    showToast(msg, type);
-    renderNotifList();
-}
-
-function renderNotifList() {
-    const list = document.getElementById('notifList');
-    if (!list) return;
-    list.innerHTML = notifications.length === 0
-        ? '<div class="notif-empty">لا توجد إشعارات</div>'
-        : notifications.slice(0,30).map(n => `<div class="notif-item ${n.read?'':'unread'}">${esc(n.text)}</div>`).join('');
-}
-
-window.markAllRead = () => {
-    notifications.forEach(n => n.read = true);
-    document.getElementById('notifCount').textContent = '';
-    renderNotifList();
-};
-
-function openSidebar() {
-    document.getElementById('sidebar').classList.add('open');
-    document.getElementById('sidebarOverlay').classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('sidebarOverlay').classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-    const btn = document.getElementById('darkModeBtn');
-    btn.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-}
-
-function getSuggestedTasks() {
-    try { return JSON.parse(localStorage.getItem('suggestedTasks') || '[]'); } catch { return []; }
-}
-function addToSuggested(name) {
-    let list = getSuggestedTasks();
-    if (!list.includes(name)) { list.unshift(name); if (list.length > 20) list.pop(); localStorage.setItem('suggestedTasks', JSON.stringify(list)); }
-}
-
-document.getElementById('loginBtn').onclick = async () => {
-    const email = document.getElementById('loginEmail').value.trim();
-    const pass = document.getElementById('loginPassword').value;
-    const err = document.getElementById('loginError');
-    err.textContent = '';
-    if (!email || !pass) { err.textContent = 'يرجى إدخال البريد وكلمة المرور'; return; }
-    try {
-        document.getElementById('loginBtn').textContent = 'جاري الدخول...';
-        await signInWithEmailAndPassword(auth, email, pass);
-    } catch {
-        err.textContent = 'خطأ في البريد أو كلمة المرور';
-        document.getElementById('loginBtn').textContent = 'دخول';
-    }
-};
+function esc(str) { if (str == null) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function showToast(msg, type = 'info') { const c = document.getElementById('toastContainer'); const t = document.createElement('div'); t.className = `toast ${type}`; t.textContent = msg; c.appendChild(t); setTimeout(() => { t.style.animation = 'toastOut 0.3s ease forwards'; setTimeout(() => t.remove(), 300); }, 3500); }
+function confirmDialog(title, text) { return new Promise(resolve => { const div = document.createElement('div'); div.className = 'confirm-overlay'; div.innerHTML = `<div class="confirm-box"><h3>${esc(title)}</h3><p>${esc(text)}</p><div class="confirm-btns"><button id="cfmYes" style="background:var(--red);color:white;font-weight:800;">تأكيد الحذف</button><button id="cfmNo" style="background:var(--border);font-weight:800;">إلغاء</button></div></div>`; document.body.appendChild(div); div.querySelector('#cfmYes').onclick = () => { div.remove(); resolve(true); }; div.querySelector('#cfmNo').onclick = () => { div.remove(); resolve(false); }; }); }
+function addNotif(msg, type = 'info') { notifications.unshift({ id: Date.now(), text: msg, type, read: false }); if (notifications.length > 100) notifications.pop(); const unread = notifications.filter(n => !n.read).length; const badge = document.getElementById('notifCount'); badge.textContent = unread > 0 ? unread : ''; showToast(msg, type); renderNotifList(); }
+function renderNotifList() { const list = document.getElementById('notifList'); if (!list) return; list.innerHTML = notifications.length === 0 ? '<div class="notif-empty">لا توجد إشعارات</div>' : notifications.slice(0,30).map(n => `<div class="notif-item ${n.read?'':'unread'}">${esc(n.text)}</div>`).join(''); }
+window.markAllRead = () => { notifications.forEach(n => n.read = true); document.getElementById('notifCount').textContent = ''; renderNotifList(); };
+function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('active'); document.body.style.overflow = ''; }
+function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('darkMode', document.body.classList.contains('dark-mode')); const btn = document.getElementById('darkModeBtn'); btn.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; }
+function getSuggestedTasks() { try { return JSON.parse(localStorage.getItem('suggestedTasks') || '[]'); } catch { return []; } }
+function addToSuggested(name) { let list = getSuggestedTasks(); if (!list.includes(name)) { list.unshift(name); if (list.length > 20) list.pop(); localStorage.setItem('suggestedTasks', JSON.stringify(list)); } }
+document.getElementById('loginBtn').onclick = async () => { const email = document.getElementById('loginEmail').value.trim(); const pass = document.getElementById('loginPassword').value; const err = document.getElementById('loginError'); err.textContent = ''; if (!email || !pass) { err.textContent = 'يرجى إدخال البريد وكلمة المرور'; return; } try { document.getElementById('loginBtn').textContent = 'جاري الدخول...'; await signInWithEmailAndPassword(auth, email, pass); } catch { err.textContent = 'خطأ في البريد أو كلمة المرور'; document.getElementById('loginBtn').textContent = 'دخول'; } };
 document.getElementById('loginPassword').addEventListener('keypress', e => { if (e.key === 'Enter') document.getElementById('loginBtn').click(); });
 window.addEventListener('load', () => setTimeout(() => document.getElementById('loginBtn').click(), 500));
-
-onAuthStateChanged(auth, async user => {
-    if (user) {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('appContent').style.display = 'block';
-        await loadAllData();
-        setupEvents();
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
-            document.getElementById('darkModeBtn').innerHTML = '<i class="fas fa-sun"></i>';
-        }
-    } else {
-        document.getElementById('loginScreen').style.display = 'flex';
-        document.getElementById('appContent').style.display = 'none';
-        document.getElementById('loginBtn').textContent = 'دخول';
-    }
-});
+onAuthStateChanged(auth, async user => { if (user) { document.getElementById('loginScreen').style.display = 'none'; document.getElementById('appContent').style.display = 'block'; await loadAllData(); setupEvents(); if (localStorage.getItem('darkMode') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkModeBtn').innerHTML = '<i class="fas fa-sun"></i>'; } } else { document.getElementById('loginScreen').style.display = 'flex'; document.getElementById('appContent').style.display = 'none'; document.getElementById('loginBtn').textContent = 'دخول'; } });
 document.getElementById('logoutBtn').onclick = () => signOut(auth);
-
-async function loadClients() {
-    const snap = await getDocs(collection(db, 'clients'));
-    clients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    clients.sort((a,b) => (a.name||'').localeCompare(b.name||'','ar'));
-    renderClients();
-}
-
-async function loadCases() {
-    const snap = await getDocs(query(collection(db,'cases'), orderBy('createdAt','asc')));
-    casesList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    casesList.forEach(c => {
-        const s = c.sessions || [];
-        if (s.length) {
-            const sorted = [...s].sort((a,b) => new Date(a.date)-new Date(b.date));
-            const today = new Date(); today.setHours(0,0,0,0);
-            c.nextSessionDate = sorted.find(x => new Date(x.date) >= today)?.date || null;
-            c.lastSessionDate = sorted[sorted.length-1].date;
-        } else { c.nextSessionDate = null; c.lastSessionDate = null; }
-    });
-    casesList.sort((a,b) => {
-        const ta = a.lastSessionDate ? new Date(a.lastSessionDate).getTime() : 0;
-        const tb = b.lastSessionDate ? new Date(b.lastSessionDate).getTime() : 0;
-        return ta - tb;
-    });
-    renderCases(); renderDashboard();
-}
-
-async function loadTasks() {
-    const snap = await getDocs(collection(db,'tasks'));
-    tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    tasks.sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt));
-    renderTasks();
-}
-
-async function loadAllData() {
-    await Promise.all([loadClients(), loadCases(), loadTasks()]);
-    checkReminders();
-}
-
+async function loadClients() { const snap = await getDocs(collection(db, 'clients')); clients = snap.docs.map(d => ({ id: d.id, ...d.data() })); clients.sort((a,b) => (a.name||'').localeCompare(b.name||'','ar')); renderClients(); }
+async function loadCases() { const snap = await getDocs(query(collection(db,'cases'), orderBy('createdAt','asc'))); casesList = snap.docs.map(d => ({ id: d.id, ...d.data() })); casesList.forEach(c => { const s = c.sessions || []; if (s.length) { const sorted = [...s].sort((a,b) => new Date(a.date)-new Date(b.date)); const today = new Date(); today.setHours(0,0,0,0); c.nextSessionDate = sorted.find(x => new Date(x.date) >= today)?.date || null; c.lastSessionDate = sorted[sorted.length-1].date; } else { c.nextSessionDate = null; c.lastSessionDate = null; } }); casesList.sort((a,b) => { const ta = a.lastSessionDate ? new Date(a.lastSessionDate).getTime() : 0; const tb = b.lastSessionDate ? new Date(b.lastSessionDate).getTime() : 0; return ta - tb; }); renderCases(); renderDashboard(); }
+async function loadTasks() { const snap = await getDocs(collection(db,'tasks')); tasks = snap.docs.map(d => ({ id: d.id, ...d.data() })); tasks.sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt)); renderTasks(); }
+async function loadAllData() { await Promise.all([loadClients(), loadCases(), loadTasks()]); checkReminders(); }
 window.addClient = async (data) => { await addDoc(collection(db,'clients'), {...data, createdAt: new Date().toISOString()}); addNotif('✅ تم إضافة موكل: '+data.name,'success'); await loadClients(); };
 window.updateClient = async (id,data) => { await updateDoc(doc(db,'clients',id), data); addNotif('✏️ تم تعديل الموكل','success'); await loadClients(); };
-window.deleteClient = async (id) => {
-    const c = clients.find(x => x.id===id);
-    if (!await confirmDialog('حذف الموكل', `هل تريد حذف "${c?.name||''}" وجميع قضاياه؟`)) return;
-    const related = casesList.filter(c => c.clients?.some(cl => cl.id===id));
-    for (const r of related) await deleteDoc(doc(db,'cases',r.id));
-    await deleteDoc(doc(db,'clients',id));
-    addNotif('🗑️ تم حذف الموكل','warning'); await loadAllData();
-};
-
+window.deleteClient = async (id) => { const c = clients.find(x => x.id===id); if (!await confirmDialog('حذف الموكل', `هل تريد حذف "${c?.name||''}" وجميع قضاياه؟`)) return; const related = casesList.filter(c => c.clients?.some(cl => cl.id===id)); for (const r of related) await deleteDoc(doc(db,'cases',r.id)); await deleteDoc(doc(db,'clients',id)); addNotif('🗑️ تم حذف الموكل','warning'); await loadAllData(); };
 window.addCase = async (data) => { await addDoc(collection(db,'cases'), {...data, sessions:[], createdAt: new Date().toISOString()}); addNotif('✅ تم إضافة قضية: '+data.caseNumber,'success'); await loadCases(); };
 window.updateCase = async (id,data) => { await updateDoc(doc(db,'cases',id), data); addNotif('✏️ تم تعديل القضية','success'); await loadCases(); };
-window.deleteCase = async (id) => {
-    const c = casesList.find(x => x.id===id);
-    if (!await confirmDialog('حذف القضية', `حذف القضية رقم "${c?.caseNumber||''}"؟`)) return;
-    await deleteDoc(doc(db,'cases',id)); addNotif('🗑️ تم حذف القضية','warning'); await loadAllData();
-};
-
-window.addSession = async (caseId, data) => {
-    const ref = doc(db,'cases',caseId); const d = await getDoc(ref);
-    const sessions = [...(d.data().sessions||[]), {id: Date.now(), ...data}];
-    sessions.sort((a,b) => new Date(a.date)-new Date(b.date));
-    await updateDoc(ref, {sessions}); addNotif('📅 تم إضافة جلسة','success'); await loadCases();
-};
-window.deleteSession = async (caseId, sessionId) => {
-    if (!await confirmDialog('حذف الجلسة','هل تريد حذف هذه الجلسة؟')) return;
-    const ref = doc(db,'cases',caseId); const d = await getDoc(ref);
-    const sessions = (d.data().sessions||[]).filter(s => s.id !== sessionId);
-    await updateDoc(ref, {sessions}); addNotif('🗑️ تم حذف الجلسة','warning'); await loadCases();
-};
-window.editSession = async (caseId, sessionId, newData) => {
-    const ref = doc(db,'cases',caseId); const d = await getDoc(ref);
-    const sessions = (d.data().sessions||[]).map(s => s.id===sessionId ? {...s,...newData} : s);
-    sessions.sort((a,b) => new Date(a.date)-new Date(b.date));
-    await updateDoc(ref, {sessions}); addNotif('✏️ تم تعديل الجلسة','success'); await loadCases();
-};
-
+window.deleteCase = async (id) => { const c = casesList.find(x => x.id===id); if (!await confirmDialog('حذف القضية', `حذف القضية رقم "${c?.caseNumber||''}"؟`)) return; await deleteDoc(doc(db,'cases',id)); addNotif('🗑️ تم حذف القضية','warning'); await loadAllData(); };
+window.addSession = async (caseId, data) => { const ref = doc(db,'cases',caseId); const d = await getDoc(ref); const sessions = [...(d.data().sessions||[]), {id: Date.now(), ...data}]; sessions.sort((a,b) => new Date(a.date)-new Date(b.date)); await updateDoc(ref, {sessions}); addNotif('📅 تم إضافة جلسة','success'); await loadCases(); };
+window.deleteSession = async (caseId, sessionId) => { if (!await confirmDialog('حذف الجلسة','هل تريد حذف هذه الجلسة؟')) return; const ref = doc(db,'cases',caseId); const d = await getDoc(ref); const sessions = (d.data().sessions||[]).filter(s => s.id !== sessionId); await updateDoc(ref, {sessions}); addNotif('🗑️ تم حذف الجلسة','warning'); await loadCases(); };
+window.editSession = async (caseId, sessionId, newData) => { const ref = doc(db,'cases',caseId); const d = await getDoc(ref); const sessions = (d.data().sessions||[]).map(s => s.id===sessionId ? {...s,...newData} : s); sessions.sort((a,b) => new Date(a.date)-new Date(b.date)); await updateDoc(ref, {sessions}); addNotif('✏️ تم تعديل الجلسة','success'); await loadCases(); };
 window.addTask = async (data) => { await addDoc(collection(db,'tasks'), data); addNotif('✅ تم إضافة مهمة','success'); await loadTasks(); };
 window.updateTask = async (id,data) => { await updateDoc(doc(db,'tasks',id), data); addNotif('✏️ تم تعديل المهمة','success'); await loadTasks(); };
 window.deleteTask = async (id) => { if (!await confirmDialog('حذف المهمة','هل تريد حذف هذه المهمة؟')) return; await deleteDoc(doc(db,'tasks',id)); addNotif('🗑️ تم حذف المهمة','warning'); await loadTasks(); };
-
-window.toggleTaskItemCompleted = async (taskId, idx, checked) => {
-    const task = tasks.find(t => t.id===taskId); if (!task) return;
-    const items = [...(task.taskItems||[])];
-    if (items[idx]) { items[idx].completed = checked; }
-    const allDone = items.length > 0 && items.every(i => i.completed);
-    await updateDoc(doc(db,'tasks',taskId), {taskItems: items, status: allDone?'done':'pending'});
-    addNotif(checked ? '✅ تم إنجاز مهمة' : '🔄 تم إعادة فتح مهمة','success');
-    await loadTasks();
-};
-
-window.deleteTaskItem = async (taskId, idx) => {
-    if (!await confirmDialog('حذف مهمة','هل تريد حذف هذه المهمة من القائمة؟')) return;
-    const task = tasks.find(t => t.id===taskId); if (!task) return;
-    const items = [...(task.taskItems||[])]; items.splice(idx,1);
-    const allDone = items.length > 0 && items.every(i => i.completed);
-    await updateDoc(doc(db,'tasks',taskId), {taskItems: items, status: allDone?'done':'pending'});
-    addNotif('🗑️ تم حذف المهمة من القائمة','warning'); await loadTasks();
-};
-
-function renderTaskCard(t, cls) {
-    const items = t.taskItems || [];
-    const done = items.filter(i => i.completed).length;
-    const total = items.length;
-    const allDone = total > 0 && done === total;
-    const pct = total > 0 ? Math.round((done/total)*100) : 0;
-    const clientInfo = (t.clientNames && t.clientNames !== 'بدون موكل')
-        ? `<div style="margin-top:6px;font-size:0.88rem;color:var(--slate);background:rgba(250,204,21,0.15);padding:6px 10px;border-radius:8px;font-weight:800;"><i class="fas fa-user-tie"></i> <strong>الموكل:</strong> ${esc(t.clientNames)}</div>` : '';
-    const lastSess = t.lastSessionDate
-        ? `<div style="margin-top:8px;padding:8px;background:rgba(34,197,94,0.1);border-radius:8px;border-right:3px solid var(--green);font-size:0.85rem;font-weight:800;">
-               <i class="fas fa-calendar-alt"></i> <strong>آخر جلسة:</strong> ${new Date(t.lastSessionDate).toLocaleDateString('ar-EG')}
-               ${t.lastSessionNotes ? `<div style="margin-top:4px;"><i class="fas fa-pen"></i> ${esc(t.lastSessionNotes)}</div>` : ''}
-           </div>` : '<div style="margin-top:6px;color:var(--muted);font-size:0.8rem;font-weight:800;">لا توجد جلسات مسجلة</div>';
-    const progress = total > 0 ? `<div style="margin-top:10px;"><div style="background:var(--border);border-radius:10px;height:7px;overflow:hidden;"><div style="background:var(--green);width:${pct}%;height:7px;transition:width 0.3s;"></div></div><div style="font-size:14px;color:var(--muted);margin-top:4px;font-weight:800;">${done}/${total} مهمة (${pct}%)</div></div>` : '';
-    let itemsHtml = '<div style="margin-top:10px;color:var(--muted);font-size:0.85rem;font-weight:800;">لا توجد مهام محددة</div>';
-    if (items.length) {
-        itemsHtml = `<div style="margin-top:12px;"><strong><i class="fas fa-list-check"></i> قائمة المهام:</strong><div style="margin-top:8px;">`;
-        items.forEach((item, idx) => {
-            const doneFlag = item.completed === true;
-            itemsHtml += `<div style="display:flex;align-items:center;gap:10px;padding:10px;margin-bottom:6px;background:${doneFlag?'rgba(34,197,94,0.1)':'rgba(250,204,21,0.1)'};border-radius:10px;border-right:3px solid ${doneFlag?'var(--green)':'var(--gold)'};font-weight:800;">
-                <input type="checkbox" class="task-checkbox" ${doneFlag?'checked':''} onchange="window.toggleTaskItemCompleted('${esc(t.id)}',${idx},this.checked)">
-                <span style="flex:1;font-size:0.92rem;${doneFlag?'text-decoration:line-through;color:var(--muted);':'font-weight:800;'}">${esc(item.name)}</span>
-                <button class="btn btn-sm btn-danger" style="padding:4px 8px;font-weight:800;" onclick="event.stopPropagation();window.deleteTaskItem('${esc(t.id)}',${idx})"><i class="fas fa-trash"></i></button>
-            </div>`;
-        });
-        itemsHtml += '</div></div>';
-    }
-    return `<div class="task-card ${cls}" onclick="event.stopPropagation();">
-        <div class="flex-between" style="margin-bottom:10px;">
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <span style="background:var(--gold);color:var(--navy);padding:4px 12px;border-radius:20px;font-weight:800;font-size:0.88rem;"><i class="fas fa-gavel"></i> ${esc(t.caseNumber||'بدون قضية')}</span>
-                <span style="background:var(--navy-light);color:white;padding:4px 10px;border-radius:20px;font-size:0.8rem;font-weight:800;"><i class="fas fa-building"></i> ${esc(t.court||'غير محدد')}</span>
-            </div>
-            <button class="btn btn-sm" onclick="event.stopPropagation();window.editTask('${esc(t.id)}')"><i class="fas fa-edit"></i> تعديل</button>
-        </div>
-        ${clientInfo}${lastSess}${progress}${itemsHtml}
-        <div class="flex-between" style="margin-top:12px;padding-top:8px;border-top:1px solid var(--border);">
-            <span style="font-size:0.8rem;color:var(--muted);font-weight:800;"><i class="fas fa-clock"></i> ${new Date(t.createdAt).toLocaleDateString('ar-EG')}</span>
-            <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteTask('${esc(t.id)}')"><i class="fas fa-trash"></i> حذف</button>
-        </div>
-    </div>`;
-}
-
-function renderTasks() {
-    const el = document.getElementById('tasksList'); if (!el) return;
-    const pending = tasks.filter(t => { const i=t.taskItems||[]; return i.length>0 && !i.every(x=>x.completed); });
-    const completed = tasks.filter(t => { const i=t.taskItems||[]; return i.length>0 && i.every(x=>x.completed); });
-    let html = '';
-    if (pending.length) { html += '<h3 style="margin:14px 0 10px;font-size:1rem;font-weight:800;"><i class="fas fa-clock"></i> المهام الجاري العمل عليها</h3>'; pending.forEach(t=>html+=renderTaskCard(t,'task-today')); }
-    if (completed.length) { html += '<h3 style="margin:14px 0 10px;font-size:1rem;color:var(--green);font-weight:800;"><i class="fas fa-check-circle"></i> المهام المنجزة</h3>'; completed.forEach(t=>html+=renderTaskCard(t,'task-done')); }
-    if (!pending.length && !completed.length) html = '<p class="loading">لا توجد مهام</p>';
-    el.innerHTML = html;
-}
-
-function showTaskModal(task = null) {
-    const isEdit = task !== null;
-    tempTaskTypes = isEdit && task.taskItems ? task.taskItems.map(i=>i.name) : [];
-
-    let sorted = [...casesList].sort((a,b)=>{
-        const na = a.clients?.[0]?.name||''; const nb = b.clients?.[0]?.name||'';
-        return na.localeCompare(nb,'ar');
-    });
-
-    const opts = '<option value="">-- اختر القضية --</option>' + sorted.map(c => {
-        const names = c.clients ? c.clients.map(x=>x.name).join(', ') : 'بدون موكل';
-        const s = c.sessions||[];
-        const last = s.length ? [...s].sort((a,b)=>new Date(b.date)-new Date(a.date))[0] : null;
-        return `<option value="${esc(c.id)}" ${task?.caseId===c.id?'selected':''}
-            data-client="${esc(names)}"
-            data-last-date="${last?new Date(last.date).toLocaleDateString('ar-EG'):''}"
-            data-last-notes="${last?esc(last.notes||''):''}">
-            ⚖️ ${esc(c.caseNumber)} | 🏛️ ${esc(c.court||'غير محدد')} | 👤 ${esc(names.length>40?names.slice(0,40)+'...':names)}
-        </option>`;
-    }).join('');
-
-    const sugg = getSuggestedTasks();
-    const suggHtml = sugg.length ? `<div style="margin-top:8px;"><div style="font-size:14px;color:var(--slate);margin-bottom:6px;font-weight:800;">✨ المقترحات:</div><div style="display:flex;flex-wrap:wrap;gap:6px;">${sugg.map(s=>`<span style="background:rgba(250,204,21,0.2);padding:4px 10px;border-radius:20px;font-size:14px;cursor:pointer;border:1px solid var(--gold);font-weight:800;" onclick="addSuggestInternal('${esc(s)}')">+ ${esc(s)}</span>`).join('')}</div></div>` : '';
-
-    document.body.insertAdjacentHTML('beforeend', `<div id="taskModal" class="modal-overlay">
-        <div class="modal-container">
-            <h3>${isEdit?'✏️ تعديل المهمة':'➕ إضافة مهمة جديدة'}</h3>
-            <label>⚖️ القضية</label>
-            <select id="taskCaseId">${opts}</select>
-            <div id="casePreview" style="background:var(--bg);padding:10px;border-radius:8px;margin-top:8px;font-size:0.85rem;display:none;font-weight:800;">
-                <div><strong>الموكل:</strong> <span id="prevClient"></span></div>
-                <div style="margin-top:4px;"><strong>آخر جلسة:</strong> <span id="prevDate"></span></div>
-                <div style="margin-top:4px;"><strong>ملاحظات:</strong> <span id="prevNotes"></span></div>
-            </div>
-            <label style="margin-top:14px;">📋 المهام</label>
-            <div id="taskTypesCont"></div>
-            <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
-                <input type="text" id="newTaskTypeInput" placeholder="اسم المهمة..." style="flex:1;margin:0;">
-                <button class="btn btn-success btn-sm" id="addTypeBtn" style="white-space:nowrap;font-weight:800;">+ إضافة</button>
-            </div>
-            ${suggHtml}
-            <div class="modal-buttons">
-                <button id="saveTaskBtn" style="background:var(--${isEdit?'gold':'green'});color:${isEdit?'var(--navy)':'white'};font-weight:800;">${isEdit?'💾 حفظ':'✅ إضافة'}</button>
-                <button id="closeTaskBtn" style="background:var(--border);font-weight:800;">إلغاء</button>
-            </div>
-        </div>
-    </div>`);
-
-    const sel = document.getElementById('taskCaseId');
-    const prev = document.getElementById('casePreview');
-    sel.onchange = () => {
-        const opt = sel.options[sel.selectedIndex];
-        if (sel.value && opt) {
-            document.getElementById('prevClient').textContent = opt.dataset.client || '--';
-            document.getElementById('prevDate').textContent = opt.dataset.lastDate || 'لا توجد';
-            document.getElementById('prevNotes').textContent = opt.dataset.lastNotes || 'لا توجد';
-            prev.style.display = 'block';
-        } else { prev.style.display = 'none'; }
-    };
-    if (sel.value) sel.dispatchEvent(new Event('change'));
-
-    const renderTypes = () => {
-        const el = document.getElementById('taskTypesCont');
-        el.innerHTML = tempTaskTypes.length ? tempTaskTypes.map((n,i) => `<div class="party-item" style="justify-content:space-between;margin-bottom:6px;font-weight:800;"><span><i class="fas fa-tasks" style="color:var(--gold);margin-left:6px;"></i>${esc(n)}</span><button class="remove-party" onclick="removeTypeInt(${i})" style="font-weight:800;">✖</button></div>`).join('') : '<p style="color:var(--muted);font-size:0.85rem;margin:5px 0;font-weight:800;">لا توجد مهام مضافة</p>';
-    };
-    window.removeTypeInt = (i) => { tempTaskTypes.splice(i,1); renderTypes(); };
-    window.addSuggestInternal = (name) => {
-        if (!tempTaskTypes.includes(name)) { tempTaskTypes.push(name); renderTypes(); showToast(`✅ تم إضافة "${name}"`,'success'); }
-        else showToast(`⚠️ "${name}" موجود بالفعل`,'warning');
-    };
-    const addType = () => {
-        const v = document.getElementById('newTaskTypeInput').value.trim();
-        if (!v) { showToast('⚠️ أدخل اسم المهمة','warning'); return; }
-        if (tempTaskTypes.includes(v)) { showToast('⚠️ المهمة موجودة بالفعل','warning'); return; }
-        tempTaskTypes.push(v); addToSuggested(v);
-        document.getElementById('newTaskTypeInput').value = '';
-        renderTypes(); showToast(`✅ تم إضافة "${v}"`,'success');
-    };
-    document.getElementById('addTypeBtn').onclick = addType;
-    document.getElementById('newTaskTypeInput').addEventListener('keypress', e => { if (e.key==='Enter') { e.preventDefault(); addType(); } });
-    renderTypes();
-
-    document.getElementById('saveTaskBtn').onclick = async () => {
-        if (tempTaskTypes.length === 0) { showToast('⚠️ أضف مهمة واحدة على الأقل','warning'); return; }
-        const caseId = sel.value;
-        const found = caseId ? casesList.find(c=>c.id===caseId) : null;
-        const s = found?.sessions||[];
-        const last = s.length ? [...s].sort((a,b)=>new Date(b.date)-new Date(a.date))[0] : null;
-        const data = {
-            caseId: caseId||'', caseNumber: found?.caseNumber||'بدون قضية',
-            court: found?.court||'غير محدد',
-            clientNames: found?.clients ? found.clients.map(c=>c.name).join(', ') : 'بدون موكل',
-            lastSessionDate: last?.date||'', lastSessionNotes: last?.notes||'',
-            taskItems: tempTaskTypes.map(n=>({id: Date.now()+Math.random(), name:n, completed:false})),
-            status: 'pending', createdAt: task?.createdAt || new Date().toISOString()
-        };
-        if (isEdit) await window.updateTask(task.id, data);
-        else await window.addTask(data);
-        document.getElementById('taskModal').remove();
-    };
-    document.getElementById('closeTaskBtn').onclick = () => document.getElementById('taskModal').remove();
-}
+window.toggleTaskItemCompleted = async (taskId, idx, checked) => { const task = tasks.find(t => t.id===taskId); if (!task) return; const items = [...(task.taskItems||[])]; if (items[idx]) { items[idx].completed = checked; } const allDone = items.length > 0 && items.every(i => i.completed); await updateDoc(doc(db,'tasks',taskId), {taskItems: items, status: allDone?'done':'pending'}); addNotif(checked ? '✅ تم إنجاز مهمة' : '🔄 تم إعادة فتح مهمة','success'); await loadTasks(); };
+window.deleteTaskItem = async (taskId, idx) => { if (!await confirmDialog('حذف مهمة','هل تريد حذف هذه المهمة من القائمة؟')) return; const task = tasks.find(t => t.id===taskId); if (!task) return; const items = [...(task.taskItems||[])]; items.splice(idx,1); const allDone = items.length > 0 && items.every(i => i.completed); await updateDoc(doc(db,'tasks',taskId), {taskItems: items, status: allDone?'done':'pending'}); addNotif('🗑️ تم حذف المهمة من القائمة','warning'); await loadTasks(); };
+function renderTaskCard(t, cls) { const items = t.taskItems || []; const done = items.filter(i => i.completed).length; const total = items.length; const allDone = total > 0 && done === total; const pct = total > 0 ? Math.round((done/total)*100) : 0; const clientInfo = (t.clientNames && t.clientNames !== 'بدون موكل') ? `<div style="margin-top:6px;font-size:0.88rem;color:var(--slate);background:rgba(250,204,21,0.15);padding:6px 10px;border-radius:8px;font-weight:800;"><i class="fas fa-user-tie"></i> <strong>الموكل:</strong> ${esc(t.clientNames)}</div>` : ''; const lastSess = t.lastSessionDate ? `<div style="margin-top:8px;padding:8px;background:rgba(34,197,94,0.1);border-radius:8px;border-right:3px solid var(--green);font-size:0.85rem;font-weight:800;"><i class="fas fa-calendar-alt"></i> <strong>آخر جلسة:</strong> ${new Date(t.lastSessionDate).toLocaleDateString('ar-EG')}${t.lastSessionNotes ? `<div style="margin-top:4px;"><i class="fas fa-pen"></i> ${esc(t.lastSessionNotes)}</div>` : ''}</div>` : '<div style="margin-top:6px;color:var(--muted);font-size:0.8rem;font-weight:800;">لا توجد جلسات مسجلة</div>'; const progress = total > 0 ? `<div style="margin-top:10px;"><div style="background:var(--border);border-radius:10px;height:7px;overflow:hidden;"><div style="background:var(--green);width:${pct}%;height:7px;transition:width 0.3s;"></div></div><div style="font-size:14px;color:var(--muted);margin-top:4px;font-weight:800;">${done}/${total} مهمة (${pct}%)</div></div>` : ''; let itemsHtml = '<div style="margin-top:10px;color:var(--muted);font-size:0.85rem;font-weight:800;">لا توجد مهام محددة</div>'; if (items.length) { itemsHtml = `<div style="margin-top:12px;"><strong><i class="fas fa-list-check"></i> قائمة المهام:</strong><div style="margin-top:8px;">`; items.forEach((item, idx) => { const doneFlag = item.completed === true; itemsHtml += `<div style="display:flex;align-items:center;gap:10px;padding:10px;margin-bottom:6px;background:${doneFlag?'rgba(34,197,94,0.1)':'rgba(250,204,21,0.1)'};border-radius:10px;border-right:3px solid ${doneFlag?'var(--green)':'var(--gold)'};font-weight:800;"><input type="checkbox" class="task-checkbox" ${doneFlag?'checked':''} onchange="window.toggleTaskItemCompleted('${esc(t.id)}',${idx},this.checked)"><span style="flex:1;font-size:0.92rem;${doneFlag?'text-decoration:line-through;color:var(--muted);':'font-weight:800;'}">${esc(item.name)}</span><button class="btn btn-sm btn-danger" style="padding:4px 8px;font-weight:800;" onclick="event.stopPropagation();window.deleteTaskItem('${esc(t.id)}',${idx})"><i class="fas fa-trash"></i></button></div>`; }); itemsHtml += '</div></div>'; } return `<div class="task-card ${cls}" onclick="event.stopPropagation();"><div class="flex-between" style="margin-bottom:10px;"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="background:var(--gold);color:var(--navy);padding:4px 12px;border-radius:20px;font-weight:800;font-size:0.88rem;"><i class="fas fa-gavel"></i> ${esc(t.caseNumber||'بدون قضية')}</span><span style="background:var(--navy-light);color:white;padding:4px 10px;border-radius:20px;font-size:0.8rem;font-weight:800;"><i class="fas fa-building"></i> ${esc(t.court||'غير محدد')}</span></div><button class="btn btn-sm" onclick="event.stopPropagation();window.editTask('${esc(t.id)}')"><i class="fas fa-edit"></i> تعديل</button></div>${clientInfo}${lastSess}${progress}${itemsHtml}<div class="flex-between" style="margin-top:12px;padding-top:8px;border-top:1px solid var(--border);"><span style="font-size:0.8rem;color:var(--muted);font-weight:800;"><i class="fas fa-clock"></i> ${new Date(t.createdAt).toLocaleDateString('ar-EG')}</span><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteTask('${esc(t.id)}')"><i class="fas fa-trash"></i> حذف</button></div></div>`; }
+function renderTasks() { const el = document.getElementById('tasksList'); if (!el) return; const pending = tasks.filter(t => { const i=t.taskItems||[]; return i.length>0 && !i.every(x=>x.completed); }); const completed = tasks.filter(t => { const i=t.taskItems||[]; return i.length>0 && i.every(x=>x.completed); }); let html = ''; if (pending.length) { html += '<h3 style="margin:14px 0 10px;font-size:1rem;font-weight:800;"><i class="fas fa-clock"></i> المهام الجاري العمل عليها</h3>'; pending.forEach(t=>html+=renderTaskCard(t,'task-today')); } if (completed.length) { html += '<h3 style="margin:14px 0 10px;font-size:1rem;color:var(--green);font-weight:800;"><i class="fas fa-check-circle"></i> المهام المنجزة</h3>'; completed.forEach(t=>html+=renderTaskCard(t,'task-done')); } if (!pending.length && !completed.length) html = '<p class="loading">لا توجد مهام</p>'; el.innerHTML = html; }
+function showTaskModal(task = null) { const isEdit = task !== null; tempTaskTypes = isEdit && task.taskItems ? task.taskItems.map(i=>i.name) : []; let sorted = [...casesList].sort((a,b)=>{ const na = a.clients?.[0]?.name||''; const nb = b.clients?.[0]?.name||''; return na.localeCompare(nb,'ar'); }); const opts = '<option value="">-- اختر القضية --</option>' + sorted.map(c => { const names = c.clients ? c.clients.map(x=>x.name).join(', ') : 'بدون موكل'; const s = c.sessions||[]; const last = s.length ? [...s].sort((a,b)=>new Date(b.date)-new Date(a.date))[0] : null; return `<option value="${esc(c.id)}" ${task?.caseId===c.id?'selected':''} data-client="${esc(names)}" data-last-date="${last?new Date(last.date).toLocaleDateString('ar-EG'):''}" data-last-notes="${last?esc(last.notes||''):''}">⚖️ ${esc(c.caseNumber)} | 🏛️ ${esc(c.court||'غير محدد')} | 👤 ${esc(names.length>40?names.slice(0,40)+'...':names)}</option>`; }).join(''); const sugg = getSuggestedTasks(); const suggHtml = sugg.length ? `<div style="margin-top:8px;"><div style="font-size:14px;color:var(--slate);margin-bottom:6px;font-weight:800;">✨ المقترحات:</div><div style="display:flex;flex-wrap:wrap;gap:6px;">${sugg.map(s=>`<span style="background:rgba(250,204,21,0.2);padding:4px 10px;border-radius:20px;font-size:14px;cursor:pointer;border:1px solid var(--gold);font-weight:800;" onclick="addSuggestInternal('${esc(s)}')">+ ${esc(s)}</span>`).join('')}</div></div>` : ''; document.body.insertAdjacentHTML('beforeend', `<div id="taskModal" class="modal-overlay"><div class="modal-container"><h3>${isEdit?'✏️ تعديل المهمة':'➕ إضافة مهمة جديدة'}</h3><label>⚖️ القضية</label><select id="taskCaseId">${opts}</select><div id="casePreview" style="background:var(--bg);padding:10px;border-radius:8px;margin-top:8px;font-size:0.85rem;display:none;font-weight:800;"><div><strong>الموكل:</strong> <span id="prevClient"></span></div><div style="margin-top:4px;"><strong>آخر جلسة:</strong> <span id="prevDate"></span></div><div style="margin-top:4px;"><strong>ملاحظات:</strong> <span id="prevNotes"></span></div></div><label style="margin-top:14px;">📋 المهام</label><div id="taskTypesCont"></div><div style="display:flex;gap:8px;margin-top:8px;align-items:center;"><input type="text" id="newTaskTypeInput" placeholder="اسم المهمة..." style="flex:1;margin:0;"><button class="btn btn-success btn-sm" id="addTypeBtn" style="white-space:nowrap;font-weight:800;">+ إضافة</button></div>${suggHtml}<div class="modal-buttons"><button id="saveTaskBtn" style="background:var(--${isEdit?'gold':'green'});color:${isEdit?'var(--navy)':'white'};font-weight:800;">${isEdit?'💾 حفظ':'✅ إضافة'}</button><button id="closeTaskBtn" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`); const sel = document.getElementById('taskCaseId'); const prev = document.getElementById('casePreview'); sel.onchange = () => { const opt = sel.options[sel.selectedIndex]; if (sel.value && opt) { document.getElementById('prevClient').textContent = opt.dataset.client || '--'; document.getElementById('prevDate').textContent = opt.dataset.lastDate || 'لا توجد'; document.getElementById('prevNotes').textContent = opt.dataset.lastNotes || 'لا توجد'; prev.style.display = 'block'; } else { prev.style.display = 'none'; } }; if (sel.value) sel.dispatchEvent(new Event('change')); const renderTypes = () => { const el = document.getElementById('taskTypesCont'); el.innerHTML = tempTaskTypes.length ? tempTaskTypes.map((n,i) => `<div class="party-item" style="justify-content:space-between;margin-bottom:6px;font-weight:800;"><span><i class="fas fa-tasks" style="color:var(--gold);margin-left:6px;"></i>${esc(n)}</span><button class="remove-party" onclick="removeTypeInt(${i})" style="font-weight:800;">✖</button></div>`).join('') : '<p style="color:var(--muted);font-size:0.85rem;margin:5px 0;font-weight:800;">لا توجد مهام مضافة</p>'; }; window.removeTypeInt = (i) => { tempTaskTypes.splice(i,1); renderTypes(); }; window.addSuggestInternal = (name) => { if (!tempTaskTypes.includes(name)) { tempTaskTypes.push(name); renderTypes(); showToast(`✅ تم إضافة "${name}"`,'success'); } else showToast(`⚠️ "${name}" موجود بالفعل`,'warning'); }; const addType = () => { const v = document.getElementById('newTaskTypeInput').value.trim(); if (!v) { showToast('⚠️ أدخل اسم المهمة','warning'); return; } if (tempTaskTypes.includes(v)) { showToast('⚠️ المهمة موجودة بالفعل','warning'); return; } tempTaskTypes.push(v); addToSuggested(v); document.getElementById('newTaskTypeInput').value = ''; renderTypes(); showToast(`✅ تم إضافة "${v}"`,'success'); }; document.getElementById('addTypeBtn').onclick = addType; document.getElementById('newTaskTypeInput').addEventListener('keypress', e => { if (e.key==='Enter') { e.preventDefault(); addType(); } }); renderTypes(); document.getElementById('saveTaskBtn').onclick = async () => { if (tempTaskTypes.length === 0) { showToast('⚠️ أضف مهمة واحدة على الأقل','warning'); return; } const caseId = sel.value; const found = caseId ? casesList.find(c=>c.id===caseId) : null; const s = found?.sessions||[]; const last = s.length ? [...s].sort((a,b)=>new Date(b.date)-new Date(a.date))[0] : null; const data = { caseId: caseId||'', caseNumber: found?.caseNumber||'بدون قضية', court: found?.court||'غير محدد', clientNames: found?.clients ? found.clients.map(c=>c.name).join(', ') : 'بدون موكل', lastSessionDate: last?.date||'', lastSessionNotes: last?.notes||'', taskItems: tempTaskTypes.map(n=>({id: Date.now()+Math.random(), name:n, completed:false})), status: 'pending', createdAt: task?.createdAt || new Date().toISOString() }; if (isEdit) await window.updateTask(task.id, data); else await window.addTask(data); document.getElementById('taskModal').remove(); }; document.getElementById('closeTaskBtn').onclick = () => document.getElementById('taskModal').remove(); }
 window.editTask = id => { const t=tasks.find(x=>x.id===id); if(t) showTaskModal(t); };
-
-function renderClients() {
-    const tbody = document.querySelector('#clientsTable tbody'); if (!tbody) return;
-    if (!clients.length) { tbody.innerHTML = '<tr><td colspan="7" class="loading">لا يوجد موكلون<\/td><\/tr>'; return; }
-    tbody.innerHTML = clients.map(c => {
-        const cnt = casesList.filter(x=>x.clients?.some(cl=>cl.id===c.id)).length;
-        return `<tr>
-            <td data-label="الاسم">${esc(c.name)}<\/td>
-            <td data-label="النوع">${c.type==='company'?'شركة':'فرد'}<\/td>
-            <td data-label="الهاتف">${esc(c.phone||'--')}<\/td>
-            <td data-label="الرقم الوطني">${esc(c.idNumber||'--')}<\/td>
-            <td data-label="التوكيل">${c.delegationNumber?'رقم: '+esc(c.delegationNumber):'لا يوجد'}<br><button class="btn btn-outline btn-sm" onclick="window.editDelegation('${esc(c.id)}')"><i class="fas fa-file-signature"></i> تعديل</button><\/td>
-            <td data-label="القضايا">${cnt}<\/td>
-            <td data-label="التحكم" class="action-buttons"><button class="btn btn-sm" style="background:var(--gold);" onclick="window.editClient('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button><button class="btn btn-sm btn-danger" onclick="window.deleteClient('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button><\/td>
-        <\/tr>`;
-    }).join('');
-}
-
-function renderDashboard() {
-    const today = new Date(); today.setHours(0,0,0,0);
-    const active = tasks.filter(t => { const i=t.taskItems||[]; return i.length>0 && !i.every(x=>x.completed); }).length;
-    document.getElementById('statsGrid').innerHTML = `<div class="stat-card"><h3>الموكلين</h3><div class="stat-number">${clients.length}</div></div>
-        <div class="stat-card"><h3>القضايا</h3><div class="stat-number">${casesList.length}</div></div>
-        <div class="stat-card"><h3>المهام</h3><div class="stat-number">${active}</div></div>`;
-
-    let upcoming = [];
-    casesList.forEach(c => {
-        (c.sessions||[]).forEach(s => {
-            const sd = new Date(s.date); sd.setHours(0,0,0,0);
-            if (sd >= today) upcoming.push({
-                caseNumber: c.caseNumber, caseId: c.id,
-                court: c.court||'غير محدد', circuit: c.circuit||'',
-                clientNames: c.clients ? c.clients.map(x=>x.name).join(', ') : 'غير معروف',
-                subject: c.subject||'لا يوجد موضوع', date: s.date, notes: s.notes
-            });
-        });
-    });
-    upcoming.sort((a,b) => new Date(a.date)-new Date(b.date));
-
-    const el = document.getElementById('upcomingSessions');
-    if (!upcoming.length) { el.innerHTML = '<div class="loading">📭 لا توجد جلسات قادمة</div>'; return; }
-    el.innerHTML = upcoming.map(s => {
-        const sd = new Date(s.date); sd.setHours(0,0,0,0);
-        const diff = Math.round((sd-today)/864e5);
-        const label = diff===0?'اليوم':diff===1?'غداً':`بعد ${diff} أيام`;
-        const color = diff===0?'#ef4444':diff===1?'#f97316':'#10b981';
-        return `<div class="session-item-card" onclick="window.goToCase('${esc(s.caseId)}')">
-            <div class="session-header"><div class="session-case-info"><span class="session-case-number">📋 ${esc(s.caseNumber)}</span><span class="session-court"><i class="fas fa-building"></i> ${esc(s.court)}</span>${s.circuit?`<span class="session-circuit"><i class="fas fa-chalkboard-user"></i> ${esc(s.circuit)}</span>`:''}</div><span class="session-date-badge" style="background:${color};">${label}</span></div>
-            <div class="session-client"><i class="fas fa-user-circle" style="color:var(--gold);font-size:16px;"></i><span>${esc(s.clientNames.length>45?s.clientNames.slice(0,45)+'...':s.clientNames)}</span></div>
-            <div class="session-subject"><i class="fas fa-tag" style="color:var(--gold);font-size:16px;"></i><span>${esc(s.subject.length>50?s.subject.slice(0,50)+'...':s.subject)}</span></div>
-            <div class="session-footer"><div class="session-date"><i class="fas fa-calendar-alt"></i><span>${new Date(s.date).toLocaleDateString('ar-EG')}</span></div>${s.notes?`<div class="session-notes"><i class="fas fa-pen"></i>${esc(s.notes.length>35?s.notes.slice(0,35)+'...':s.notes)}</div>`:''}</div>
-        </div>`;
-    }).join('');
-}
-
-function getStatusClass(s) {
-    if (s==='متداولة') return 'status-mutadawla';
-    if (s==='حكم نهائي') return 'status-hukm';
-    if (s==='مستأنفة') return 'status-mostanfa';
-    if (s==='نقض') return 'status-naqd';
-    return '';
-}
-
-function renderCases() {
-    const tbody = document.querySelector('#casesTable tbody'); if (!tbody) return;
-    if (!casesList.length) { tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا<\/td><\/tr>'; return; }
-    let html = '';
-    for (const c of casesList) {
-        const exp = expandedCaseId === c.id;
-        const sessions = c.sessions||[];
-        const sorted = [...sessions].sort((a,b)=>new Date(b.date)-new Date(a.date));
-        const last = sorted[0] ? new Date(sorted[0].date).toLocaleDateString('ar-EG') : null;
-        const lastNotes = sorted[0]?.notes||'';
-        const clientsHtml = c.clients ? c.clients.map(x=>esc(x.name)+(x.title?` (${esc(x.title)})`:''  )).join('<br>') : '--';
-        const opponentsHtml = c.opponents ? c.opponents.map(x=>esc(x.name)+(x.title?` (${esc(x.title)})`:''  )).join('<br>') : '--';
-
-        html += `<tr class="case-row" data-id="${esc(c.id)}" onclick="window.toggleCaseDetails('${esc(c.id)}')">
-            <td data-label=""><i class="fas fa-chevron-${exp?'down':'left'}"></i><\/td>
-            <td data-label="رقم القضية"><strong>${esc(c.caseNumber)}</strong><\/td>
-            <td data-label="المحكمة">${esc(c.court||'--')}${c.circuit?' — '+esc(c.circuit):''}<\/td>
-            <td data-label="الموكلون">${clientsHtml}<\/td>
-            <td data-label="الخصوم">${opponentsHtml}<\/td>
-            <td data-label="الموضوع"><strong>📌 ${esc(c.subject||'--')}</strong>${last?`<div><span class="badge" style="font-size:12px;">آخر جلسة: ${last}</span></div>`:''}${lastNotes?`<div style="font-size:13px;color:var(--orange);margin-top:3px;font-weight:800;"><i class="fas fa-pen"></i> ${esc(lastNotes)}</div>`:''}<\/td>
-            <td data-label="الحالة"><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span><\/td>
-            <td data-label="التحكم" class="action-buttons"><button class="btn btn-sm" style="background:var(--gold);" onclick="event.stopPropagation();window.editCase('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteCase('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button><\/td>
-        <\/tr>`;
-
-        if (exp) {
-            const asc = [...sessions].sort((a,b)=>new Date(a.date)-new Date(b.date));
-            html += `<tr class="expanded-row"><td colspan="8"><div class="expanded-content">
-                <h4>📄 تفاصيل الموضوع</h4>
-                <div style="background:white;padding:10px;border-radius:10px;margin-bottom:8px;font-size:0.88rem;font-weight:800;">${esc(c.subjectDetails||'لا توجد تفاصيل')}</div>
-                <button class="btn btn-sm" onclick="event.stopPropagation();window.editSubjectDetails('${esc(c.id)}')">تعديل التفاصيل</button>
-                <h4>📅 الجلسات</h4>
-                <button class="btn btn-sm btn-success" onclick="event.stopPropagation();window.showAddSession('${esc(c.id)}')">+ إضافة جلسة</button>
-                ${!asc.length ? '<p style="margin-top:8px;color:var(--muted);font-size:0.85rem;font-weight:800;">لا توجد جلسات</p>' : asc.map(s=>`<div class="session-item" style="margin-top:8px;"><div><i class="fas fa-calendar"></i> ${new Date(s.date).toLocaleDateString('ar-EG')}${s.notes?'<br><span style="font-size:13px;"><i class="fas fa-pen"></i> '+esc(s.notes)+'</span>':''}</div><div><button class="btn btn-sm" onclick="event.stopPropagation();window.editSessionModal('${esc(c.id)}',${s.id})">تعديل</button><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteSession('${esc(c.id)}',${s.id})">حذف</button></div></div>`).join('')}
-            </div><\/td><\/tr>`;
-        }
-    }
-    tbody.innerHTML = html;
-}
-
+function renderClients() { const tbody = document.querySelector('#clientsTable tbody'); if (!tbody) return; if (!clients.length) { tbody.innerHTML = '<tr><td colspan="7" class="loading">لا يوجد موكلون<\/td><\/tr>'; return; } tbody.innerHTML = clients.map(c => { const cnt = casesList.filter(x=>x.clients?.some(cl=>cl.id===c.id)).length; return `<tr><td>${esc(c.name)}<\/td><td>${c.type==='company'?'شركة':'فرد'}<\/td><td>${esc(c.phone||'--')}<\/td><td>${esc(c.idNumber||'--')}<\/td><td>${c.delegationNumber?'رقم: '+esc(c.delegationNumber):'لا يوجد'}<br><button class="btn btn-outline btn-sm" onclick="window.editDelegation('${esc(c.id)}')"><i class="fas fa-file-signature"></i> تعديل</button><\/td><td>${cnt}<\/td><td class="action-buttons"><button class="btn btn-sm" style="background:var(--gold);" onclick="window.editClient('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button><button class="btn btn-sm btn-danger" onclick="window.deleteClient('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button><\/td><\/tr>`; }).join(''); }
+function renderDashboard() { const today = new Date(); today.setHours(0,0,0,0); const active = tasks.filter(t => { const i=t.taskItems||[]; return i.length>0 && !i.every(x=>x.completed); }).length; document.getElementById('statsGrid').innerHTML = `<div class="stat-card"><h3>الموكلين</h3><div class="stat-number">${clients.length}</div></div><div class="stat-card"><h3>القضايا</h3><div class="stat-number">${casesList.length}</div></div><div class="stat-card"><h3>المهام</h3><div class="stat-number">${active}</div></div>`; let upcoming = []; casesList.forEach(c => { (c.sessions||[]).forEach(s => { const sd = new Date(s.date); sd.setHours(0,0,0,0); if (sd >= today) upcoming.push({ caseNumber: c.caseNumber, caseId: c.id, court: c.court||'غير محدد', circuit: c.circuit||'', clientNames: c.clients ? c.clients.map(x=>x.name).join(', ') : 'غير معروف', subject: c.subject||'لا يوجد موضوع', date: s.date, notes: s.notes }); }); }); upcoming.sort((a,b) => new Date(a.date)-new Date(b.date)); const el = document.getElementById('upcomingSessions'); if (!upcoming.length) { el.innerHTML = '<div class="loading">📭 لا توجد جلسات قادمة</div>'; return; } el.innerHTML = upcoming.map(s => { const sd = new Date(s.date); sd.setHours(0,0,0,0); const diff = Math.round((sd-today)/864e5); const label = diff===0?'اليوم':diff===1?'غداً':`بعد ${diff} أيام`; const color = diff===0?'#ef4444':diff===1?'#f97316':'#10b981'; return `<div class="session-item-card" onclick="window.goToCase('${esc(s.caseId)}')"><div class="session-header"><div class="session-case-info"><span class="session-case-number">📋 ${esc(s.caseNumber)}</span><span class="session-court"><i class="fas fa-building"></i> ${esc(s.court)}</span>${s.circuit?`<span class="session-circuit"><i class="fas fa-chalkboard-user"></i> ${esc(s.circuit)}</span>`:''}</div><span class="session-date-badge" style="background:${color};">${label}</span></div><div class="session-client"><i class="fas fa-user-circle" style="color:var(--gold);font-size:16px;"></i><span>${esc(s.clientNames.length>45?s.clientNames.slice(0,45)+'...':s.clientNames)}</span></div><div class="session-subject"><i class="fas fa-tag" style="color:var(--gold);font-size:16px;"></i><span>${esc(s.subject.length>50?s.subject.slice(0,50)+'...':s.subject)}</span></div><div class="session-footer"><div class="session-date"><i class="fas fa-calendar-alt"></i><span>${new Date(s.date).toLocaleDateString('ar-EG')}</span></div>${s.notes?`<div class="session-notes"><i class="fas fa-pen"></i>${esc(s.notes.length>35?s.notes.slice(0,35)+'...':s.notes)}</div>`:''}</div></div>`; }).join(''); }
+function getStatusClass(s) { if (s==='متداولة') return 'status-mutadawla'; if (s==='حكم نهائي') return 'status-hukm'; if (s==='مستأنفة') return 'status-mostanfa'; if (s==='نقض') return 'status-naqd'; return ''; }
+function renderCases() { const tbody = document.querySelector('#casesTable tbody'); if (!tbody) return; if (!casesList.length) { tbody.innerHTML = '<tr><td colspan="8" class="loading">لا توجد قضايا<\/td><\/tr>'; return; } let html = ''; for (const c of casesList) { const exp = expandedCaseId === c.id; const sessions = c.sessions||[]; const sorted = [...sessions].sort((a,b)=>new Date(b.date)-new Date(a.date)); const last = sorted[0] ? new Date(sorted[0].date).toLocaleDateString('ar-EG') : null; const lastNotes = sorted[0]?.notes||''; const clientsHtml = c.clients ? c.clients.map(x=>esc(x.name)+(x.title?` (${esc(x.title)})`:''  )).join('<br>') : '--'; const opponentsHtml = c.opponents ? c.opponents.map(x=>esc(x.name)+(x.title?` (${esc(x.title)})`:''  )).join('<br>') : '--'; html += `<tr class="case-row" data-id="${esc(c.id)}" onclick="window.toggleCaseDetails('${esc(c.id)}')"><td><i class="fas fa-chevron-${exp?'down':'left'}"></i><\/td><td><strong>${esc(c.caseNumber)}</strong><\/td><td>${esc(c.court||'--')}${c.circuit?' — '+esc(c.circuit):''}<\/td><td>${clientsHtml}<\/td><td>${opponentsHtml}<\/td><td><strong>📌 ${esc(c.subject||'--')}</strong>${last?`<div><span class="badge" style="font-size:12px;">آخر جلسة: ${last}</span></div>`:''}${lastNotes?`<div style="font-size:13px;color:var(--orange);margin-top:3px;font-weight:800;"><i class="fas fa-pen"></i> ${esc(lastNotes)}</div>`:''}<\/td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span><\/td><td class="action-buttons"><button class="btn btn-sm" style="background:var(--gold);" onclick="event.stopPropagation();window.editCase('${esc(c.id)}')"><i class="fas fa-edit"></i> تعديل</button><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteCase('${esc(c.id)}')"><i class="fas fa-trash"></i> حذف</button><\/td><\/tr>`; if (exp) { const asc = [...sessions].sort((a,b)=>new Date(a.date)-new Date(b.date)); html += `<tr class="expanded-row"><td colspan="8"><div class="expanded-content"><h4>📄 تفاصيل الموضوع</h4><div style="background:white;padding:10px;border-radius:10px;margin-bottom:8px;font-size:0.88rem;font-weight:800;">${esc(c.subjectDetails||'لا توجد تفاصيل')}</div><button class="btn btn-sm" onclick="event.stopPropagation();window.editSubjectDetails('${esc(c.id)}')">تعديل التفاصيل</button><h4>📅 الجلسات</h4><button class="btn btn-sm btn-success" onclick="event.stopPropagation();window.showAddSession('${esc(c.id)}')">+ إضافة جلسة</button>${!asc.length ? '<p style="margin-top:8px;color:var(--muted);font-size:0.85rem;font-weight:800;">لا توجد جلسات</p>' : asc.map(s=>`<div class="session-item" style="margin-top:8px;"><div><i class="fas fa-calendar"></i> ${new Date(s.date).toLocaleDateString('ar-EG')}${s.notes?'<br><span style="font-size:13px;"><i class="fas fa-pen"></i> '+esc(s.notes)+'</span>':''}</div><div><button class="btn btn-sm" onclick="event.stopPropagation();window.editSessionModal('${esc(c.id)}',${s.id})">تعديل</button><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();window.deleteSession('${esc(c.id)}',${s.id})">حذف</button></div></div>`).join('')}</div><\/td><\/tr>`; } } tbody.innerHTML = html; }
 window.toggleCaseDetails = id => { expandedCaseId = expandedCaseId===id ? null : id; renderCases(); };
-window.goToCase = id => {
-    document.querySelector('.nav-item[data-tab="cases"]')?.click();
-    setTimeout(() => {
-        expandedCaseId = id; renderCases();
-        setTimeout(() => {
-            const row = document.querySelector(`.case-row[data-id="${id}"]`);
-            if (row) { row.scrollIntoView({behavior:'smooth',block:'center'}); row.querySelectorAll('td').forEach(td=>td.style.background='#fef9c3'); setTimeout(()=>row.querySelectorAll('td').forEach(td=>td.style.background=''),2000); }
-        }, 300);
-    }, 300);
-};
-
-function showCaseModal(caseData = null) {
-    if (!clients.length) { showToast('⚠️ أضف موكلاً أولاً','warning'); return; }
-    const isEdit = caseData !== null;
-    tempClients = isEdit ? [...(caseData.clients||[])] : [];
-    tempOpponents = isEdit ? [...(caseData.opponents||[])] : [];
-
-    document.body.insertAdjacentHTML('beforeend', `<div id="caseModal" class="modal-overlay"><div class="modal-container">
-        <h3>${isEdit?'✏️ تعديل القضية':'➕ إضافة قضية جديدة'}</h3>
-        <label>رقم القضية</label><input type="text" id="caseNumber" value="${esc(caseData?.caseNumber||'')}">
-        <label>المحكمة</label><input type="text" id="court" value="${esc(caseData?.court||'')}">
-        <label>الدائرة</label><input type="text" id="circuit" value="${esc(caseData?.circuit||'')}">
-        <label>الموضوع</label><input type="text" id="subject" value="${esc(caseData?.subject||'')}">
-        <label>الحالة</label>
-        <input type="text" id="caseStatus" value="${esc(caseData?.caseStatus||'')}" placeholder="اكتب الحالة (مثال: متداولة، حكم، شطب، صلح...)">
-        <h4 style="margin-top:14px;font-size:0.95rem;font-weight:800;">الموكلون</h4><div id="clientsCont"></div>
-        <div class="flex-between" style="margin-top:6px;"><select id="selectClient" style="flex:1;margin:0;">${clients.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select><button class="btn btn-sm" id="addC2" style="font-weight:800;">+ إضافة</button></div>
-        <h4 style="margin-top:14px;font-size:0.95rem;font-weight:800;">الخصوم</h4><div id="oppCont"></div>
-        <div class="flex-between" style="margin-top:6px;gap:6px;"><input type="text" id="newOppName" placeholder="اسم الخصم" style="flex:2;margin:0;"><input type="text" id="newOppTitle" placeholder="الصفة" style="flex:1;margin:0;"><button class="btn btn-sm" id="addO2" style="font-weight:800;">+ إضافة</button></div>
-        <div class="modal-buttons"><button id="saveCaseBtn" style="background:var(--gold);font-weight:800;">${isEdit?'💾 حفظ':'✅ إضافة'}</button><button id="closeCaseBtn" style="background:var(--border);font-weight:800;">إلغاء</button></div>
-    </div></div>`);
-
-    const renderClientsList = () => {
-        const container = document.getElementById('clientsCont');
-        if (!container) return;
-        if (tempClients.length === 0) { container.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;font-weight:800;">لا يوجد موكلون</p>'; return; }
-        container.innerHTML = tempClients.map((cl, idx) => `<div class="party-item" style="justify-content:space-between;"><span><i class="fas fa-user"></i> ${esc(cl.name)}${cl.title?' ('+esc(cl.title)+')':''}</span><button class="remove-party" onclick="window.removeTempClient(${idx})" style="font-weight:800;">✖</button></div>`).join('');
-    };
-    const renderOpponentsList = () => {
-        const container = document.getElementById('oppCont');
-        if (!container) return;
-        if (tempOpponents.length === 0) { container.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;font-weight:800;">لا يوجد خصوم</p>'; return; }
-        container.innerHTML = tempOpponents.map((op, idx) => `<div class="party-item" style="justify-content:space-between;"><span><i class="fas fa-gavel"></i> ${esc(op.name)}${op.title?' ('+esc(op.title)+')':''}</span><button class="remove-party" onclick="window.removeTempOpponent(${idx})" style="font-weight:800;">✖</button></div>`).join('');
-    };
-    window.removeTempClient = (idx) => { tempClients.splice(idx,1); renderClientsList(); };
-    window.removeTempOpponent = (idx) => { tempOpponents.splice(idx,1); renderOpponentsList(); };
-    document.getElementById('addC2').onclick = () => {
-        const id = document.getElementById('selectClient').value;
-        const selectedClient = clients.find(c => c.id === id);
-        if (selectedClient && !tempClients.some(cl => cl.id === selectedClient.id)) {
-            const title = prompt('صفة الموكل (اختياري):');
-            tempClients.push({ id: selectedClient.id, name: selectedClient.name, title: title || '' });
-            renderClientsList();
-        }
-    };
-    document.getElementById('addO2').onclick = () => {
-        const name = document.getElementById('newOppName').value.trim();
-        if (!name) return;
-        const title = document.getElementById('newOppTitle').value.trim();
-        tempOpponents.push({ name: name, title: title });
-        document.getElementById('newOppName').value = '';
-        document.getElementById('newOppTitle').value = '';
-        renderOpponentsList();
-    };
-    renderClientsList();
-    renderOpponentsList();
-
-    document.getElementById('saveCaseBtn').onclick = async () => {
-        const caseNumber = document.getElementById('caseNumber').value.trim();
-        if (!caseNumber) { showToast('⚠️ رقم القضية مطلوب','warning'); return; }
-        if (tempClients.length === 0) { showToast('⚠️ أضف موكلاً واحداً على الأقل','warning'); return; }
-        const data = {
-            caseNumber: caseNumber,
-            court: document.getElementById('court').value,
-            circuit: document.getElementById('circuit').value,
-            clients: tempClients,
-            opponents: tempOpponents,
-            subject: document.getElementById('subject').value,
-            caseStatus: document.getElementById('caseStatus').value,
-            subjectDetails: caseData?.subjectDetails || ''
-        };
-        if (isEdit) await window.updateCase(caseData.id, data);
-        else await window.addCase(data);
-        document.getElementById('caseModal').remove();
-    };
-    document.getElementById('closeCaseBtn').onclick = () => document.getElementById('caseModal').remove();
-}
+window.goToCase = id => { document.querySelector('.nav-item[data-tab="cases"]')?.click(); setTimeout(() => { expandedCaseId = id; renderCases(); setTimeout(() => { const row = document.querySelector(`.case-row[data-id="${id}"]`); if (row) { row.scrollIntoView({behavior:'smooth',block:'center'}); row.querySelectorAll('td').forEach(td=>td.style.background='#fef9c3'); setTimeout(()=>row.querySelectorAll('td').forEach(td=>td.style.background=''),2000); } }, 300); }, 300); };
+function showCaseModal(caseData = null) { if (!clients.length) { showToast('⚠️ أضف موكلاً أولاً','warning'); return; } const isEdit = caseData !== null; tempClients = isEdit ? [...(caseData.clients||[])] : []; tempOpponents = isEdit ? [...(caseData.opponents||[])] : []; document.body.insertAdjacentHTML('beforeend', `<div id="caseModal" class="modal-overlay"><div class="modal-container"><h3>${isEdit?'✏️ تعديل القضية':'➕ إضافة قضية جديدة'}</h3><label>رقم القضية</label><input type="text" id="caseNumber" value="${esc(caseData?.caseNumber||'')}"><label>المحكمة</label><input type="text" id="court" value="${esc(caseData?.court||'')}"><label>الدائرة</label><input type="text" id="circuit" value="${esc(caseData?.circuit||'')}"><label>الموضوع</label><input type="text" id="subject" value="${esc(caseData?.subject||'')}"><label>الحالة</label><input type="text" id="caseStatus" value="${esc(caseData?.caseStatus||'')}" placeholder="اكتب الحالة (مثال: متداولة، حكم، شطب، صلح...)"><h4 style="margin-top:14px;font-size:0.95rem;font-weight:800;">الموكلون</h4><div id="clientsCont"></div><div class="flex-between" style="margin-top:6px;"><select id="selectClient" style="flex:1;margin:0;">${clients.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select><button class="btn btn-sm" id="addC2" style="font-weight:800;">+ إضافة</button></div><h4 style="margin-top:14px;font-size:0.95rem;font-weight:800;">الخصوم</h4><div id="oppCont"></div><div class="flex-between" style="margin-top:6px;gap:6px;"><input type="text" id="newOppName" placeholder="اسم الخصم" style="flex:2;margin:0;"><input type="text" id="newOppTitle" placeholder="الصفة" style="flex:1;margin:0;"><button class="btn btn-sm" id="addO2" style="font-weight:800;">+ إضافة</button></div><div class="modal-buttons"><button id="saveCaseBtn" style="background:var(--gold);font-weight:800;">${isEdit?'💾 حفظ':'✅ إضافة'}</button><button id="closeCaseBtn" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`); const renderClientsList = () => { const container = document.getElementById('clientsCont'); if (!container) return; if (tempClients.length === 0) { container.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;font-weight:800;">لا يوجد موكلون</p>'; return; } container.innerHTML = tempClients.map((cl, idx) => `<div class="party-item" style="justify-content:space-between;"><span><i class="fas fa-user"></i> ${esc(cl.name)}${cl.title?' ('+esc(cl.title)+')':''}</span><button class="remove-party" onclick="window.removeTempClient(${idx})" style="font-weight:800;">✖</button></div>`).join(''); }; const renderOpponentsList = () => { const container = document.getElementById('oppCont'); if (!container) return; if (tempOpponents.length === 0) { container.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;font-weight:800;">لا يوجد خصوم</p>'; return; } container.innerHTML = tempOpponents.map((op, idx) => `<div class="party-item" style="justify-content:space-between;"><span><i class="fas fa-gavel"></i> ${esc(op.name)}${op.title?' ('+esc(op.title)+')':''}</span><button class="remove-party" onclick="window.removeTempOpponent(${idx})" style="font-weight:800;">✖</button></div>`).join(''); }; window.removeTempClient = (idx) => { tempClients.splice(idx,1); renderClientsList(); }; window.removeTempOpponent = (idx) => { tempOpponents.splice(idx,1); renderOpponentsList(); }; document.getElementById('addC2').onclick = () => { const id = document.getElementById('selectClient').value; const selectedClient = clients.find(c => c.id === id); if (selectedClient && !tempClients.some(cl => cl.id === selectedClient.id)) { const title = prompt('صفة الموكل (اختياري):'); tempClients.push({ id: selectedClient.id, name: selectedClient.name, title: title || '' }); renderClientsList(); } }; document.getElementById('addO2').onclick = () => { const name = document.getElementById('newOppName').value.trim(); if (!name) return; const title = document.getElementById('newOppTitle').value.trim(); tempOpponents.push({ name: name, title: title }); document.getElementById('newOppName').value = ''; document.getElementById('newOppTitle').value = ''; renderOpponentsList(); }; renderClientsList(); renderOpponentsList(); document.getElementById('saveCaseBtn').onclick = async () => { const caseNumber = document.getElementById('caseNumber').value.trim(); if (!caseNumber) { showToast('⚠️ رقم القضية مطلوب','warning'); return; } if (tempClients.length === 0) { showToast('⚠️ أضف موكلاً واحداً على الأقل','warning'); return; } const data = { caseNumber: caseNumber, court: document.getElementById('court').value, circuit: document.getElementById('circuit').value, clients: tempClients, opponents: tempOpponents, subject: document.getElementById('subject').value, caseStatus: document.getElementById('caseStatus').value, subjectDetails: caseData?.subjectDetails || '' }; if (isEdit) await window.updateCase(caseData.id, data); else await window.addCase(data); document.getElementById('caseModal').remove(); }; document.getElementById('closeCaseBtn').onclick = () => document.getElementById('caseModal').remove(); }
 window.editCase = (id) => { const c = casesList.find(x => x.id === id); if (c) showCaseModal(c); };
-window.showAddSession = (caseId) => {
-    document.body.insertAdjacentHTML('beforeend', `<div id="sessModal" class="modal-overlay"><div class="modal-container"><h3>➕ إضافة جلسة</h3><label>التاريخ</label><input type="date" id="sDate"><label>ملاحظات</label><textarea id="sNotes" rows="3"></textarea><div class="modal-buttons"><button id="saveSess" style="background:var(--green);color:white;font-weight:800;">✅ إضافة</button><button id="closeSess" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`);
-    document.getElementById('saveSess').onclick = async () => { const d = document.getElementById('sDate').value; if (!d){ showToast('⚠️ أدخل التاريخ','warning'); return; } await window.addSession(caseId, {date:d, notes:document.getElementById('sNotes').value}); document.getElementById('sessModal').remove(); };
-    document.getElementById('closeSess').onclick = () => document.getElementById('sessModal').remove();
-};
-window.editSessionModal = (caseId, sessionId) => {
-    const c = casesList.find(x => x.id === caseId);
-    const s = c?.sessions?.find(x => x.id === sessionId);
-    if (!s) return;
-    document.body.insertAdjacentHTML('beforeend', `<div id="sessModal" class="modal-overlay"><div class="modal-container"><h3>✏️ تعديل الجلسة</h3><label>التاريخ</label><input type="date" id="sDate" value="${esc(s.date)}"><label>ملاحظات</label><textarea id="sNotes" rows="3">${esc(s.notes||'')}</textarea><div class="modal-buttons"><button id="saveSess" style="background:var(--gold);font-weight:800;">💾 حفظ</button><button id="closeSess" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`);
-    document.getElementById('saveSess').onclick = async () => { const d = document.getElementById('sDate').value; if (!d){ showToast('⚠️ أدخل التاريخ','warning'); return; } await window.editSession(caseId, sessionId, {date:d, notes:document.getElementById('sNotes').value}); document.getElementById('sessModal').remove(); };
-    document.getElementById('closeSess').onclick = () => document.getElementById('sessModal').remove();
-};
-
-function searchClient() {
-    const term = document.getElementById('searchClientInput').value.trim().toLowerCase();
-    const div = document.getElementById('searchResults');
-    if (!term) { div.innerHTML='<p class="loading">🔍 أدخل اسم موكل للبحث</p>'; return; }
-    const found = clients.filter(c=>(c.name||'').toLowerCase().includes(term));
-    if (!found.length) { div.innerHTML='<p class="loading">❌ لا توجد نتائج</p>'; return; }
-    div.innerHTML = found.map(client => {
-        const cases = casesList.filter(c=>c.clients?.some(cl=>cl.id===client.id));
-        return `<div style="background:white;border-radius:var(--radius-md);padding:16px;margin-bottom:16px;border-right:5px solid var(--gold);box-shadow:var(--shadow);">
-            <div style="background:var(--gold);padding:10px 14px;border-radius:var(--radius-sm);margin-bottom:12px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><h3 style="font-size:1rem;color:var(--navy);font-weight:800;">${esc(client.name)}</h3><span style="background:var(--navy);color:white;padding:3px 10px;border-radius:20px;font-size:14px;font-weight:800;">${cases.length} قضية</span></div>
-                <div style="font-size:14px;color:var(--navy-mid);margin-top:4px;font-weight:800;">${client.phone?'📞 '+esc(client.phone):''}${client.delegationNumber?' | 📜 '+esc(client.delegationNumber):''}</div>
-            </div>
-            ${!cases.length ? '<p style="color:var(--muted);font-size:0.85rem;font-weight:800;">لا توجد قضايا</p>' : `<div class="table-wrap">table<thead><tr><th>رقم القضية</th><th>المحكمة</th><th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th></tr></thead><tbody>${cases.map(c=>{ let ld='لا توجد', ln=''; if(c.sessions?.length){const s=[...c.sessions].sort((a,b)=>new Date(b.date)-new Date(a.date));ld=new Date(s[0].date).toLocaleDateString('ar-EG');ln=s[0].notes||'';} return `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong><\/td><td>${esc(c.court||'--')}<\/td><td>${esc(c.subject||'--')}<\/td><td>${esc(ld)}${ln?`<div style="font-size:13px;color:var(--orange);font-weight:800;">${esc(ln.slice(0,30))}${ln.length>30?'...':''}</div>`:''}<\/td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span><\/td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')"><i class="fas fa-eye"></i><\/button><\/td><\/tr>`;}).join('')}</tbody>table</div>`}
-        </div>`;
-    }).join('');
-}
-
-function searchCourt() {
-    const term = document.getElementById('searchCourtInput').value.trim().toLowerCase();
-    const div = document.getElementById('searchResults');
-    if (!term) { div.innerHTML='<p class="loading">🔍 أدخل اسم محكمة للبحث</p>'; return; }
-    const found = casesList.filter(c=>c.court&&c.court.toLowerCase().includes(term));
-    if (!found.length) { div.innerHTML='<p class="loading">❌ لا توجد قضايا</p>'; return; }
-    div.innerHTML = `<div style="background:white;border-radius:var(--radius-md);padding:16px;box-shadow:var(--shadow);">
-        <div style="background:var(--gold);padding:10px 14px;border-radius:var(--radius-sm);margin-bottom:12px;"><h3 style="color:var(--navy);font-weight:800;">🏛️ ${esc(term)} — ${found.length} قضية</h3></div>
-        <div class="table-wrap">table<thead><tr><th>رقم القضية</th><th>الدائرة</th><th>الموكلون</th><th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th></tr></thead><tbody>
-        ${found.map(c=>{ let ld='لا توجد', ln=''; if(c.sessions?.length){const s=[...c.sessions].sort((a,b)=>new Date(b.date)-new Date(a.date));ld=new Date(s[0].date).toLocaleDateString('ar-EG');ln=s[0].notes||'';} return `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong><\/td><td>${esc(c.circuit||'--')}<\/td><td>${c.clients?c.clients.map(x=>esc(x.name)).join('<br>'):'--'}<\/td><td>${esc(c.subject||'--')}<\/td><td>${esc(ld)}${ln?`<div style="font-size:13px;color:var(--orange);font-weight:800;">${esc(ln.slice(0,25))}${ln.length>25?'...':''}</div>`:''}<\/td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span><\/td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')"><i class="fas fa-eye"></i><\/button><\/td><\/tr>`;}).join('')}
-        </tbody>table</div></div>`;
-}
-window.searchClient = searchClient;
-window.searchCourt = searchCourt;
-
-function showClientModal(client = null) {
-    const isEdit = client !== null;
-    document.body.insertAdjacentHTML('beforeend', `<div id="clientModal" class="modal-overlay"><div class="modal-container"><h3>${isEdit?'✏️ تعديل الموكل':'➕ إضافة موكل جديد'}</h3>
-        <label>الاسم</label><input type="text" id="clName" value="${esc(client?.name||'')}">
-        <label>النوع</label><select id="clType"><option value="individual" ${(!client||client.type==='individual')?'selected':''}>فرد</option><option value="company" ${client?.type==='company'?'selected':''}>شركة</option></select>
-        <label>الهاتف</label><input type="text" id="clPhone" value="${esc(client?.phone||'')}">
-        <label>الرقم الوطني</label><input type="text" id="clIdNum" value="${esc(client?.idNumber||'')}">
-        <div class="modal-buttons"><button id="saveClient" style="background:var(--${isEdit?'gold':'green'});color:${isEdit?'var(--navy)':'white'};font-weight:800;">${isEdit?'💾 حفظ':'✅ إضافة'}</button><button id="closeClient" style="background:var(--border);font-weight:800;">إلغاء</button></div>
-    </div></div>`);
-    document.getElementById('saveClient').onclick = async () => { const n=document.getElementById('clName').value.trim(); if(!n){showToast('⚠️ الاسم مطلوب','warning');return;} const d={name:n,type:document.getElementById('clType').value,phone:document.getElementById('clPhone').value,idNumber:document.getElementById('clIdNum').value}; if(isEdit) await window.updateClient(client.id,{...client,...d}); else await window.addClient(d); document.getElementById('clientModal').remove(); };
-    document.getElementById('closeClient').onclick = () => document.getElementById('clientModal').remove();
-}
+window.showAddSession = (caseId) => { document.body.insertAdjacentHTML('beforeend', `<div id="sessModal" class="modal-overlay"><div class="modal-container"><h3>➕ إضافة جلسة</h3><label>التاريخ</label><input type="date" id="sDate"><label>ملاحظات</label><textarea id="sNotes" rows="3"></textarea><div class="modal-buttons"><button id="saveSess" style="background:var(--green);color:white;font-weight:800;">✅ إضافة</button><button id="closeSess" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`); document.getElementById('saveSess').onclick = async () => { const d = document.getElementById('sDate').value; if (!d){ showToast('⚠️ أدخل التاريخ','warning'); return; } await window.addSession(caseId, {date:d, notes:document.getElementById('sNotes').value}); document.getElementById('sessModal').remove(); }; document.getElementById('closeSess').onclick = () => document.getElementById('sessModal').remove(); };
+window.editSessionModal = (caseId, sessionId) => { const c = casesList.find(x => x.id === caseId); const s = c?.sessions?.find(x => x.id === sessionId); if (!s) return; document.body.insertAdjacentHTML('beforeend', `<div id="sessModal" class="modal-overlay"><div class="modal-container"><h3>✏️ تعديل الجلسة</h3><label>التاريخ</label><input type="date" id="sDate" value="${esc(s.date)}"><label>ملاحظات</label><textarea id="sNotes" rows="3">${esc(s.notes||'')}</textarea><div class="modal-buttons"><button id="saveSess" style="background:var(--gold);font-weight:800;">💾 حفظ</button><button id="closeSess" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`); document.getElementById('saveSess').onclick = async () => { const d = document.getElementById('sDate').value; if (!d){ showToast('⚠️ أدخل التاريخ','warning'); return; } await window.editSession(caseId, sessionId, {date:d, notes:document.getElementById('sNotes').value}); document.getElementById('sessModal').remove(); }; document.getElementById('closeSess').onclick = () => document.getElementById('sessModal').remove(); };
+function searchClient() { const term = document.getElementById('searchClientInput').value.trim().toLowerCase(); const div = document.getElementById('searchResults'); if (!term) { div.innerHTML='<p class="loading">🔍 أدخل اسم موكل للبحث</p>'; return; } const found = clients.filter(c=>(c.name||'').toLowerCase().includes(term)); if (!found.length) { div.innerHTML='<p class="loading">❌ لا توجد نتائج</p>'; return; } div.innerHTML = found.map(client => { const cases = casesList.filter(c=>c.clients?.some(cl=>cl.id===client.id)); return `<div style="background:white;border-radius:var(--radius-md);padding:16px;margin-bottom:16px;border-right:5px solid var(--gold);box-shadow:var(--shadow);"><div style="background:var(--gold);padding:10px 14px;border-radius:var(--radius-sm);margin-bottom:12px;"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><h3 style="font-size:1rem;color:var(--navy);font-weight:800;">${esc(client.name)}</h3><span style="background:var(--navy);color:white;padding:3px 10px;border-radius:20px;font-size:14px;font-weight:800;">${cases.length} قضية</span></div><div style="font-size:14px;color:var(--navy-mid);margin-top:4px;font-weight:800;">${client.phone?'📞 '+esc(client.phone):''}${client.delegationNumber?' | 📜 '+esc(client.delegationNumber):''}</div></div>${!cases.length ? '<p style="color:var(--muted);font-size:0.85rem;font-weight:800;">لا توجد قضايا</p>' : `<div class="table-wrap"><table style="width:100%;border-collapse:collapse;"><thead><tr><th>رقم القضية</th><th>المحكمة</th><th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th></tr></thead><tbody>${cases.map(c=>{ let ld='لا توجد', ln=''; if(c.sessions?.length){const s=[...c.sessions].sort((a,b)=>new Date(b.date)-new Date(a.date));ld=new Date(s[0].date).toLocaleDateString('ar-EG');ln=s[0].notes||'';} return `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong><\/td><td>${esc(c.court||'--')}<\/td><td>${esc(c.subject||'--')}<\/td><td>${esc(ld)}${ln?`<div style="font-size:13px;color:var(--orange);font-weight:800;">${esc(ln.slice(0,30))}${ln.length>30?'...':''}</div>`:''}<\/td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span><\/td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')"><i class="fas fa-eye"></i><\/button><\/td><\/tr>`;}).join('')}</tbody>etable</div>`}</div>`; }).join(''); }
+function searchCourt() { const term = document.getElementById('searchCourtInput').value.trim().toLowerCase(); const div = document.getElementById('searchResults'); if (!term) { div.innerHTML='<p class="loading">🔍 أدخل اسم محكمة للبحث</p>'; return; } const found = casesList.filter(c=>c.court&&c.court.toLowerCase().includes(term)); if (!found.length) { div.innerHTML='<p class="loading">❌ لا توجد قضايا</p>'; return; } div.innerHTML = `<div style="background:white;border-radius:var(--radius-md);padding:16px;box-shadow:var(--shadow);"><div style="background:var(--gold);padding:10px 14px;border-radius:var(--radius-sm);margin-bottom:12px;"><h3 style="color:var(--navy);font-weight:800;">🏛️ ${esc(term)} — ${found.length} قضية</h3></div><div class="table-wrap"><table style="width:100%;border-collapse:collapse;"><thead><tr><th>رقم القضية</th><th>الدائرة</th><th>الموكلون</th><th>الموضوع</th><th>آخر جلسة</th><th>الحالة</th><th></th></tr></thead><tbody>${found.map(c=>{ let ld='لا توجد', ln=''; if(c.sessions?.length){const s=[...c.sessions].sort((a,b)=>new Date(b.date)-new Date(a.date));ld=new Date(s[0].date).toLocaleDateString('ar-EG');ln=s[0].notes||'';} return `<tr onclick="window.goToCase('${esc(c.id)}')" style="cursor:pointer;"><td><strong>${esc(c.caseNumber)}</strong><\/td><td>${esc(c.circuit||'--')}<\/td><td>${c.clients?c.clients.map(x=>esc(x.name)).join('<br>'):'--'}<\/td><td>${esc(c.subject||'--')}<\/td><td>${esc(ld)}${ln?`<div style="font-size:13px;color:var(--orange);font-weight:800;">${esc(ln.slice(0,25))}${ln.length>25?'...':''}</div>`:''}<\/td><td><span class="status-badge ${getStatusClass(c.caseStatus)}">${esc(c.caseStatus||'متداولة')}</span><\/td><td><button class="btn btn-sm" onclick="event.stopPropagation();window.goToCase('${esc(c.id)}')"><i class="fas fa-eye"></i><\/button><\/td><\/tr>`;}).join('')}</tbody>etable</div></div>`; }
+window.searchClient = searchClient; window.searchCourt = searchCourt;
+function showClientModal(client = null) { const isEdit = client !== null; document.body.insertAdjacentHTML('beforeend', `<div id="clientModal" class="modal-overlay"><div class="modal-container"><h3>${isEdit?'✏️ تعديل الموكل':'➕ إضافة موكل جديد'}</h3><label>الاسم</label><input type="text" id="clName" value="${esc(client?.name||'')}"><label>النوع</label><select id="clType"><option value="individual" ${(!client||client.type==='individual')?'selected':''}>فرد</option><option value="company" ${client?.type==='company'?'selected':''}>شركة</option></select><label>الهاتف</label><input type="text" id="clPhone" value="${esc(client?.phone||'')}"><label>الرقم الوطني</label><input type="text" id="clIdNum" value="${esc(client?.idNumber||'')}"><div class="modal-buttons"><button id="saveClient" style="background:var(--${isEdit?'gold':'green'});color:${isEdit?'var(--navy)':'white'};font-weight:800;">${isEdit?'💾 حفظ':'✅ إضافة'}</button><button id="closeClient" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`); document.getElementById('saveClient').onclick = async () => { const n=document.getElementById('clName').value.trim(); if(!n){showToast('⚠️ الاسم مطلوب','warning');return;} const d={name:n,type:document.getElementById('clType').value,phone:document.getElementById('clPhone').value,idNumber:document.getElementById('clIdNum').value}; if(isEdit) await window.updateClient(client.id,{...client,...d}); else await window.addClient(d); document.getElementById('clientModal').remove(); }; document.getElementById('closeClient').onclick = () => document.getElementById('clientModal').remove(); }
 window.editClient = id => { const c=clients.find(x=>x.id===id); if(c) showClientModal(c); };
-window.editDelegation = id => { const c=clients.find(x=>x.id===id); if(!c) return; document.body.insertAdjacentHTML('beforeend', `<div id="delModal" class="modal-overlay"><div class="modal-container"><h3>📜 بيانات التوكيل — ${esc(c.name)}</h3><label>رقم التوكيل</label><input type="text" id="delNum" value="${esc(c.delegationNumber||'')}"><label>تاريخ التوكيل</label><input type="date" id="delDate" value="${esc(c.delegationDate||'')}"><label>جهة التوثيق</label><input type="text" id="delAuth" value="${esc(c.delegationAuthority||'')}"><div class="modal-buttons"><button id="saveDel" class="btn btn-success" style="font-weight:800;">💾 حفظ</button><button id="closeDel" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`);
-    document.getElementById('saveDel').onclick = () => { window.updateClient(id,{...c,delegationNumber:document.getElementById('delNum').value,delegationDate:document.getElementById('delDate').value,delegationAuthority:document.getElementById('delAuth').value}); document.getElementById('delModal').remove(); };
-    document.getElementById('closeDel').onclick = () => document.getElementById('delModal').remove();
-};
-window.editSubjectDetails = id => { const c=casesList.find(x=>x.id===id); if(!c) return; document.body.insertAdjacentHTML('beforeend', `<div id="subModal" class="modal-overlay"><div class="modal-container"><h3>📝 تفاصيل الموضوع</h3><textarea id="details" rows="6">${esc(c.subjectDetails||'')}</textarea><div class="modal-buttons"><button id="saveSub" class="btn btn-success" style="font-weight:800;">💾 حفظ</button><button id="closeSub" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`);
-    document.getElementById('saveSub').onclick = () => { window.updateCase(id,{...c,subjectDetails:document.getElementById('details').value}); document.getElementById('subModal').remove(); };
-    document.getElementById('closeSub').onclick = () => document.getElementById('subModal').remove();
-};
-
-const shownReminders = new Set();
-function checkReminders() {
-    tasks.forEach(t => {
-        const items = t.taskItems||[];
-        if (items.length && !items.every(i=>i.completed) && !shownReminders.has(t.id)) {
-            shownReminders.add(t.id);
-            addNotif(`📋 مهمة: ${t.caseNumber||'بدون قضية'} — ${items.length} مهمة`,'info');
-        }
-    });
-}
-setInterval(checkReminders, 3600000);
-setTimeout(checkReminders, 2000);
-
-function setupEvents() {
-    document.getElementById('addClientBtn').onclick = () => showClientModal();
-    document.getElementById('addCaseBtn').onclick   = () => showCaseModal();
-    document.getElementById('addTaskBtn').onclick   = () => showTaskModal();
-    document.getElementById('searchClientBtn').onclick = searchClient;
-    document.getElementById('searchCourtBtn').onclick  = searchCourt;
-    document.getElementById('searchClientInput').addEventListener('keypress', e => { if(e.key==='Enter') searchClient(); });
-    document.getElementById('searchCourtInput').addEventListener('keypress',  e => { if(e.key==='Enter') searchCourt(); });
-    document.getElementById('darkModeBtn').onclick = toggleDarkMode;
-
-    document.querySelectorAll('.search-type-btn').forEach(btn => {
-        btn.onclick = () => {
-            document.querySelectorAll('.search-type-btn').forEach(b=>b.classList.remove('active'));
-            btn.classList.add('active');
-            const t = btn.dataset.type;
-            document.getElementById('searchClientDiv').style.display = t==='client'?'block':'none';
-            document.getElementById('searchCourtDiv').style.display  = t==='court' ?'block':'none';
-            document.getElementById('searchResults').innerHTML = '';
-        };
-    });
-
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.onclick = () => {
-            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-            item.classList.add('active');
-            const tab = item.dataset.tab;
-            document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none');
-            document.getElementById(tab+'Tab').style.display = 'block';
-            const titles = {dashboard:'لوحة التحكم',clients:'الموكلون',cases:'القضايا',tasks:'المهام الإدارية',search:'بحث'};
-            document.getElementById('pageTitle').textContent = titles[tab]||'';
-            if(tab==='clients')   renderClients();
-            if(tab==='cases')     renderCases();
-            if(tab==='dashboard') renderDashboard();
-            if(tab==='tasks')     renderTasks();
-            if(tab==='search')    document.getElementById('searchResults').innerHTML='';
-            closeSidebar();
-        };
-    });
-
-    document.getElementById('menuToggle').onclick = () => {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
-    };
-    document.getElementById('sidebarOverlay').onclick = closeSidebar;
-
-    document.getElementById('notifIcon').onclick = e => {
-        e.stopPropagation();
-        document.getElementById('notifPanel').classList.toggle('open');
-        if (document.getElementById('notifPanel').classList.contains('open')) {
-            notifications.forEach(n=>n.read=true);
-            document.getElementById('notifCount').textContent = '';
-            renderNotifList();
-        }
-    };
-    document.addEventListener('click', () => document.getElementById('notifPanel').classList.remove('open'));
-    document.getElementById('notifPanel').addEventListener('click', e=>e.stopPropagation());
-}
+window.editDelegation = id => { const c=clients.find(x=>x.id===id); if(!c) return; document.body.insertAdjacentHTML('beforeend', `<div id="delModal" class="modal-overlay"><div class="modal-container"><h3>📜 بيانات التوكيل — ${esc(c.name)}</h3><label>رقم التوكيل</label><input type="text" id="delNum" value="${esc(c.delegationNumber||'')}"><label>تاريخ التوكيل</label><input type="date" id="delDate" value="${esc(c.delegationDate||'')}"><label>جهة التوثيق</label><input type="text" id="delAuth" value="${esc(c.delegationAuthority||'')}"><div class="modal-buttons"><button id="saveDel" class="btn btn-success" style="font-weight:800;">💾 حفظ</button><button id="closeDel" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`); document.getElementById('saveDel').onclick = () => { window.updateClient(id,{...c,delegationNumber:document.getElementById('delNum').value,delegationDate:document.getElementById('delDate').value,delegationAuthority:document.getElementById('delAuth').value}); document.getElementById('delModal').remove(); }; document.getElementById('closeDel').onclick = () => document.getElementById('delModal').remove(); };
+window.editSubjectDetails = id => { const c=casesList.find(x=>x.id===id); if(!c) return; document.body.insertAdjacentHTML('beforeend', `<div id="subModal" class="modal-overlay"><div class="modal-container"><h3>📝 تفاصيل الموضوع</h3><textarea id="details" rows="6">${esc(c.subjectDetails||'')}</textarea><div class="modal-buttons"><button id="saveSub" class="btn btn-success" style="font-weight:800;">💾 حفظ</button><button id="closeSub" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`); document.getElementById('saveSub').onclick = () => { window.updateCase(id,{...c,subjectDetails:document.getElementById('details').value}); document.getElementById('subModal').remove(); }; document.getElementById('closeSub').onclick = () => document.getElementById('subModal').remove(); };
+const shownReminders = new Set(); function checkReminders() { tasks.forEach(t => { const items = t.taskItems||[]; if (items.length && !items.every(i=>i.completed) && !shownReminders.has(t.id)) { shownReminders.add(t.id); addNotif(`📋 مهمة: ${t.caseNumber||'بدون قضية'} — ${items.length} مهمة`,'info'); } }); } setInterval(checkReminders, 3600000); setTimeout(checkReminders, 2000);
+function setupEvents() { document.getElementById('addClientBtn').onclick = () => showClientModal(); document.getElementById('addCaseBtn').onclick = () => showCaseModal(); document.getElementById('addTaskBtn').onclick = () => showTaskModal(); document.getElementById('searchClientBtn').onclick = searchClient; document.getElementById('searchCourtBtn').onclick = searchCourt; document.getElementById('searchClientInput').addEventListener('keypress', e => { if(e.key==='Enter') searchClient(); }); document.getElementById('searchCourtInput').addEventListener('keypress', e => { if(e.key==='Enter') searchCourt(); }); document.getElementById('darkModeBtn').onclick = toggleDarkMode; document.querySelectorAll('.search-type-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.search-type-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); const t = btn.dataset.type; document.getElementById('searchClientDiv').style.display = t==='client'?'block':'none'; document.getElementById('searchCourtDiv').style.display = t==='court'?'block':'none'; document.getElementById('searchResults').innerHTML = ''; }; }); document.querySelectorAll('.nav-item').forEach(item => { item.onclick = () => { document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); item.classList.add('active'); const tab = item.dataset.tab; document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none'); document.getElementById(tab+'Tab').style.display = 'block'; const titles = {dashboard:'لوحة التحكم',clients:'الموكلون',cases:'القضايا',tasks:'المهام الإدارية',search:'بحث'}; document.getElementById('pageTitle').textContent = titles[tab]||''; if(tab==='clients') renderClients(); if(tab==='cases') renderCases(); if(tab==='dashboard') renderDashboard(); if(tab==='tasks') renderTasks(); if(tab==='search') document.getElementById('searchResults').innerHTML=''; closeSidebar(); }; }); document.getElementById('menuToggle').onclick = () => { const sidebar = document.getElementById('sidebar'); sidebar.classList.contains('open') ? closeSidebar() : openSidebar(); }; document.getElementById('sidebarOverlay').onclick = closeSidebar; document.getElementById('notifIcon').onclick = e => { e.stopPropagation(); document.getElementById('notifPanel').classList.toggle('open'); if (document.getElementById('notifPanel').classList.contains('open')) { notifications.forEach(n=>n.read=true); document.getElementById('notifCount').textContent = ''; renderNotifList(); } }; document.addEventListener('click', () => document.getElementById('notifPanel').classList.remove('open')); document.getElementById('notifPanel').addEventListener('click', e=>e.stopPropagation()); }
 </script>
 </body>
 </html>
