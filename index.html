@@ -1159,7 +1159,6 @@ function showCaseModal(caseData = null) {
     tempClients   = isEdit ? [...(caseData.clients||[])]   : [];
     tempOpponents = isEdit ? [...(caseData.opponents||[])] : [];
     
-    // 🧨 تم حذف statusOptions ✅
     document.body.insertAdjacentHTML('beforeend', `
         <div id="caseModal" class="modal-overlay"><div class="modal-container">
             <h3>${isEdit?'✏️ تعديل القضية':'➕ إضافة قضية جديدة'}</h3>
@@ -1167,45 +1166,111 @@ function showCaseModal(caseData = null) {
             <label>المحكمة</label><input type="text" id="court" value="${esc(caseData?.court||'')}">
             <label>الدائرة</label><input type="text" id="circuit" value="${esc(caseData?.circuit||'')}">
             <label>الموضوع</label><input type="text" id="subject" value="${esc(caseData?.subject||'')}">
-            
-            <!-- ✅ الحالة بقى input text مفتوح -->
             <label>الحالة</label>
             <input type="text" id="caseStatus" value="${esc(caseData?.caseStatus||'')}" placeholder="اكتب الحالة (مثال: متداولة، حكم، شطب، صلح...)">
-
             <h4 style="margin-top:14px;font-size:0.95rem;font-weight:800;">الموكلون</h4><div id="clientsCont"></div>
-            <div class="flex-between" style="margin-top:6px;"><select id="selectClient" style="flex:1;margin:0;">${clients.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select><button class="btn btn-sm" id="addC2" style="font-weight:800;">+ إضافة</button></div>
+            <div class="flex-between" style="margin-top:6px;">
+                <select id="selectClient" style="flex:1;margin:0;">${clients.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select>
+                <button class="btn btn-sm" id="addC2" style="font-weight:800;">+ إضافة</button>
+            </div>
             <h4 style="margin-top:14px;font-size:0.95rem;font-weight:800;">الخصوم</h4><div id="oppCont"></div>
-            <div class="flex-between" style="margin-top:6px;gap:6px;"><input type="text" id="newOppName" placeholder="اسم الخصم" style="flex:2;margin:0;"><input type="text" id="newOppTitle" placeholder="الصفة" style="flex:1;margin:0;"><button class="btn btn-sm" id="addO2" style="font-weight:800;">+ إضافة</button></div>
-            <div class="modal-buttons"><button id="saveCaseBtn" style="background:var(--gold);font-weight:800;">${isEdit?'💾 حفظ':'✅ إضافة'}</button><button id="closeCaseBtn" style="background:var(--border);font-weight:800;">إلغاء</button></div>
+            <div class="flex-between" style="margin-top:6px;gap:6px;">
+                <input type="text" id="newOppName" placeholder="اسم الخصم" style="flex:2;margin:0;">
+                <input type="text" id="newOppTitle" placeholder="الصفة" style="flex:1;margin:0;">
+                <button class="btn btn-sm" id="addO2" style="font-weight:800;">+ إضافة</button>
+            </div>
+            <div class="modal-buttons">
+                <button id="saveCaseBtn" style="background:var(--gold);font-weight:800;">${isEdit?'💾 حفظ':'✅ إضافة'}</button>
+                <button id="closeCaseBtn" style="background:var(--border);font-weight:800;">إلغاء</button>
+            </div>
         </div></div>`);
 
-    const rC = () => { document.getElementById('clientsCont').innerHTML = tempClients.length ? tempClients.map((c,i)=>`<div class="party-item"><span>${esc(c.name)}${c.title?' ('+esc(c.title)+')':''}</span><button class="remove-party" onclick="removeTC2(${i})">✖</button></div>`).join('') : '<p style="color:var(--muted);font-size:0.85rem;font-weight:800;">لا يوجد موكلون</p>'; };
-    const rO = () => { document.getElementById('oppCont').innerHTML = tempOpponents.length ? tempOpponents.map((o,i)=>`<div class="party-item"><span>${esc(o.name)}${o.title?' ('+esc(o.title)+')':''}</span><button class="remove-party" onclick="removeTO2(${i})">✖</button></div>`).join('') : '<p style="color:var(--muted);font-size:0.85rem;font-weight:800;">لا يوجد خصوم</p>'; };
-    window.removeTC2 = i => { tempClients.splice(i,1); rC(); };
-    window.removeTO2 = i => { tempOpponents.splice(i,1); rO(); };
-    document.getElementById('addC2').onclick = () => { const id=document.getElementById('selectClient').value; const c=clients.find(x=>x.id===id); if(c&&!tempClients.some(x=>x.id===c.id)){const t=prompt('صفة الموكل (اختياري):');tempClients.push({id:c.id,name:c.name,title:t||''}); rC();} };
-    document.getElementById('addO2').onclick = () => { const n=document.getElementById('newOppName').value.trim(); if(!n)return; tempOpponents.push({name:n,title:document.getElementById('newOppTitle').value.trim()}); document.getElementById('newOppName').value=''; document.getElementById('newOppTitle').value=''; rO(); };
-    rC(); rO();
+    const renderClientsList = () => {
+        const container = document.getElementById('clientsCont');
+        if (!container) return;
+        if (tempClients.length === 0) {
+            container.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;font-weight:800;">لا يوجد موكلون</p>';
+            return;
+        }
+        container.innerHTML = tempClients.map((cl, idx) => `
+            <div class="party-item" style="justify-content:space-between;">
+                <span><i class="fas fa-user"></i> ${esc(cl.name)}${cl.title ? ' ('+esc(cl.title)+')' : ''}</span>
+                <button class="remove-party" onclick="removeTempClient(${idx})" style="font-weight:800;">✖</button>
+            </div>
+        `).join('');
+    };
+
+    const renderOpponentsList = () => {
+        const container = document.getElementById('oppCont');
+        if (!container) return;
+        if (tempOpponents.length === 0) {
+            container.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;font-weight:800;">لا يوجد خصوم</p>';
+            return;
+        }
+        container.innerHTML = tempOpponents.map((op, idx) => `
+            <div class="party-item" style="justify-content:space-between;">
+                <span><i class="fas fa-gavel"></i> ${esc(op.name)}${op.title ? ' ('+esc(op.title)+')' : ''}</span>
+                <button class="remove-party" onclick="removeTempOpponent(${idx})" style="font-weight:800;">✖</button>
+            </div>
+        `).join('');
+    };
+
+    window.removeTempClient = (idx) => {
+        tempClients.splice(idx, 1);
+        renderClientsList();
+    };
+    window.removeTempOpponent = (idx) => {
+        tempOpponents.splice(idx, 1);
+        renderOpponentsList();
+    };
+
+    document.getElementById('addC2').onclick = () => {
+        const id = document.getElementById('selectClient').value;
+        const selectedClient = clients.find(c => c.id === id);
+        if (selectedClient && !tempClients.some(cl => cl.id === selectedClient.id)) {
+            const title = prompt('صفة الموكل (اختياري):');
+            tempClients.push({ id: selectedClient.id, name: selectedClient.name, title: title || '' });
+            renderClientsList();
+        }
+    };
+
+    document.getElementById('addO2').onclick = () => {
+        const name = document.getElementById('newOppName').value.trim();
+        if (!name) return;
+        const title = document.getElementById('newOppTitle').value.trim();
+        tempOpponents.push({ name: name, title: title });
+        document.getElementById('newOppName').value = '';
+        document.getElementById('newOppTitle').value = '';
+        renderOpponentsList();
+    };
+
+    renderClientsList();
+    renderOpponentsList();
 
     document.getElementById('saveCaseBtn').onclick = async () => {
-        const cn = document.getElementById('caseNumber').value.trim();
-        if (!cn) { showToast('⚠️ رقم القضية مطلوب','warning'); return; }
-        if (!tempClients.length) { showToast('⚠️ أضف موكلاً واحداً على الأقل','warning'); return; }
+        const caseNumber = document.getElementById('caseNumber').value.trim();
+        if (!caseNumber) { showToast('⚠️ رقم القضية مطلوب','warning'); return; }
+        if (tempClients.length === 0) { showToast('⚠️ أضف موكلاً واحداً على الأقل','warning'); return; }
+        
         const data = {
-            caseNumber: cn,
+            caseNumber: caseNumber,
             court: document.getElementById('court').value,
             circuit: document.getElementById('circuit').value,
             clients: tempClients,
             opponents: tempOpponents,
             subject: document.getElementById('subject').value,
-            caseStatus: document.getElementById('caseStatus').value,   // ✅ نص حر
-            subjectDetails: caseData?.subjectDetails||''
+            caseStatus: document.getElementById('caseStatus').value,
+            subjectDetails: caseData?.subjectDetails || ''
         };
+        
         if (isEdit) await window.updateCase(caseData.id, data);
         else await window.addCase(data);
         document.getElementById('caseModal').remove();
     };
-    document.getElementById('closeCaseBtn').onclick = () => document.getElementById('caseModal').remove();
+
+    document.getElementById('closeCaseBtn').onclick = () => {
+        document.getElementById('caseModal').remove();
+    };
 }
 // ===== CLIENT MODALS =====
 function showClientModal(client = null) {
