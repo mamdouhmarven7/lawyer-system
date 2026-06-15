@@ -1185,6 +1185,7 @@ function showCaseModal(caseData = null) {
             </div>
         </div></div>`);
 
+    // دالة عرض الموكلين
     const renderClientsList = () => {
         const container = document.getElementById('clientsCont');
         if (!container) return;
@@ -1195,11 +1196,12 @@ function showCaseModal(caseData = null) {
         container.innerHTML = tempClients.map((cl, idx) => `
             <div class="party-item" style="justify-content:space-between;">
                 <span><i class="fas fa-user"></i> ${esc(cl.name)}${cl.title ? ' ('+esc(cl.title)+')' : ''}</span>
-                <button class="remove-party" onclick="removeTempClient(${idx})" style="font-weight:800;">✖</button>
+                <button class="remove-party" onclick="window.removeTempClient(${idx})" style="font-weight:800;">✖</button>
             </div>
         `).join('');
     };
 
+    // دالة عرض الخصوم
     const renderOpponentsList = () => {
         const container = document.getElementById('oppCont');
         if (!container) return;
@@ -1210,11 +1212,12 @@ function showCaseModal(caseData = null) {
         container.innerHTML = tempOpponents.map((op, idx) => `
             <div class="party-item" style="justify-content:space-between;">
                 <span><i class="fas fa-gavel"></i> ${esc(op.name)}${op.title ? ' ('+esc(op.title)+')' : ''}</span>
-                <button class="remove-party" onclick="removeTempOpponent(${idx})" style="font-weight:800;">✖</button>
+                <button class="remove-party" onclick="window.removeTempOpponent(${idx})" style="font-weight:800;">✖</button>
             </div>
         `).join('');
     };
 
+    // تعريف الدوال على window عشان تبقى متاحة
     window.removeTempClient = (idx) => {
         tempClients.splice(idx, 1);
         renderClientsList();
@@ -1224,6 +1227,7 @@ function showCaseModal(caseData = null) {
         renderOpponentsList();
     };
 
+    // إضافة موكل
     document.getElementById('addC2').onclick = () => {
         const id = document.getElementById('selectClient').value;
         const selectedClient = clients.find(c => c.id === id);
@@ -1234,6 +1238,7 @@ function showCaseModal(caseData = null) {
         }
     };
 
+    // إضافة خصم
     document.getElementById('addO2').onclick = () => {
         const name = document.getElementById('newOppName').value.trim();
         if (!name) return;
@@ -1247,6 +1252,7 @@ function showCaseModal(caseData = null) {
     renderClientsList();
     renderOpponentsList();
 
+    // حفظ القضية
     document.getElementById('saveCaseBtn').onclick = async () => {
         const caseNumber = document.getElementById('caseNumber').value.trim();
         if (!caseNumber) { showToast('⚠️ رقم القضية مطلوب','warning'); return; }
@@ -1268,6 +1274,7 @@ function showCaseModal(caseData = null) {
         document.getElementById('caseModal').remove();
     };
 
+    // إغلاق المودال
     document.getElementById('closeCaseBtn').onclick = () => {
         document.getElementById('caseModal').remove();
     };
