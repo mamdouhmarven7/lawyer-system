@@ -1158,7 +1158,8 @@ function showCaseModal(caseData = null) {
     const isEdit = caseData !== null;
     tempClients   = isEdit ? [...(caseData.clients||[])]   : [];
     tempOpponents = isEdit ? [...(caseData.opponents||[])] : [];
-    const statusOpts = ['متداولة','حكم نهائي','مستأنفة','نقض'];
+    
+    // 🧨 تم حذف statusOptions ✅
     document.body.insertAdjacentHTML('beforeend', `
         <div id="caseModal" class="modal-overlay"><div class="modal-container">
             <h3>${isEdit?'✏️ تعديل القضية':'➕ إضافة قضية جديدة'}</h3>
@@ -1166,7 +1167,11 @@ function showCaseModal(caseData = null) {
             <label>المحكمة</label><input type="text" id="court" value="${esc(caseData?.court||'')}">
             <label>الدائرة</label><input type="text" id="circuit" value="${esc(caseData?.circuit||'')}">
             <label>الموضوع</label><input type="text" id="subject" value="${esc(caseData?.subject||'')}">
-            <label>الحالة</label><select id="caseStatus">${statusOpts.map(s=>`<option ${(caseData?.caseStatus||'متداولة')===s?'selected':''}>${s}</option>`).join('')}</select>
+            
+            <!-- ✅ الحالة بقى input text مفتوح -->
+            <label>الحالة</label>
+            <input type="text" id="caseStatus" value="${esc(caseData?.caseStatus||'')}" placeholder="اكتب الحالة (مثال: متداولة، حكم، شطب، صلح...)">
+
             <h4 style="margin-top:14px;font-size:0.95rem;font-weight:800;">الموكلون</h4><div id="clientsCont"></div>
             <div class="flex-between" style="margin-top:6px;"><select id="selectClient" style="flex:1;margin:0;">${clients.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select><button class="btn btn-sm" id="addC2" style="font-weight:800;">+ إضافة</button></div>
             <h4 style="margin-top:14px;font-size:0.95rem;font-weight:800;">الخصوم</h4><div id="oppCont"></div>
@@ -1181,31 +1186,27 @@ function showCaseModal(caseData = null) {
     document.getElementById('addC2').onclick = () => { const id=document.getElementById('selectClient').value; const c=clients.find(x=>x.id===id); if(c&&!tempClients.some(x=>x.id===c.id)){const t=prompt('صفة الموكل (اختياري):');tempClients.push({id:c.id,name:c.name,title:t||''}); rC();} };
     document.getElementById('addO2').onclick = () => { const n=document.getElementById('newOppName').value.trim(); if(!n)return; tempOpponents.push({name:n,title:document.getElementById('newOppTitle').value.trim()}); document.getElementById('newOppName').value=''; document.getElementById('newOppTitle').value=''; rO(); };
     rC(); rO();
+
     document.getElementById('saveCaseBtn').onclick = async () => {
         const cn = document.getElementById('caseNumber').value.trim();
         if (!cn) { showToast('⚠️ رقم القضية مطلوب','warning'); return; }
         if (!tempClients.length) { showToast('⚠️ أضف موكلاً واحداً على الأقل','warning'); return; }
-        const data = {caseNumber:cn, court:document.getElementById('court').value, circuit:document.getElementById('circuit').value, clients:tempClients, opponents:tempOpponents, subject:document.getElementById('subject').value, caseStatus:document.getElementById('caseStatus').value, subjectDetails:caseData?.subjectDetails||''};
-        if (isEdit) await window.updateCase(caseData.id, data); else await window.addCase(data);
+        const data = {
+            caseNumber: cn,
+            court: document.getElementById('court').value,
+            circuit: document.getElementById('circuit').value,
+            clients: tempClients,
+            opponents: tempOpponents,
+            subject: document.getElementById('subject').value,
+            caseStatus: document.getElementById('caseStatus').value,   // ✅ نص حر
+            subjectDetails: caseData?.subjectDetails||''
+        };
+        if (isEdit) await window.updateCase(caseData.id, data);
+        else await window.addCase(data);
         document.getElementById('caseModal').remove();
     };
     document.getElementById('closeCaseBtn').onclick = () => document.getElementById('caseModal').remove();
 }
-window.editCase = id => { const c=casesList.find(x=>x.id===id); if(c) showCaseModal(c); };
-
-// ===== SESSION MODALS =====
-window.showAddSession = id => {
-    document.body.insertAdjacentHTML('beforeend', `<div id="sessModal" class="modal-overlay"><div class="modal-container"><h3>➕ إضافة جلسة</h3><label>التاريخ</label><input type="date" id="sDate"><label>ملاحظات</label><textarea id="sNotes" rows="3"></textarea><div class="modal-buttons"><button id="saveSess" style="background:var(--green);color:white;font-weight:800;">✅ إضافة</button><button id="closeSess" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`);
-    document.getElementById('saveSess').onclick  = async () => { const d=document.getElementById('sDate').value; if(!d){showToast('⚠️ أدخل التاريخ','warning');return;} await window.addSession(id,{date:d,notes:document.getElementById('sNotes').value}); document.getElementById('sessModal').remove(); };
-    document.getElementById('closeSess').onclick = () => document.getElementById('sessModal').remove();
-};
-window.editSessionModal = (caseId, sessionId) => {
-    const c=casesList.find(x=>x.id===caseId); const s=c?.sessions?.find(x=>x.id===sessionId); if(!s) return;
-    document.body.insertAdjacentHTML('beforeend', `<div id="sessModal" class="modal-overlay"><div class="modal-container"><h3>✏️ تعديل الجلسة</h3><label>التاريخ</label><input type="date" id="sDate" value="${esc(s.date)}"><label>ملاحظات</label><textarea id="sNotes" rows="3">${esc(s.notes||'')}</textarea><div class="modal-buttons"><button id="saveSess" style="background:var(--gold);font-weight:800;">💾 حفظ</button><button id="closeSess" style="background:var(--border);font-weight:800;">إلغاء</button></div></div></div>`);
-    document.getElementById('saveSess').onclick  = async () => { const d=document.getElementById('sDate').value; if(!d){showToast('⚠️ أدخل التاريخ','warning');return;} await window.editSession(caseId,sessionId,{date:d,notes:document.getElementById('sNotes').value}); document.getElementById('sessModal').remove(); };
-    document.getElementById('closeSess').onclick = () => document.getElementById('sessModal').remove();
-};
-
 // ===== CLIENT MODALS =====
 function showClientModal(client = null) {
     const isEdit = client !== null;
