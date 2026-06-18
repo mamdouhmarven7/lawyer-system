@@ -167,6 +167,132 @@
         body.dark-mode #notifPanel { background: #1a1a1a; }
         @media (max-width: 768px) { .sidebar { transform: translateX(100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-right: 0; padding: 12px; } .menu-toggle { display: block; } .page-title { font-size: 1.1rem; } .logout-btn span { display: none; } .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; } .stat-card { padding: 12px; } .stat-number { font-size: 1.5rem; } .stat-card h3 { font-size: 0.78rem; } table { min-width: 520px; } th, td { padding: 8px 6px; font-size: 0.8rem; } .action-buttons { flex-direction: column; gap: 4px; } .action-buttons .btn-sm { width: 100%; justify-content: center; } .card { padding: 12px; } .card-header { gap: 8px; } .top-bar { padding: 8px 12px; margin-bottom: 12px; } .modal-container { border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 20px 16px; } .confirm-box { padding: 20px 16px; } .session-item-card { padding: 12px 14px; } #notifPanel { top: 60px; right: 8px; left: 8px; width: auto; } }
         @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; } .main-content { padding: 10px; } .search-type-buttons { gap: 6px; } .search-type-btn { padding: 7px 14px; font-size: 0.82rem; } }
+    /* ===== تحسينات الموبايل للقضايا ===== */
+@media (max-width: 768px) {
+    /* إخفاء رأس الجدول */
+    #casesTable thead {
+        display: none;
+    }
+    
+    /* تحويل كل صف إلى بطاقة */
+    #casesTable tbody tr {
+        display: block;
+        margin-bottom: 16px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        background: var(--white);
+        box-shadow: var(--shadow);
+    }
+    
+    /* كل خلية تصبح سطر منفصل */
+    #casesTable tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 6px 4px;
+        border-bottom: 1px solid var(--border);
+        text-align: right;
+        font-size: 14px;
+    }
+    
+    #casesTable tbody td:last-child {
+        border-bottom: none;
+    }
+    
+    /* إضافة عنوان العمود قبل كل قيمة */
+    #casesTable tbody td::before {
+        content: attr(data-label);
+        font-weight: 800;
+        color: var(--gold-dark);
+        font-size: 13px;
+        min-width: 90px;
+    }
+    
+    /* العمود الأول (السهم) لا يحتاج عنوان */
+    #casesTable tbody td:first-child::before {
+        display: none;
+    }
+    
+    #casesTable tbody td:first-child {
+        justify-content: center;
+        border-bottom: none;
+        padding: 4px;
+    }
+    
+    /* أزرار التحكم */
+    .action-buttons {
+        flex-direction: row;
+        gap: 6px;
+        justify-content: flex-start;
+    }
+    
+    .action-buttons .btn-sm {
+        padding: 4px 10px;
+        font-size: 12px;
+        width: auto;
+    }
+    
+    /* تفاصيل الجلسات الموسعة */
+    .expanded-content {
+        font-size: 14px;
+        padding: 12px;
+    }
+    
+    .session-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+    
+    .session-item > div:last-child {
+        display: flex;
+        gap: 6px;
+        justify-content: flex-end;
+    }
+}
+        @media (max-width: 768px) {
+    /* ===== الموكلين ===== */
+    #clientsTable thead {
+        display: none;
+    }
+    
+    #clientsTable tbody tr {
+        display: block;
+        margin-bottom: 16px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        background: var(--white);
+        box-shadow: var(--shadow);
+    }
+    
+    #clientsTable tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 6px 4px;
+        border-bottom: 1px solid var(--border);
+        text-align: right;
+        font-size: 14px;
+    }
+    
+    #clientsTable tbody td:last-child {
+        border-bottom: none;
+    }
+    
+    #clientsTable tbody td::before {
+        content: attr(data-label);
+        font-weight: 800;
+        color: var(--gold-dark);
+        font-size: 13px;
+        min-width: 90px;
+    }
+}
     </style>
 </head>
 <body>
